@@ -1,4 +1,4 @@
-baseurl = "/"
+baseurl = "rlouden.netlify.com/"
 languageCode = "en-us"
 title = "A blog to document my foray into analytics and machine learning"
 theme = "hugo-xmin"
