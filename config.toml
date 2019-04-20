@@ -13,9 +13,9 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
-  logo = "img/avatar-icon.png"
-  favicon = "img/favicon.ico"
-  dateFormat = "April 20, 2019"
+  logo = "img/avatar.png"
+  favicon = "img/avatar.png"
+  dateFormat = "April 20, 19"
   commit = false
   rss = false
   comments = false
@@ -42,8 +42,8 @@ pygmentsCodefencesGuessSyntax = true
 [Author]
   name = "Rich Louden"
   website = "unsupervised-learnings.co.uk"
-  github = "https://github.com/Richyyl"
-  twitter = "https://twitter.com/Richyyl"
+  github = "Richyyl"
+  twitter = "Richyyl"
 
 
 [[menu.main]]

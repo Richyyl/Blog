@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>EDA &amp; model building - Upsupervised Learnings</title>
+  <meta property="og:title" content="EDA &amp; model building" />
+  <meta name="twitter:title" content="EDA &amp; model building" />
+  <meta name="author" content="Rich Louden"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/rlouden.netlify.com\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/rlouden.netlify.com\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/post\/part_2_-_eda_and_modelling\/",
+          "name": "E d a \x26 model building"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Richyyl"
+  },
+  "headline": "EDA \x26 model building",
+  "description" : "",
+  "inLanguage" : "en",
+  "wordCount":  0 ,
+  "datePublished" : "0001-01-01T00:00:00",
+  "dateModified" : "0001-01-01T00:00:00",
+  "image" : "\/rlouden.netlify.com\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/rlouden.netlify.com\/post\/part_2_-_eda_and_modelling\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/rlouden.netlify.com\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/rlouden.netlify.com\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="EDA &amp; model building" />
+<meta property="og:image" content="/rlouden.netlify.com/img/avatar.png" />
+<meta property="og:url" content="/rlouden.netlify.com/post/part_2_-_eda_and_modelling/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="EDA &amp; model building" />
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <link href='/rlouden.netlify.com/img/avatar.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/rlouden.netlify.com/post/part_2_-_eda_and_modelling/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/rlouden.netlify.com/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/rlouden.netlify.com/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/rlouden.netlify.com/css/syntax.css" /><link rel="stylesheet" href="/rlouden.netlify.com/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/rlouden.netlify.com/post/">Blog</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/rlouden.netlify.com/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/rlouden.netlify.com/">
+            <img class="avatar-img" src="/rlouden.netlify.com/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>EDA &amp; model building</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on April 10, 19
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Richyyl
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.</p>
+
+<p>As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma">## -- Attaching packages ------------------------------------- tidyverse 1.2.1 --</pre></div><div class="highlight"><pre class="chroma">## v ggplot2 3.1.0       v purrr   0.3.2  
+## v tibble  2.1.1       v dplyr   0.8.0.1
+## v tidyr   0.8.3       v stringr 1.4.0  
+## v readr   1.3.1       v forcats 0.4.0</pre></div><div class="highlight"><pre class="chroma">## -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</pre></div><div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="kn">library</span><span class="p">(</span>tidymodels<span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma">## -- Attaching packages ------------------------------------ tidymodels 0.0.2 --</pre></div><div class="highlight"><pre class="chroma">## v broom     0.5.1     v recipes   0.1.4
+## v dials     0.0.2     v rsample   0.0.4
+## v infer     0.4.0     v yardstick 0.0.3
+## v parsnip   0.0.1</pre></div><div class="highlight"><pre class="chroma">## -- Conflicts --------------------------------------- tidymodels_conflicts() --
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()</pre></div><div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="kn">library</span><span class="p">(</span>janitor<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ggrepel<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>gghighlight<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>ranger<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>glmnet<span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma">## Loading required package: Matrix</pre></div><div class="highlight"><pre class="chroma">## 
+## Attaching package: &#39;Matrix&#39;</pre></div><div class="highlight"><pre class="chroma">## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     expand</pre></div><div class="highlight"><pre class="chroma">## Loading required package: foreach</pre></div><div class="highlight"><pre class="chroma">## 
+## Attaching package: &#39;foreach&#39;</pre></div><div class="highlight"><pre class="chroma">## The following objects are masked from &#39;package:purrr&#39;:
+## 
+##     accumulate, when</pre></div><div class="highlight"><pre class="chroma">## Loaded glmnet 2.0-16</pre></div><div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">theme_set<span class="p">(</span>theme_minimal<span class="p">())</span></code></pre></div>
+<p>At the end of the last segement I&rsquo;d managed to scrape five key datasets, the first two relating to attacking and defensive stats for clubs, the second two the same but at a player level and the final one a list of players and their current clubs. I&rsquo;m going to start off exploring the player data just to make sure it can give the insight we need, and then move into a deeper dive of the club level data.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">all_players <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&#34;2019-19 players.csv&#34;</span><span class="p">)</span>
+
+player_attack <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&#34;player_attack_stats.csv&#34;</span><span class="p">)</span>
+
+player_defence <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&#34;player_defence_stats.csv&#34;</span><span class="p">)</span>
+
+current_players_attacking <span class="o">&lt;-</span> inner_join<span class="p">(</span>all_players<span class="p">,</span> player_attack<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Full_name&#34;</span> <span class="o">=</span> <span class="s">&#34;Name&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  janitor<span class="o">::</span>clean_names<span class="p">()</span>
+
+current_players_defending <span class="o">&lt;-</span> inner_join<span class="p">(</span>all_players<span class="p">,</span> player_defence<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Full_name&#34;</span> <span class="o">=</span> <span class="s">&#34;Name&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  janitor<span class="o">::</span>clean_names<span class="p">()</span>
+
+check_attacking_data <span class="o">&lt;-</span> current_players_attacking <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>data <span class="o">==</span> <span class="s">&#34;Season_17&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>desc<span class="p">(</span>chances_created<span class="p">))</span> <span class="o">%&gt;%</span>
+  View<span class="p">()</span>
+
+check_defending_data <span class="o">&lt;-</span> current_players_defending <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>data <span class="o">==</span> <span class="s">&#34;Season_17&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  arrange<span class="p">(</span>desc<span class="p">(</span>tackles_made<span class="p">))</span> <span class="o">%&gt;%</span>
+  View<span class="p">()</span>
+
+players_per_team <span class="o">&lt;-</span> current_players_attacking <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>data <span class="o">==</span> <span class="s">&#34;Season_18&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  count<span class="p">(</span>team<span class="p">)</span></code></pre></div>
+<p>Since the player data appears to be in a good shape, ie enough of it should be there with enough players to put together some teams for predictions, its time to have a good look at the team data and see what really impacts how many goals you score or concede.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_attack <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&#34;team_attack_stats.csv&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  janitor<span class="o">::</span>clean_names<span class="p">()</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>avg_pass_length <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>str_remove<span class="p">(</span>avg_pass_length<span class="p">,</span> <span class="s">&#34;m&#34;</span><span class="p">)))</span> <span class="o">%&gt;%</span>
+         separate<span class="p">(</span>data<span class="p">,</span> into <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Stats&#34;</span><span class="p">,</span> <span class="s">&#34;Season&#34;</span><span class="p">),</span> sep <span class="o">=</span> <span class="s">&#34;_&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+         mutate<span class="p">(</span>Season <span class="o">=</span> case_when<span class="p">(</span>Season <span class="o">==</span> <span class="s">&#34;15&#34;</span> <span class="o">~</span> <span class="s">&#34;15/16&#34;</span><span class="p">,</span>
+                                   Season <span class="o">==</span> <span class="s">&#34;16&#34;</span> <span class="o">~</span> <span class="s">&#34;16/17&#34;</span><span class="p">,</span>
+                                   Season <span class="o">==</span> <span class="s">&#34;17&#34;</span> <span class="o">~</span> <span class="s">&#34;17/18&#34;</span><span class="p">,</span>
+                                   <span class="bp">T</span> <span class="o">~</span> <span class="s">&#34;18/19&#34;</span><span class="p">),</span>
+                Season <span class="o">=</span> <span class="kp">factor</span><span class="p">(</span>Season<span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma">## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `passes completed` = col_double(),
+##   `forward passes` = col_double(),
+##   `backward passes` = col_double(),
+##   `sideways passes` = col_double(),
+##   `chances created` = col_double(),
+##   `assists created` = col_double(),
+##   `avg pass length` = col_character(),
+##   `shots on target` = col_double(),
+##   `shots off target` = col_double(),
+##   `goals scored` = col_double()
+## )</pre></div><div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_defence <span class="o">&lt;-</span> read_csv<span class="p">(</span><span class="s">&#34;team_defence_stats.csv&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  janitor<span class="o">::</span>clean_names<span class="p">()</span> <span class="o">%&gt;%</span>
+  separate<span class="p">(</span>data<span class="p">,</span> into <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Stats&#34;</span><span class="p">,</span> <span class="s">&#34;Season&#34;</span><span class="p">),</span> sep <span class="o">=</span> <span class="s">&#34;_&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+         mutate<span class="p">(</span>Season <span class="o">=</span> case_when<span class="p">(</span>Season <span class="o">==</span> <span class="s">&#34;15&#34;</span> <span class="o">~</span> <span class="s">&#34;15/16&#34;</span><span class="p">,</span>
+                                   Season <span class="o">==</span> <span class="s">&#34;16&#34;</span> <span class="o">~</span> <span class="s">&#34;16/17&#34;</span><span class="p">,</span>
+                                   Season <span class="o">==</span> <span class="s">&#34;17&#34;</span> <span class="o">~</span> <span class="s">&#34;17/18&#34;</span><span class="p">,</span>
+                                   <span class="bp">T</span> <span class="o">~</span> <span class="s">&#34;18/19&#34;</span><span class="p">),</span>
+                Season <span class="o">=</span> <span class="kp">factor</span><span class="p">(</span>Season<span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma">## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `tackles made` = col_double(),
+##   `tackles won` = col_double(),
+##   intercept = col_double(),
+##   `total blocks` = col_double(),
+##   `total clearances` = col_double(),
+##   `total red cards` = col_double(),
+##   `total yellow cards` = col_double(),
+##   `total saves` = col_double(),
+##   `saves per goal` = col_double(),
+##   `totals goals conceded` = col_double()
+## )</pre></div>
+<p>First lets see how passing relates to goals scored, which you&rsquo;d expect to be a fairly linear trend with some outliers, as most teams that pass lots and move well hold the ball and ultimatly score, however some teams are able to soak up the attacks and move on the counter. From the graph we can see that two teams who are at opposite ends of the passing spectrum show quite a significant difference in goals per 90 minutes.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">passing_labels <span class="o">&lt;-</span> team_attack <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>team <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Manchester City&#34;</span><span class="p">,</span> <span class="s">&#34;Burnley&#34;</span><span class="p">))</span>
+  
+team_attack <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> passes_completed<span class="p">,</span> y <span class="o">=</span> goals_scored<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">),</span> position <span class="o">=</span> <span class="s">&#34;jitter&#34;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average completed passes, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average goals scored, per 90 minutes&#34;</span><span class="p">,</span>
+       col <span class="o">=</span> <span class="s">&#34;Season&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;Teams that pass more generally score more goals&#34;</span><span class="p">)</span> <span class="o">+</span>
+  gghighlight<span class="p">(</span>team <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Manchester City&#34;</span><span class="p">,</span> <span class="s">&#34;Burnley&#34;</span><span class="p">),</span> use_direct_label <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>labels <span class="o">=</span> scales<span class="o">::</span>comma_format<span class="p">())</span> <span class="o">+</span>
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  geom_text_repel<span class="p">(</span>data <span class="o">=</span> passing_labels<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> passes_completed<span class="p">,</span> y <span class="o">=</span> goals_scored<span class="p">,</span> label <span class="o">=</span> team<span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma">## Warning: You set use_group_by = TRUE, but grouped calculation failed.
+## Falling back to ungrouped filter operation...</pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check passing stats-1.png" alt="" /><!-- -->
+Again, when looking at changes against goals score we&rsquo;d expect a linear trend here, as the more times you&rsquo;re on to shoot the more you&rsquo;re likely to score, which is shown by the clear linear trend. However, what is interesting is that more chances doesnt appear to improve your on target ratio, meaning its unlikely you&rsquo;ll get better if you just keep shooting.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">chances_labels <span class="o">&lt;-</span> team_attack <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>team <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Manchester United&#34;</span><span class="p">,</span> <span class="s">&#34;Newcastle United&#34;</span><span class="p">))</span>
+  
+team_attack <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> chances_created<span class="p">,</span> y <span class="o">=</span> goals_scored<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">),</span> position <span class="o">=</span> <span class="s">&#34;jitter&#34;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average chances created, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average goals scored, per 90 minutes&#34;</span><span class="p">,</span>
+       col <span class="o">=</span> <span class="s">&#34;Season&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;More chances leads to more goals&#34;</span><span class="p">)</span> <span class="o">+</span>
+  gghighlight<span class="p">(</span>team <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Manchester United&#34;</span><span class="p">,</span> <span class="s">&#34;Newcastle United&#34;</span><span class="p">),</span> use_direct_label <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span>
+  scale_x_continuous<span class="p">(</span>labels <span class="o">=</span> scales<span class="o">::</span>comma_format<span class="p">())</span> <span class="o">+</span>
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  geom_text_repel<span class="p">(</span>data <span class="o">=</span> chances_labels<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> chances_created<span class="p">,</span> y <span class="o">=</span> goals_scored<span class="p">,</span> label <span class="o">=</span> team<span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma">## Warning: You set use_group_by = TRUE, but grouped calculation failed.
+## Falling back to ungrouped filter operation...</pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check chances-1.png" alt="" /><!-- --></p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_attack <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>shot_ratio <span class="o">=</span> shots_on_target <span class="o">/</span> shots_off_target<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> chances_created<span class="p">,</span> y <span class="o">=</span> shot_ratio<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">),</span> position <span class="o">=</span> <span class="s">&#34;jitter&#34;</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average chances created, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average shots on target - off target ratio, \nper 90 minutes&#34;</span><span class="p">,</span>
+       col <span class="o">=</span> <span class="s">&#34;Season&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;More chances doesnt always mean you&#39;ll hit the target&#34;</span><span class="p">,</span>
+       caption <span class="o">=</span> <span class="s">&#34;Horizontal line highlights a 1-1 ratio&#34;</span><span class="p">)</span> <span class="o">+</span> 
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  geom_hline<span class="p">(</span>yintercept <span class="o">=</span> <span class="m">1</span><span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check chances-2.png" alt="" /><!-- -->
+Moving on to some defensive stats now, with both the number of tackles and tackle success on display below. As can be seen from the two charts there is little to no correlation between these metrics and how many goals you might concede, which probably isnt what you&rsquo;d expect. Interestignly however there seems to be less tackling in this season so far, on average, than the past 3 seasons.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_defence <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> tackles_made<span class="p">,</span> y <span class="o">=</span> totals_goals_conceded<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">))</span> <span class="o">+</span>
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average number of tackles, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average goals conceded, per 90 minutes&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;There appears to be little correlation between\n how much you tackle and how much you concede&#34;</span><span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check tackles-1.png" alt="" /><!-- --></p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_defence <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>tackle_success <span class="o">=</span> tackles_won <span class="o">/</span> tackles_made<span class="p">)</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> tackle_success<span class="p">,</span> y <span class="o">=</span> totals_goals_conceded<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">))</span> <span class="o">+</span>
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average tackle success ratio, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average goals conceded, per 90 minutes&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;With tackle success also showing\n little correlation against goals conceded&#34;</span><span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check tackles-2.png" alt="" /><!-- -->
+For the final defence metric I&rsquo;m going to explore saves per goal, which you&rsquo;d expect to increase with the number of goals conceded as it shows how much pressure the team is under, likely leading to mistakes. As predicted, there&rsquo;s a slight linear trend between the two, with the graph also highlighting the low number of saves and goals conceded by Manchester Utd in recent seasons, under their more defensive approach spearheaded by the now absent Jose Mourinho.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">saves_labels <span class="o">&lt;-</span> team_defence <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>team <span class="o">%in%</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Manchester United&#34;</span><span class="p">,</span> <span class="s">&#34;Chelsea&#34;</span><span class="p">,</span> <span class="s">&#34;Burnley&#34;</span><span class="p">))</span>
+
+team_defence <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> total_saves<span class="p">,</span> y <span class="o">=</span> totals_goals_conceded<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>aes<span class="p">(</span>col <span class="o">=</span> Season<span class="p">))</span> <span class="o">+</span>
+  expand_limits<span class="p">(</span>x <span class="o">=</span> <span class="m">0</span><span class="p">,</span> y <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">+</span>
+  labs<span class="p">(</span>x <span class="o">=</span> <span class="s">&#34;Average number of saves, per 90 minutes&#34;</span><span class="p">,</span>
+       y <span class="o">=</span> <span class="s">&#34;Average goals conceded, per 90 minutes&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;Number of saves however does appear to\n upwardly trend with conceding goals&#34;</span><span class="p">)</span> <span class="o">+</span>
+  geom_text<span class="p">(</span>data <span class="o">=</span> saves_labels<span class="p">,</span> aes<span class="p">(</span>x <span class="o">=</span> total_saves<span class="p">,</span> y <span class="o">=</span> totals_goals_conceded<span class="p">,</span> label <span class="o">=</span> team<span class="p">),</span> hjust <span class="o">=</span> <span class="m">0.5</span><span class="p">,</span> check_overlap <span class="o">=</span> <span class="bp">T</span><span class="p">,</span> vjust <span class="o">=</span> <span class="m">1</span><span class="p">,</span> nudge_x <span class="o">=</span> <span class="m">-1</span><span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Check saves per goal-1.png" alt="" /><!-- -->
+Now that we&rsquo;vce had a quick look at the data its time to build some models, starting with a simple linear regression and a random forest, with a parameter grid. Firstly however I need to split the data into test and training sets, and then further split the training sets into 5 fold cross validation sets, each with 5 repeats to provide averages for our assessment statistics.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">attack_final <span class="o">&lt;-</span> team_attack <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>shot_ratio <span class="o">=</span> shots_on_target <span class="o">/</span> shots_off_target<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span>goals_scored<span class="p">,</span> everything<span class="p">(),</span><span class="o">-</span>team<span class="p">,</span> <span class="o">-</span>Stats<span class="p">,</span> <span class="o">-</span>Season<span class="p">)</span>
+
+defence_final <span class="o">&lt;-</span> team_defence <span class="o">%&gt;%</span>
+  select<span class="p">(</span>totals_goals_conceded<span class="p">,</span> everything<span class="p">(),</span><span class="o">-</span>team<span class="p">,</span> <span class="o">-</span>Stats<span class="p">,</span> <span class="o">-</span>Season<span class="p">)</span>
+
+<span class="kp">set.seed</span><span class="p">(</span><span class="m">101</span><span class="p">)</span>
+
+<span class="c1">#create initital train test splits and then produce 5 fold cross validation sets</span>
+
+attack_split <span class="o">&lt;-</span> initial_split<span class="p">(</span>attack_final<span class="p">)</span>
+
+defence_split <span class="o">&lt;-</span> initial_split<span class="p">(</span>defence_final<span class="p">)</span>
+
+attack_train <span class="o">&lt;-</span> training<span class="p">(</span>attack_split<span class="p">)</span>
+
+attack_test <span class="o">&lt;-</span> testing<span class="p">(</span>attack_split<span class="p">)</span>
+
+defence_train <span class="o">&lt;-</span> training<span class="p">(</span>defence_split<span class="p">)</span>
+
+defence_test <span class="o">&lt;-</span> testing<span class="p">(</span>defence_split<span class="p">)</span>
+
+attack_cross <span class="o">&lt;-</span> vfold_cv<span class="p">(</span>attack_train<span class="p">,</span> v <span class="o">=</span> <span class="m">5</span><span class="p">,</span> repeats <span class="o">=</span> <span class="m">5</span><span class="p">)</span>
+
+defence_cross <span class="o">&lt;-</span> vfold_cv<span class="p">(</span>defence_train<span class="p">,</span> v <span class="o">=</span> <span class="m">5</span><span class="p">,</span> repeats <span class="o">=</span> <span class="m">5</span><span class="p">)</span></code></pre></div>
+<p>With the data prepped its time to make the model objects, using the new interface provided by the parsnip package. In addition, this package allows easy creation of parameter grids, which can then be combined with the base model as a nested column of a dataframe.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">linear_mod <span class="o">&lt;-</span> linear_reg<span class="p">()</span> <span class="o">%&gt;%</span>
+  set_engine<span class="p">(</span><span class="s">&#34;lm&#34;</span><span class="p">)</span>
+
+random_forest <span class="o">&lt;-</span> rand_forest<span class="p">(</span>mode <span class="o">=</span> <span class="s">&#34;regression&#34;</span><span class="p">,</span> mtry <span class="o">=</span> varying<span class="p">(),</span> trees <span class="o">=</span> varying<span class="p">(),</span> min_n <span class="o">=</span> varying<span class="p">())</span> <span class="o">%&gt;%</span>
+  set_engine<span class="p">(</span><span class="s">&#34;ranger&#34;</span><span class="p">,</span> importance <span class="o">=</span> <span class="s">&#34;impurity&#34;</span><span class="p">)</span>
+
+forest_models <span class="o">&lt;-</span> grid_random<span class="p">(</span>
+  trees <span class="o">%&gt;%</span> range_set<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1000</span><span class="p">,</span> <span class="m">10000</span><span class="p">)),</span>
+  min_n <span class="o">%&gt;%</span> range_set<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="m">12</span><span class="p">)),</span>
+  mtry <span class="o">%&gt;%</span> range_set<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">5</span><span class="p">,</span><span class="m">9</span><span class="p">)),</span>
+  size <span class="o">=</span> <span class="m">5</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>specs <span class="o">=</span> <span class="kp">merge</span><span class="p">(</span><span class="m">.</span><span class="p">,</span> random_forest<span class="p">))</span>
+
+full_attack_rf <span class="o">&lt;-</span> crossing<span class="p">(</span>attack_cross<span class="p">,</span> forest_models<span class="p">)</span>
+
+full_defence_rf <span class="o">&lt;-</span> crossing<span class="p">(</span>defence_cross<span class="p">,</span> forest_models<span class="p">)</span></code></pre></div>
+<p>Now its time to fit the models and calculate the assessment statistics, where I&rsquo;ll be using the standard combo of R2 and RMSE to judge the models.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">attack_form <span class="o">&lt;-</span>formula<span class="p">(</span>goals_scored <span class="o">~</span> <span class="m">.</span><span class="p">)</span>
+
+defence_form <span class="o">&lt;-</span> formula<span class="p">(</span>totals_goals_conceded <span class="o">~</span> <span class="m">.</span><span class="p">)</span>
+
+fit_model <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span><span class="kp">split</span><span class="p">,</span> spec<span class="p">,</span> form<span class="p">)</span> <span class="p">{</span>
+fit<span class="p">(</span>
+object <span class="o">=</span> spec<span class="p">,</span>
+formula <span class="o">=</span> form<span class="p">,</span>
+data <span class="o">=</span> analysis<span class="p">(</span><span class="kp">split</span><span class="p">)</span> <span class="c1"># &lt;- pull out training set</span>
+<span class="p">)</span>
+<span class="p">}</span>
+
+attack_lm <span class="o">&lt;-</span> attack_cross <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map<span class="p">(</span>splits<span class="p">,</span> fit_model<span class="p">,</span> linear_mod<span class="p">,</span> attack_form<span class="p">))</span>
+
+defence_lm <span class="o">&lt;-</span> defence_cross <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map<span class="p">(</span>splits<span class="p">,</span> fit_model<span class="p">,</span> linear_mod<span class="p">,</span> defence_form<span class="p">))</span>
+
+attack_rf <span class="o">&lt;-</span> full_attack_rf <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> specs<span class="p">,</span> <span class="o">~</span>fit_model<span class="p">(</span>split <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> spec <span class="o">=</span> <span class="m">.</span>y<span class="p">,</span> form <span class="o">=</span> attack_form<span class="p">)))</span>
+
+defence_rf <span class="o">&lt;-</span> full_defence_rf <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> specs<span class="p">,</span> <span class="o">~</span>fit_model<span class="p">(</span>split <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> spec <span class="o">=</span> <span class="m">.</span>y<span class="p">,</span> form <span class="o">=</span> defence_form<span class="p">)))</span></code></pre></div>
+<p>Now that we have the models built its time to make some predictions and asses the accuracy, using a couple of functions to pull out the appropriate data and either perform the prediction or assess it.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">compute_pred <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span><span class="kp">split</span><span class="p">,</span> model<span class="p">)</span> <span class="p">{</span>
+<span class="c1"># Extract the assessment set</span>
+assess <span class="o">&lt;-</span> assessment<span class="p">(</span><span class="kp">split</span><span class="p">)</span>
+<span class="c1"># Compute predictions (a df is returned)</span>
+pred <span class="o">&lt;-</span> predict<span class="p">(</span>model<span class="p">,</span> new_data <span class="o">=</span> assess<span class="p">)</span>
+bind_cols<span class="p">(</span>assess<span class="p">,</span> pred<span class="p">)</span>
+<span class="p">}</span>
+
+compute_perf <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>pred_df<span class="p">,</span> <span class="kp">t</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1"># Create a function that calculates rmse and rsq and returns a data frame</span>
+t <span class="o">&lt;-</span> enquo<span class="p">(</span><span class="kp">t</span><span class="p">)</span>
+numeric_metrics <span class="o">&lt;-</span> metric_set<span class="p">(</span>rmse<span class="p">,</span> rsq<span class="p">)</span>
+numeric_metrics<span class="p">(</span>
+pred_df<span class="p">,</span>
+truth <span class="o">=</span> <span class="o">!!</span><span class="kp">t</span><span class="p">,</span>
+estimate <span class="o">=</span> <span class="m">.</span>pred
+<span class="p">)</span>
+<span class="p">}</span>
+
+attack_lm <span class="o">&lt;-</span> attack_lm <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> goals_scored<span class="p">)))</span>
+
+defence_lm <span class="o">&lt;-</span> defence_lm <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> totals_goals_conceded<span class="p">)))</span>
+
+attack_rf <span class="o">&lt;-</span> attack_rf <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> goals_scored<span class="p">)))</span>
+
+defence_rf <span class="o">&lt;-</span> defence_rf <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> totals_goals_conceded<span class="p">)))</span></code></pre></div>
+<p>As can be seen from the below charts, for both datasets the linear model appears to outshine any of the random forest models for both R2 and RMSE.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">error_sum <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span> a <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> b <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> <span class="kt">c</span> <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="p">{</span>
+
+<span class="kr">if</span><span class="p">(</span><span class="kp">is.null</span><span class="p">(</span>a<span class="p">)){</span>
+
+  x <span class="o">%&gt;%</span>
+unnest<span class="p">(</span>perf<span class="p">)</span> <span class="o">%&gt;%</span>
+group_by<span class="p">(</span><span class="m">.</span>metric<span class="p">)</span> <span class="o">%&gt;%</span>
+summarise<span class="p">(</span>
+<span class="m">.</span>avg <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span><span class="m">.</span>estimate<span class="p">),</span>
+<span class="m">.</span>sd <span class="o">=</span> sd<span class="p">(</span><span class="m">.</span>estimate<span class="p">)</span>
+<span class="p">)}</span> <span class="kp">else</span><span class="p">{</span>  
+a <span class="o">&lt;-</span> ensym<span class="p">(</span>a<span class="p">)</span>
+b <span class="o">&lt;-</span> ensym<span class="p">(</span>b<span class="p">)</span>
+<span class="kt">c</span> <span class="o">&lt;-</span> ensym<span class="p">(</span><span class="kt">c</span><span class="p">)</span>
+
+x <span class="o">%&gt;%</span>
+unnest<span class="p">(</span>perf<span class="p">)</span> <span class="o">%&gt;%</span>
+group_by<span class="p">(</span><span class="m">.</span>metric<span class="p">,</span> <span class="o">!!</span>a<span class="p">,</span> <span class="o">!!</span>b<span class="p">,</span> <span class="o">!!</span><span class="kt">c</span><span class="p">)</span> <span class="o">%&gt;%</span>
+summarise<span class="p">(</span>
+<span class="m">.</span>avg <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span><span class="m">.</span>estimate<span class="p">),</span>
+<span class="m">.</span>sd <span class="o">=</span> sd<span class="p">(</span><span class="m">.</span>estimate<span class="p">))</span>
+<span class="p">}</span>
+<span class="p">}</span>
+
+attack_lm_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>attack_lm<span class="p">)</span>
+
+defence_lm_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>defence_lm<span class="p">)</span>
+
+attack_rf_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>attack_rf<span class="p">,</span> <span class="s">&#34;trees&#34;</span><span class="p">,</span> <span class="s">&#34;min_n&#34;</span><span class="p">,</span> <span class="s">&#34;mtry&#34;</span><span class="p">)</span>
+
+defence_rf_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>defence_rf<span class="p">,</span> <span class="s">&#34;trees&#34;</span><span class="p">,</span> <span class="s">&#34;min_n&#34;</span><span class="p">,</span> <span class="s">&#34;mtry&#34;</span><span class="p">)</span>
+
+attack_error <span class="o">&lt;-</span> attack_lm_error <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>method <span class="o">=</span> <span class="s">&#34;lm&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">(</span>unite<span class="p">(</span>attack_rf_error<span class="p">,</span> method<span class="p">,</span> trees<span class="p">,</span> min_n<span class="p">,</span> mtry<span class="p">,</span> sep <span class="o">=</span> <span class="s">&#34;-&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymin <span class="o">=</span> <span class="m">.</span>avg <span class="o">-</span> <span class="m">.</span>sd<span class="p">,</span>
+         ymax <span class="o">=</span> <span class="m">.</span>avg <span class="o">+</span> <span class="m">.</span>sd<span class="p">)</span>
+
+defence_error <span class="o">&lt;-</span> defence_lm_error <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>method <span class="o">=</span> <span class="s">&#34;lm&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">(</span>unite<span class="p">(</span>defence_rf_error<span class="p">,</span> method<span class="p">,</span> trees<span class="p">,</span> min_n<span class="p">,</span> mtry<span class="p">,</span> sep <span class="o">=</span> <span class="s">&#34;-&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymin <span class="o">=</span> <span class="m">.</span>avg <span class="o">-</span> <span class="m">.</span>sd<span class="p">,</span>
+         ymax <span class="o">=</span> <span class="m">.</span>avg <span class="o">+</span> <span class="m">.</span>sd<span class="p">)</span>
+
+attack_error <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> method<span class="p">,</span> y <span class="o">=</span> <span class="m">.</span>avg<span class="p">,</span> col <span class="o">=</span> method<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  geom_errorbar<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> ymin<span class="p">,</span> ymax <span class="o">=</span> ymax<span class="p">))</span> <span class="o">+</span>
+  facet_wrap<span class="p">(</span><span class="o">~</span><span class="m">.</span>metric<span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Extract error and plot-1.png" alt="" /><!-- --></p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">defence_error <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> method<span class="p">,</span> y <span class="o">=</span> <span class="m">.</span>avg<span class="p">,</span> col <span class="o">=</span> method<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  geom_errorbar<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> ymin<span class="p">,</span> ymax <span class="o">=</span> ymax<span class="p">))</span> <span class="o">+</span>
+  facet_wrap<span class="p">(</span><span class="o">~</span><span class="m">.</span>metric<span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Extract error and plot-2.png" alt="" /><!-- --></p>
+
+<p>One of the better aspects of the random forest model is that we can look to see what variables had the biggest impact, which for regression models in ranger is given by which variables accounted for the largest decrease in variation at each node split. As can be seen from the below charts, chances, shots on target and assists were the most important for predicting goals scored and blocks, saves and clearances for predicting goals conceded.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">attacking_variables <span class="o">&lt;-</span> tibble<span class="p">(</span>variable <span class="o">=</span> <span class="kp">names</span><span class="p">(</span>attack_final<span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="m">11</span><span class="p">]))</span>
+
+attacking_importance <span class="o">&lt;-</span> attack_rf <span class="o">%&gt;%</span>
+  select<span class="p">(</span>model<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="m">.</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="s">&#34;fit&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="s">&#34;variable.importance&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">()</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>attacking_variables<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">6</span><span class="p">,</span> everything<span class="p">())</span> <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>model<span class="p">,</span> score<span class="p">,</span> <span class="m">2</span><span class="o">:</span><span class="m">6</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>variable<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>mean_var <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>score<span class="p">)</span><span class="o">/</span><span class="m">100</span><span class="p">)</span>
+
+attacking_importance <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>variable <span class="o">=</span> str_to_sentence<span class="p">(</span>str_replace_all<span class="p">(</span>variable<span class="p">,</span> <span class="s">&#34;_&#34;</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">)),</span>
+         variable <span class="o">=</span> fct_reorder<span class="p">(</span>variable<span class="p">,</span> <span class="o">-</span>mean_var<span class="p">))</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> variable<span class="p">,</span> y <span class="o">=</span> mean_var<span class="p">,</span> col <span class="o">=</span> reorder<span class="p">(</span>variable<span class="p">,</span> mean_var<span class="p">)))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>show.legend <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>y <span class="o">=</span> <span class="s">&#34;Decrease in MSE at each node&#34;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&#34;Variable&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;Assists, shots and chances have the most impact\n on predicting goals scored&#34;</span><span class="p">,</span>
+       col <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">)</span> <span class="o">+</span>
+  scale_y_continuous<span class="p">(</span>labels <span class="o">=</span> scales<span class="o">::</span>percent_format<span class="p">())</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Produce variable importance plot for rf models-1.png" alt="" /><!-- --></p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">defensive_variables <span class="o">&lt;-</span> tibble<span class="p">(</span>variable <span class="o">=</span> <span class="kp">names</span><span class="p">(</span>team_defence<span class="p">[</span><span class="m">2</span><span class="o">:</span><span class="m">10</span><span class="p">]))</span>
+
+defensive_importance <span class="o">&lt;-</span> defence_rf <span class="o">%&gt;%</span>
+  select<span class="p">(</span>model<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="m">.</span><span class="p">[[</span><span class="m">1</span><span class="p">]]</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="s">&#34;fit&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  map<span class="p">(</span><span class="s">&#34;variable.importance&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">()</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>defensive_variables<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">6</span><span class="p">,</span> everything<span class="p">())</span> <span class="o">%&gt;%</span>
+  gather<span class="p">(</span>model<span class="p">,</span> score<span class="p">,</span> <span class="m">2</span><span class="o">:</span><span class="m">6</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  group_by<span class="p">(</span>variable<span class="p">)</span> <span class="o">%&gt;%</span>
+  summarise<span class="p">(</span>mean_var <span class="o">=</span> <span class="kp">mean</span><span class="p">(</span>score<span class="p">)</span><span class="o">/</span><span class="m">100</span><span class="p">)</span>
+
+defensive_importance <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>variable <span class="o">=</span> str_to_sentence<span class="p">(</span>str_replace_all<span class="p">(</span>variable<span class="p">,</span> <span class="s">&#34;_&#34;</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">)),</span>
+         variable <span class="o">=</span> fct_reorder<span class="p">(</span>variable<span class="p">,</span> <span class="o">-</span>mean_var<span class="p">))</span> <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> variable<span class="p">,</span> y <span class="o">=</span> mean_var<span class="p">,</span> col <span class="o">=</span> reorder<span class="p">(</span>variable<span class="p">,</span> mean_var<span class="p">)))</span> <span class="o">+</span>
+  geom_point<span class="p">(</span>show.legend <span class="o">=</span> <span class="bp">F</span><span class="p">)</span> <span class="o">+</span>
+  coord_flip<span class="p">()</span> <span class="o">+</span>
+  labs<span class="p">(</span>y <span class="o">=</span> <span class="s">&#34;Decrease in MSE at each node&#34;</span><span class="p">,</span>
+       x <span class="o">=</span> <span class="s">&#34;Variable&#34;</span><span class="p">,</span>
+       title <span class="o">=</span> <span class="s">&#34;Clearances and saves have the most impact\n on predicting goals conceded&#34;</span><span class="p">,</span>
+       col <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="p">)</span> <span class="o">+</span>
+  scale_y_continuous<span class="p">(</span>labels <span class="o">=</span> scales<span class="o">::</span>percent_format<span class="p">())</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Produce variable importance plot for rf models-2.png" alt="" /><!-- -->
+Due to the large amount of variation accounted for by only a few variables in each model a good way to proceed would be to run a ridge regression, which due to the penalty against low impact variables may be able to outperform the more simplistic linear regression. As with the other sets of models, the parsnip interface is used to both construct the model object and a paramter grid to test different penalty values. However, again there appears to be no benefit to this method over the linear regression model, making lm the best choice to go forwards with for this analysis.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">ridge_mod <span class="o">&lt;-</span> linear_reg<span class="p">(</span>penalty <span class="o">=</span> varying<span class="p">(),</span> mixture <span class="o">=</span> <span class="m">0</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  set_engine<span class="p">(</span><span class="s">&#34;glmnet&#34;</span><span class="p">)</span>
+  
+ridge_models <span class="o">&lt;-</span> grid_regular<span class="p">(</span>
+  penalty<span class="p">,</span> levels <span class="o">=</span> <span class="m">15</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>specs <span class="o">=</span> <span class="kp">merge</span><span class="p">(</span><span class="m">.</span><span class="p">,</span> ridge_mod<span class="p">))</span>
+
+full_attack_ridge <span class="o">&lt;-</span> crossing<span class="p">(</span>attack_cross<span class="p">,</span> ridge_models<span class="p">)</span>
+
+full_defence_ridge <span class="o">&lt;-</span> crossing<span class="p">(</span>defence_cross<span class="p">,</span> ridge_models<span class="p">)</span>
+
+attack_ridge <span class="o">&lt;-</span> full_attack_ridge <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> specs<span class="p">,</span> <span class="o">~</span>fit_model<span class="p">(</span>split <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> spec <span class="o">=</span> <span class="m">.</span>y<span class="p">,</span> form <span class="o">=</span> attack_form<span class="p">)))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> goals_scored<span class="p">)))</span>
+
+defence_ridge <span class="o">&lt;-</span> full_defence_ridge <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>model <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> specs<span class="p">,</span> <span class="o">~</span>fit_model<span class="p">(</span>split <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> spec <span class="o">=</span> <span class="m">.</span>y<span class="p">,</span> form <span class="o">=</span> defence_form<span class="p">)))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>pred <span class="o">=</span> map2<span class="p">(</span>splits<span class="p">,</span> model<span class="p">,</span> compute_pred<span class="p">),</span>
+         perf <span class="o">=</span> map<span class="p">(</span>pred<span class="p">,</span> <span class="o">~</span>compute_perf<span class="p">(</span>pred_df <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span> t <span class="o">=</span> totals_goals_conceded<span class="p">)))</span>
+
+attack_ridge_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>attack_ridge<span class="p">,</span> <span class="s">&#34;penalty&#34;</span><span class="p">,</span><span class="s">&#34;penalty&#34;</span><span class="p">,</span><span class="s">&#34;penalty&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>penalty <span class="o">=</span> <span class="kp">as.character</span><span class="p">(</span>penalty<span class="p">))</span>
+
+defence_ridge_error <span class="o">&lt;-</span> error_sum<span class="p">(</span>defence_ridge<span class="p">,</span> <span class="s">&#34;penalty&#34;</span><span class="p">,</span><span class="s">&#34;penalty&#34;</span><span class="p">,</span><span class="s">&#34;penalty&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>penalty <span class="o">=</span> <span class="kp">as.character</span><span class="p">(</span>penalty<span class="p">))</span>
+
+attack_ridge_error <span class="o">&lt;-</span> attack_lm_error <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>penalty <span class="o">=</span> <span class="s">&#34;lm&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">(</span>attack_ridge_error<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymin <span class="o">=</span> <span class="m">.</span>avg <span class="o">-</span> <span class="m">.</span>sd<span class="p">,</span>
+         ymax <span class="o">=</span> <span class="m">.</span>avg <span class="o">+</span> <span class="m">.</span>sd<span class="p">)</span>
+
+defence_ridge_error <span class="o">&lt;-</span> defence_lm_error <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>penalty <span class="o">=</span> <span class="s">&#34;lm&#34;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_rows<span class="p">(</span>defence_ridge_error<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>ymin <span class="o">=</span> <span class="m">.</span>avg <span class="o">-</span> <span class="m">.</span>sd<span class="p">,</span>
+         ymax <span class="o">=</span> <span class="m">.</span>avg <span class="o">+</span> <span class="m">.</span>sd<span class="p">)</span>
+
+attack_ridge_error <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> penalty<span class="p">,</span> y <span class="o">=</span> <span class="m">.</span>avg<span class="p">,</span> col <span class="o">=</span> penalty<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  geom_errorbar<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> ymin<span class="p">,</span> ymax <span class="o">=</span> ymax<span class="p">))</span> <span class="o">+</span>
+  facet_wrap<span class="p">(</span><span class="o">~</span><span class="m">.</span>metric<span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Attempt ridge regression and compare to lm-1.png" alt="" /><!-- --></p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">defence_ridge_error <span class="o">%&gt;%</span>
+  ggplot<span class="p">(</span>aes<span class="p">(</span>x <span class="o">=</span> penalty<span class="p">,</span> y <span class="o">=</span> <span class="m">.</span>avg<span class="p">,</span> col <span class="o">=</span> penalty<span class="p">))</span> <span class="o">+</span>
+  geom_point<span class="p">()</span> <span class="o">+</span>
+  geom_errorbar<span class="p">(</span>aes<span class="p">(</span>ymin <span class="o">=</span> ymin<span class="p">,</span> ymax <span class="o">=</span> ymax<span class="p">))</span> <span class="o">+</span>
+  facet_wrap<span class="p">(</span><span class="o">~</span><span class="m">.</span>metric<span class="p">)</span></code></pre></div>
+<p><img src="Part_2_-_EDA_and_modelling_files/figure-html/Attempt ridge regression and compare to lm-2.png" alt="" /><!-- -->
+The final stage of this section is to fit the a linear regression model to the full training data set and test its predictive capabiltities on the unseen test dataset. For the attacking dataset the lm showed an error of ~ 0.5 goals, covering around 91% of the variation in the dataset. For the defensive dataset the linear model showed an error of ~ 0.44 goals per game, covering around 93% variation. All in all these models seem appropriate to run with for this analysis, which I&rsquo;ll be utilising them in combination with some aggregated player data to try and predict some outcomes of upcoming matches!</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">attack_final_lm <span class="o">&lt;-</span> fit<span class="p">(</span>object <span class="o">=</span> linear_mod<span class="p">,</span>
+formula <span class="o">=</span> attack_form<span class="p">,</span>
+data <span class="o">=</span> attack_train<span class="p">)</span>
+
+attack_pred_final <span class="o">&lt;-</span> predict<span class="p">(</span>attack_final_lm<span class="p">,</span> select<span class="p">(</span>attack_test<span class="p">,</span> <span class="o">-</span>goals_scored<span class="p">))</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>select<span class="p">(</span>attack_test<span class="p">,</span> goals_scored<span class="p">))</span> <span class="o">%&gt;%</span>
+  compute_perf<span class="p">(</span><span class="m">.</span><span class="p">,</span> goals_scored<span class="p">)</span>
+
+defence_final_lm <span class="o">&lt;-</span> fit<span class="p">(</span>object <span class="o">=</span> linear_mod<span class="p">,</span>
+formula <span class="o">=</span> defence_form<span class="p">,</span>
+data <span class="o">=</span> defence_train<span class="p">)</span>
+
+defence_pred_final <span class="o">&lt;-</span> predict<span class="p">(</span>defence_final_lm<span class="p">,</span> select<span class="p">(</span>defence_test<span class="p">,</span> <span class="o">-</span>totals_goals_conceded<span class="p">))</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>select<span class="p">(</span>defence_test<span class="p">,</span> totals_goals_conceded<span class="p">))</span> <span class="o">%&gt;%</span>
+  compute_perf<span class="p">(</span><span class="m">.</span><span class="p">,</span> totals_goals_conceded<span class="p">)</span></code></pre></div>
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/rlouden.netlify.com/post/intro___part_1_-_scraping/" data-toggle="tooltip" data-placement="top" title="EPL scraping">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="unsupervised-learnings.co.uk">Rich Louden</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            0001
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/rlouden.netlify.com/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/rlouden.netlify.com/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+

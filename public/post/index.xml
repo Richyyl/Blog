@@ -25,7 +25,7 @@ As before, first thing to do is load the required packages, for this piece the r
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</guid>
-      <description>###This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+      <description>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
 Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</description>
     </item>
     

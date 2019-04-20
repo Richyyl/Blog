@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>EPL scraping - Upsupervised Learnings</title>
+  <meta property="og:title" content="EPL scraping" />
+  <meta name="twitter:title" content="EPL scraping" />
+  <meta name="description" content="###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+ Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches
+ Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.">
+  <meta property="og:description" content="###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+ Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches
+ Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.">
+  <meta name="twitter:description" content="###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have …">
+  <meta name="author" content="Rich Louden"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/rlouden.netlify.com\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/rlouden.netlify.com\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/post\/intro___part_1_-_scraping\/",
+          "name": "E p l scraping"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "EPL scraping",
+  "description" : "###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.\n Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches\n Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.",
+  "inLanguage" : "en",
+  "wordCount":  1481 ,
+  "datePublished" : "0001-01-01T00:00:00",
+  "dateModified" : "0001-01-01T00:00:00",
+  "image" : "\/rlouden.netlify.com\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/rlouden.netlify.com\/post\/intro___part_1_-_scraping\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/rlouden.netlify.com\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/rlouden.netlify.com\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="EPL scraping" />
+<meta property="og:description" content="###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+ Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches
+ Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.">
+<meta property="og:image" content="/rlouden.netlify.com/img/avatar.png" />
+<meta property="og:url" content="/rlouden.netlify.com/post/intro___part_1_-_scraping/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="EPL scraping" />
+  <meta name="twitter:description" content="###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have …">
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <link href='/rlouden.netlify.com/img/avatar.png' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/rlouden.netlify.com/post/intro___part_1_-_scraping/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/rlouden.netlify.com/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/rlouden.netlify.com/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/rlouden.netlify.com/css/syntax.css" /><link rel="stylesheet" href="/rlouden.netlify.com/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/rlouden.netlify.com/post/">Blog</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/rlouden.netlify.com/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/rlouden.netlify.com/">
+            <img class="avatar-img" src="/rlouden.netlify.com/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>EPL scraping</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on April 10, 19
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p>###This piece of work will focus on building a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.</p>
+
+<ul>
+<li><p>Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</p></li>
+
+<li><p>Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.</p></li>
+
+<li><p>Part three: Utilise the knowledge from part two to make predictions, using aggregated data from players to provide team statistics</p></li>
+</ul>
+
+<p>####This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / proactice piece on how to utilise aspects of selenium for other tricky websites.</p>
+
+<p>As always its best to start by loading any packages you might need. It&rsquo;s likely that websites may require dynamic scraping, as such a combination of Rselenium and Rvest will likely work best, along with the tidyverse for general data cleanup</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r"><span class="kn">library</span><span class="p">(</span>tidyverse<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>RSelenium<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>rvest<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>httr<span class="p">)</span></code></pre></div>
+<p>Right, first things first lets find a good site to scrape match results from and see what I can pull, this will also need to include match stats for the model.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">test_url <span class="o">&lt;-</span> <span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;st=101,103,104,106,117,111,211,213,313,312&#34;</span>
+
+rD <span class="o">&lt;-</span> rsDriver<span class="p">(</span>browser <span class="o">=</span> <span class="s">&#34;firefox&#34;</span><span class="p">,</span> port <span class="o">=</span> <span class="m">4444L</span><span class="p">)</span>
+remDr <span class="o">&lt;-</span> rD<span class="o">$</span>client
+remDr<span class="o">$</span>navigate<span class="p">(</span>test_url<span class="p">)</span>
+
+X <span class="o">&lt;-</span> read_html<span class="p">(</span>remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span>
+
+headers <span class="o">&lt;-</span> X <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jgckrp&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kp">unique</span><span class="p">()</span>
+
+Scores <span class="o">&lt;-</span> X <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;bRLgxe&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="m">10</span><span class="p">,</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename_all<span class="p">(</span>funs<span class="p">(</span><span class="kt">c</span><span class="p">(</span>headers<span class="p">)))</span>
+
+teams <span class="o">&lt;-</span> X <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;gRqZkC&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  enframe<span class="p">(</span>name <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Team <span class="o">=</span> value<span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>Scores<span class="p">)</span></code></pre></div>
+<p>Since all this works and pulls a nice set of data for a specific season and all clubs I can go ahead and start to iterate using map. For each season I&rsquo;m going to collect some attacking and defending data, which involves selecting the urls by hand, making a list and then iterating. I do plan to autimate this at a later point, but for now I&rsquo;m happy with doing it by hand since there arent many URLs.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">team_scraper <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>scrape_url<span class="p">){</span>
+
+remDr<span class="o">$</span>navigate<span class="p">(</span>scrape_url<span class="p">)</span>
+  
+<span class="kp">Sys.sleep</span><span class="p">(</span><span class="m">10</span><span class="p">)</span>
+
+page <span class="o">&lt;-</span> read_html<span class="p">(</span>remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span>
+  
+headers <span class="o">&lt;-</span> page <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jgckrp&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kp">unique</span><span class="p">()</span>
+
+Scores <span class="o">&lt;-</span> page <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;bRLgxe&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="m">10</span><span class="p">,</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename_all<span class="p">(</span>funs<span class="p">(</span><span class="kt">c</span><span class="p">(</span>headers<span class="p">)))</span>
+
+teams <span class="o">&lt;-</span> page <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;gRqZkC&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  enframe<span class="p">(</span>name <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Team <span class="o">=</span> value<span class="p">)</span> <span class="o">%&gt;%</span>
+  bind_cols<span class="p">(</span>Scores<span class="p">)</span>  
+   
+<span class="p">}</span>
+
+name_vec <span class="o">&lt;-</span> <span class="kp">paste0</span><span class="p">(</span><span class="kp">rep</span><span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="s">&#34;Attacking&#34;</span><span class="p">,</span> <span class="s">&#34;Defending&#34;</span><span class="p">),</span><span class="m">4</span><span class="p">),</span><span class="s">&#34;_&#34;</span><span class="p">,(</span><span class="kt">c</span><span class="p">(</span><span class="s">&#34;15&#34;</span><span class="p">,</span><span class="s">&#34;15&#34;</span><span class="p">,</span><span class="s">&#34;16&#34;</span><span class="p">,</span><span class="s">&#34;16&#34;</span><span class="p">,</span><span class="s">&#34;17&#34;</span><span class="p">,</span><span class="s">&#34;17&#34;</span><span class="p">,</span><span class="s">&#34;18&#34;</span><span class="p">,</span><span class="s">&#34;18&#34;</span><span class="p">)))</span>
+
+team_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&#34;</span><span class="p">,</span> <span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&#34;</span><span class="p">,</span> <span class="s">&#34;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&#34;</span><span class="p">)</span>
+
+team_url_df <span class="o">&lt;-</span> tibble<span class="p">(</span>x <span class="o">=</span> name_vec<span class="p">,</span>
+                 y <span class="o">=</span> team_urls<span class="p">)</span>
+
+team_url_list <span class="o">&lt;-</span> <span class="kp">as.list</span><span class="p">(</span>team_url_df<span class="o">$</span>y<span class="p">)</span> <span class="o">%&gt;%</span>
+  set_names<span class="p">(</span>team_url_df<span class="o">$</span>x<span class="p">)</span></code></pre></div>
+<p>Now the vectors and lists are all made up its time to collect the data!</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">rD <span class="o">&lt;-</span> rsDriver<span class="p">(</span>browser <span class="o">=</span> <span class="s">&#34;firefox&#34;</span><span class="p">,</span> port <span class="o">=</span> <span class="m">4464L</span><span class="p">)</span>
+remDr <span class="o">&lt;-</span> rD<span class="o">$</span>client
+
+match_stats <span class="o">&lt;-</span> map<span class="p">(</span>team_url_list<span class="p">,</span> team_scraper<span class="p">)</span>
+
+match_stats_df <span class="o">&lt;-</span> map_df<span class="p">(</span>match_stats<span class="p">,</span> bind_rows<span class="p">,</span> <span class="m">.i</span>d <span class="o">=</span> <span class="s">&#34;Data&#34;</span><span class="p">)</span>
+
+team_attack_stats <span class="o">&lt;-</span> match_stats_df <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>str_detect<span class="p">(</span>Data<span class="p">,</span> <span class="s">&#34;Attacking&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">12</span><span class="p">)</span>
+
+<span class="kp">sum</span><span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>team_attack_stats<span class="p">))</span>
+
+write_csv<span class="p">(</span>team_attack_stats<span class="p">,</span> <span class="s">&#34;team_attack_stats.csv&#34;</span><span class="p">)</span>
+
+team_defence_stats <span class="o">&lt;-</span> match_stats_df <span class="o">%&gt;%</span>
+  filter<span class="p">(</span>str_detect<span class="p">(</span>Data<span class="p">,</span> <span class="s">&#34;Defending&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">2</span><span class="p">,</span> <span class="m">13</span><span class="o">:</span><span class="m">22</span><span class="p">))</span>
+
+<span class="kp">sum</span><span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>team_defence_stats<span class="p">))</span>
+
+write_csv<span class="p">(</span>team_defence_stats<span class="p">,</span> <span class="s">&#34;team_defence_stats.csv&#34;</span><span class="p">)</span></code></pre></div>
+<p>Now we have all the club level data its time to collect the player level data! Luckily the same website holds player level information for the same stats, meaning I can utilise the same scraping infrastructure. However, it does need to be tweaked slightly to pull in the number of matches and also to scroll down the page and continue scraping, so we get all the players. As such, first thing to do is manually make a new list of URLs for the players and then test the old infrastructure to see where tweaks are required. Another issue after checked the data is that the website appears to not liek showing more thna 4 stats per player, or you start to get missing data. As such I&rsquo;ve had to replicate the URLS.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">player_table_vec <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Attacking_16&#34;</span><span class="p">,</span>  <span class="s">&#34;Attacking_17&#34;</span><span class="p">,</span><span class="s">&#34;Attacking_18&#34;</span><span class="p">,</span> <span class="s">&#34;Defending_16&#34;</span><span class="p">,</span> <span class="s">&#34;Defending_17&#34;</span><span class="p">,</span> <span class="s">&#34;Defending_18&#34;</span><span class="p">)</span>
+
+base_attacking_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">)</span>
+
+base_defending_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">,</span><span class="s">&#34;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&#34;</span><span class="p">)</span>
+
+first_four_stats_player_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">paste0</span><span class="p">(</span>base_attacking_urls<span class="p">,</span> <span class="s">&#34;101,103,104,105&#34;</span><span class="p">),</span> <span class="kp">paste0</span><span class="p">(</span>base_defending_urls<span class="p">,</span> <span class="s">&#34;312,307,401,402&#34;</span><span class="p">))</span>
+
+second_three_stats_player_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">paste0</span><span class="p">(</span>base_attacking_urls<span class="p">,</span> <span class="s">&#34;117,111,113&#34;</span><span class="p">),</span> <span class="kp">paste0</span><span class="p">(</span>base_defending_urls<span class="p">,</span> <span class="s">&#34;406,502,503&#34;</span><span class="p">))</span>
+
+final_two_stats_player_urls <span class="o">&lt;-</span> <span class="kt">c</span><span class="p">(</span><span class="kp">paste0</span><span class="p">(</span>base_attacking_urls<span class="p">,</span> <span class="s">&#34;211,212&#34;</span><span class="p">),</span> <span class="kp">paste0</span><span class="p">(</span>base_defending_urls<span class="p">,</span> <span class="s">&#34;602,604&#34;</span><span class="p">))</span>
+
+all_player_urls <span class="o">&lt;-</span> <span class="kt">list</span><span class="p">(</span>first_four_stats_player_urls<span class="p">,</span> second_three_stats_player_urls<span class="p">,</span> final_two_stats_player_urls<span class="p">)</span>
+
+player_url_list <span class="o">&lt;-</span> map<span class="p">(</span><span class="m">.</span>x <span class="o">=</span> all_player_urls<span class="p">,</span> <span class="o">~</span><span class="kp">as.list</span><span class="p">(</span><span class="m">.</span>x<span class="p">)</span> <span class="o">%&gt;%</span>
+                         set_names<span class="p">(</span>player_table_vec<span class="p">))</span>
+
+rD <span class="o">&lt;-</span> rsDriver<span class="p">(</span>browser <span class="o">=</span> <span class="s">&#34;firefox&#34;</span><span class="p">,</span> port <span class="o">=</span> <span class="m">4454L</span><span class="p">)</span>
+remDr <span class="o">&lt;-</span> rD<span class="o">$</span>client
+
+remDr<span class="o">$</span>navigate<span class="p">(</span>player_url_list<span class="p">[[</span><span class="m">1</span><span class="p">]][[</span><span class="m">1</span><span class="p">]])</span>
+
+Y <span class="o">&lt;-</span> read_html<span class="p">(</span>remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span>
+
+headers <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jgckrp&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kp">unique</span><span class="p">()</span>
+
+scores <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;bRLgxe&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="m">9</span><span class="p">,</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename_all<span class="p">(</span>funs<span class="p">(</span><span class="kt">c</span><span class="p">(</span>headers<span class="p">)))</span>
+
+players <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jPUbTB&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  enframe<span class="p">(</span>name <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Team <span class="o">=</span> value<span class="p">)</span>
+  
+games <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;gRUmwo&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="m">1</span><span class="p">,</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Games <span class="o">=</span> V1<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>Games <span class="o">=</span> str_extract<span class="p">(</span>Games<span class="p">,</span> <span class="s">&#34;^.{2}&#34;</span><span class="p">))</span>
+
+player_stats <span class="o">&lt;-</span> bind_cols<span class="p">(</span>players<span class="p">,</span> games<span class="p">,</span> scores<span class="p">)</span>
+
+scroll <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span><span class="s">&#39;css&#39;</span><span class="p">,</span> <span class="s">&#34;body&#34;</span><span class="p">)</span>
+scroll<span class="o">$</span>sendKeysToElement<span class="p">(</span><span class="kt">list</span><span class="p">(</span>key <span class="o">=</span> <span class="s">&#34;end&#34;</span><span class="p">))</span>
+
+more <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&#39;css selector&#39;</span><span class="p">,</span> <span class="s">&#34;span:nth-child(1) &gt; div&#34;</span><span class="p">)</span>
+more<span class="o">$</span>clickElement<span class="p">()</span></code></pre></div>
+<p>Now that we have the infrastructure pieces set it&rsquo;s time to build them up into a function! Sadly I had to resort to using a for loop within a  fucntion for this due to needing to load the URL once then scroll the page and then click the next button multiple times, without re-openeing the original URL. I&rsquo;m aware theres likely a much faster way to do this using map, so any feedback on that would be greatly welcomed! Also includes some error handling for the fact that the more button may dissapear.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">player_stats_final <span class="o">&lt;-</span> tibble<span class="p">()</span>
+
+player_scraper <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>scrape_url<span class="p">,</span> vec<span class="p">){</span>
+
+remDr<span class="o">$</span>navigate<span class="p">(</span>scrape_url<span class="p">)</span>
+<span class="kp">Sys.sleep</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>
+  
+<span class="kr">for</span><span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>vec<span class="p">)){</span>
+
+Y <span class="o">&lt;-</span> read_html<span class="p">(</span>remDr<span class="o">$</span>getPageSource<span class="p">()[[</span><span class="m">1</span><span class="p">]])</span>
+
+headers <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jgckrp&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kp">unique</span><span class="p">()</span>
+
+scores <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;bRLgxe&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="kp">length</span><span class="p">(</span>headers<span class="p">),</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename_all<span class="p">(</span>funs<span class="p">(</span><span class="kt">c</span><span class="p">(</span>headers<span class="p">)))</span>
+
+players <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;jPUbTB&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  enframe<span class="p">(</span>name <span class="o">=</span> <span class="kc">NULL</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Name <span class="o">=</span> value<span class="p">)</span>
+  
+games <span class="o">&lt;-</span> Y <span class="o">%&gt;%</span>
+  html_nodes<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[contains(concat( &#34; &#34;, @class, &#34; &#34; ), concat( &#34; &#34;, &#34;gRUmwo&#34;, &#34; &#34; ))]&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  html_text<span class="p">()</span> <span class="o">%&gt;%</span>
+  <span class="kt">matrix</span><span class="p">(</span>ncol<span class="o">=</span><span class="m">1</span><span class="p">,</span> byrow<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  as_tibble<span class="p">()</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Games <span class="o">=</span> V1<span class="p">)</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>Games <span class="o">=</span> str_extract<span class="p">(</span>Games<span class="p">,</span> <span class="s">&#34;^.{2}&#34;</span><span class="p">))</span>
+
+player_stats <span class="o">&lt;-</span> bind_cols<span class="p">(</span>players<span class="p">,</span> games<span class="p">,</span> scores<span class="p">)</span>
+
+player_stats_final <span class="o">&lt;-</span> bind_rows<span class="p">(</span>player_stats_final<span class="p">,</span> player_stats<span class="p">)</span> <span class="o">%&gt;%</span>
+  distinct<span class="p">(</span>Name<span class="p">,</span> <span class="m">.</span>keep_all <span class="o">=</span> <span class="bp">T</span><span class="p">)</span>
+
+scroll <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span><span class="s">&#39;css&#39;</span><span class="p">,</span> <span class="s">&#34;body&#34;</span><span class="p">)</span>
+
+scroll<span class="o">$</span>sendKeysToElement<span class="p">(</span><span class="kt">list</span><span class="p">(</span>key <span class="o">=</span> <span class="s">&#34;end&#34;</span><span class="p">))</span>
+
+check <span class="o">&lt;-</span> <span class="kp">suppressMessages</span><span class="p">(</span><span class="kp">try</span><span class="p">(</span>remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&#39;css selector&#39;</span><span class="p">,</span> <span class="s">&#34;span:nth-child(1) &gt; div&#34;</span><span class="p">),</span> silent <span class="o">=</span> <span class="kc">TRUE</span><span class="p">))</span>
+
+<span class="kr">if</span> <span class="p">(</span><span class="kp">any</span><span class="p">(</span><span class="kp">class</span><span class="p">(</span>check<span class="p">)</span> <span class="o">!=</span> <span class="s">&#34;try-error&#34;</span><span class="p">))</span> <span class="p">{</span>
+more <span class="o">&lt;-</span> remDr<span class="o">$</span>findElement<span class="p">(</span>using <span class="o">=</span> <span class="s">&#39;css selector&#39;</span><span class="p">,</span> <span class="s">&#34;span:nth-child(1) &gt; div&#34;</span><span class="p">)</span>
+more<span class="o">$</span>clickElement<span class="p">()}</span> <span class="kr">else</span> <span class="p">{</span>
+  <span class="kp">Sys.sleep</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kp">Sys.sleep</span><span class="p">(</span><span class="m">5</span><span class="p">)</span>
+
+<span class="p">}</span>
+<span class="kr">return</span><span class="p">(</span>player_stats_final<span class="p">)</span>
+<span class="p">}</span>
+
+rD <span class="o">&lt;-</span> rsDriver<span class="p">(</span>browser <span class="o">=</span> <span class="s">&#34;firefox&#34;</span><span class="p">,</span> port <span class="o">=</span> <span class="m">4456L</span><span class="p">)</span>
+remDr <span class="o">&lt;-</span> rD<span class="o">$</span>client
+remDr<span class="o">$</span>setWindowSize<span class="p">(</span><span class="m">1530L</span><span class="p">,</span> <span class="m">825L</span><span class="p">)</span>
+
+player_stats <span class="o">&lt;-</span> map<span class="p">(</span>player_url_list<span class="p">,</span> <span class="o">~</span>map<span class="p">(</span><span class="m">.</span>x<span class="p">,</span> <span class="o">~</span>player_scraper<span class="p">(</span>scrape_url <span class="o">=</span> <span class="m">.</span>x<span class="p">,</span>
+                                                      vec <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">20</span><span class="p">,</span><span class="m">1</span><span class="p">))))</span>
+
+table_joiner <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>w<span class="p">,</span> x<span class="p">,</span> y<span class="p">,</span> z<span class="p">){</span>
+
+a <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">1</span><span class="p">]][[</span>x<span class="p">]]</span>
+
+b <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">2</span><span class="p">]][[</span>x<span class="p">]]</span>
+
+<span class="kt">c</span> <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">3</span><span class="p">]][[</span>x<span class="p">]]</span>
+
+joined_frame_1 <span class="o">&lt;-</span> inner_join<span class="p">(</span>a<span class="p">,</span>b<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  inner_join<span class="p">(</span><span class="kt">c</span><span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>data <span class="o">=</span> <span class="s">&#34;Season_16&#34;</span><span class="p">)</span>
+
+d <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">1</span><span class="p">]][[</span>y<span class="p">]]</span>
+
+e <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">2</span><span class="p">]][[</span>y<span class="p">]]</span>
+
+f <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">3</span><span class="p">]][[</span>y<span class="p">]]</span>
+
+joined_frame_2 <span class="o">&lt;-</span> inner_join<span class="p">(</span>d<span class="p">,</span>e<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  inner_join<span class="p">(</span>f<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>data <span class="o">=</span> <span class="s">&#34;Season_17&#34;</span><span class="p">)</span>
+
+
+g <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">1</span><span class="p">]][[</span>z<span class="p">]]</span>
+
+h <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">2</span><span class="p">]][[</span>z<span class="p">]]</span>
+
+i <span class="o">&lt;-</span> w<span class="p">[[</span><span class="m">3</span><span class="p">]][[</span>z<span class="p">]]</span>
+
+joined_frame_3 <span class="o">&lt;-</span> inner_join<span class="p">(</span>g<span class="p">,</span>h<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  inner_join<span class="p">(</span>i<span class="p">,</span> by <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;Name&#34;</span><span class="p">,</span> <span class="s">&#34;Games&#34;</span><span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>data <span class="o">=</span> <span class="s">&#34;Season_18&#34;</span><span class="p">)</span>
+
+final_frame <span class="o">&lt;-</span> bind_rows<span class="p">(</span>joined_frame_1<span class="p">,</span> joined_frame_2<span class="p">,</span> joined_frame_3<span class="p">)</span> <span class="o">%&gt;%</span> select<span class="p">(</span><span class="kp">length</span><span class="p">(</span><span class="m">.</span><span class="p">),</span> everything<span class="p">())</span>
+  
+<span class="p">}</span>
+
+player_attack_stats <span class="o">&lt;-</span> table_joiner<span class="p">(</span>player_stats<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
+
+player_defence_stats <span class="o">&lt;-</span> table_joiner<span class="p">(</span>player_stats<span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">5</span><span class="p">,</span> <span class="m">6</span><span class="p">)</span>
+
+<span class="kp">sum</span><span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>player_attack_stats<span class="p">))</span>
+
+write_csv<span class="p">(</span>player_attack_stats<span class="p">,</span> <span class="s">&#34;player_attack_stats.csv&#34;</span><span class="p">)</span>
+
+<span class="kp">sum</span><span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>player_defence_stats<span class="p">))</span>
+
+write_csv<span class="p">(</span>player_defence_stats<span class="p">,</span> <span class="s">&#34;player_defence_stats.csv&#34;</span><span class="p">)</span></code></pre></div>
+<p>Now we have all the player and team data we need to scrape the final piece, ie what clubs do the players play for now. Luckily we&rsquo;re past the January transfer window so no one should be moving around, so I can just go ahead and scrape the current lost of EPL players and their associated clubs.</p>
+<div class="highlight"><pre class="chroma"><code class="language-r" data-lang="r">club_url <span class="o">&lt;-</span> <span class="s">&#34;https://www.worldfootball.net/players_list/eng-premier-league-2018-2019/nach-name/&#34;</span>
+
+page_vec <span class="o">&lt;-</span> <span class="kp">seq</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">12</span><span class="p">,</span><span class="m">1</span><span class="p">)</span>
+
+club_urls <span class="o">&lt;-</span> <span class="kp">paste0</span><span class="p">(</span>club_url<span class="p">,</span> page_vec<span class="p">)</span> <span class="o">%&gt;%</span>
+  <span class="kp">as.list</span><span class="p">()</span>
+
+club_scraper <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">){</span>
+  
+  club_table <span class="o">&lt;-</span> read_html<span class="p">(</span>x<span class="p">)</span> <span class="o">%&gt;%</span>
+    html_node<span class="p">(</span>xpath <span class="o">=</span> <span class="s">&#39;//*[@id=&#34;site&#34;]/div[3]/div[1]/div/div[3]/div/table&#39;</span><span class="p">)</span> <span class="o">%&gt;%</span>
+    html_table<span class="p">()</span>
+  
+<span class="p">}</span>
+
+current_clubs <span class="o">&lt;-</span> map<span class="p">(</span>club_urls<span class="p">,</span> club_scraper<span class="p">)</span>
+
+current_clubs_df <span class="o">&lt;-</span> map_df<span class="p">(</span>current_clubs<span class="p">,</span> bind_cols<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">3</span><span class="p">)</span> <span class="o">%&gt;%</span>
+  separate<span class="p">(</span>Player<span class="p">,</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#34;First&#34;</span><span class="p">,</span> <span class="s">&#34;Last&#34;</span><span class="p">),</span> sep <span class="o">=</span> <span class="s">&#34; &#34;</span><span class="p">,</span> extra <span class="o">=</span> <span class="s">&#34;merge&#34;</span><span class="p">)</span>
+
+single_names <span class="o">&lt;-</span> filter<span class="p">(</span>current_clubs_df<span class="p">,</span> <span class="kp">is.na</span><span class="p">(</span>Last<span class="p">))</span> <span class="o">%&gt;%</span>
+  rename<span class="p">(</span>Full_name <span class="o">=</span> First<span class="p">)</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">-2</span><span class="p">)</span>
+
+double_names <span class="o">&lt;-</span> filter<span class="p">(</span>current_clubs_df<span class="p">,</span> <span class="o">!</span><span class="kp">is.na</span><span class="p">(</span>Last<span class="p">))</span> <span class="o">%&gt;%</span>
+  mutate<span class="p">(</span>Full_name <span class="o">=</span> <span class="kp">paste0</span><span class="p">(</span>str_sub<span class="p">(</span>First<span class="p">,</span> <span class="m">1</span><span class="p">,</span> <span class="m">1</span><span class="p">),</span> <span class="s">&#34;.&#34;</span><span class="p">,</span> <span class="s">&#34; &#34;</span><span class="p">,</span> Last<span class="p">))</span> <span class="o">%&gt;%</span>
+  select<span class="p">(</span><span class="m">4</span><span class="p">,</span><span class="m">3</span><span class="p">)</span>
+
+all_players <span class="o">&lt;-</span> bind_rows<span class="p">(</span>double_names<span class="p">,</span> single_names<span class="p">)</span>
+
+write_csv<span class="p">(</span>all_players<span class="p">,</span> <span class="s">&#34;2019-19 players.csv&#34;</span><span class="p">)</span></code></pre></div>
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+            <li class="next">
+              <a href="/rlouden.netlify.com/post/part_2_-_eda_and_modelling/" data-toggle="tooltip" data-placement="top" title="EDA &amp; model building">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="unsupervised-learnings.co.uk">Rich Louden</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            0001
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/rlouden.netlify.com/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/rlouden.netlify.com/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -9,13 +9,13 @@ editor_options:
 
 
 
-<p>###This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.</p>
+<p>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.</p>
 <ul>
 <li><p>Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</p></li>
 <li><p>Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.</p></li>
 <li><p>Part three: Utilise the model from part two to make predictions, using aggregated data from players to provide team statistics</p></li>
 </ul>
-<p>####This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / practice piece on how to utilise aspects of selenium for other tricky websites.</p>
+<p>This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / practice piece on how to utilise aspects of selenium for other tricky websites.</p>
 <p>As always its best to start by loading any packages you might need. It’s likely that websites may require dynamic scraping, as such a combination of Rselenium and Rvest will likely work best, along with the tidyverse for general data cleanup.</p>
 <pre class="r"><code>library(tidyverse)
 library(RSelenium)
