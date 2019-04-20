@@ -1,21 +1,57 @@
 baseurl = "rlouden.netlify.com/"
-languageCode = "en-us"
-title = "A blog to document my foray into analytics and machine learning"
+DefaultContentLanguage = "en"
+#DefaultContentLanguage = "ja"
+title = "Beautiful Hugo"
 theme = "beautifulhugo"
-googleAnalytics = ""
-disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
-preserveTaxonomyNames = true
-footnotereturnlinkcontents = "↩"
+metaDataFormat = "yaml"
+pygmentsStyle = "trac"
+pygmentsUseClasses = true
+pygmentsCodeFences = true
+pygmentsCodefencesGuessSyntax = true
 
-[[social_icons]]
-id = "github"
-url = "https://github.com/Richyyl"
-title = "GitHub"
-icon = "fab fa-github"
 
-[[social_icons]]
-id = "twitter"
-url = "https://twitter.com/Richyyl"
-title = "Twitter"
-icon = "fab fa-twitter"
+[Params]
+  homeTitle = "Upsupervised Learnings"
+  subtitle = "A blog to showcase my foray into analytics and data science"
+  logo = "img/avatar-icon.png" # Expecting square dimensions
+  favicon = "img/favicon.ico"
+  dateFormat = "April 20, 2019"
+  commit = false
+  rss = false
+  comments = false
+  readingTime = false
+  wordCount = false
+  useHLJS = false
+  socialShare = false
+  delayDisqus = false
+  showRelatedPosts = false
+#  gcse = "012345678901234567890:abcdefghijk" # Get your code from google.com/cse. Make sure to go to "Look and Feel" and change Layout to "Full Width" and Theme to "Classic"
+
+#[[Params.bigimg]]
+#  src = "img/triangle.jpg"
+#  desc = "Triangle"
+#[[Params.bigimg]]
+#  src = "img/sphere.jpg"
+#  desc = "Sphere"
+#  # position: see values of CSS background-position.
+#  position = "center top"
+#[[Params.bigimg]]
+#  src = "img/hexagon.jpg"
+#  desc = "Hexagon"
+
+[Author]
+  name = "Rich Louden"
+  website = "unsupervised-learnings.co.uk"
+  github = "Richyll"
+  twitter = "Richyll"
+
+
+[[menu.main]]
+    name = "Blog"
+    url = "post/"
+    weight = 1
+
+[[menu.main]]
+    name = "About"
+    url = "page/about/"
+    weight = 3
