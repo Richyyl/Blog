@@ -1,0 +1,319 @@
+---
+title: "EPL scraping"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+<p>###This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.</p>
+<ul>
+<li><p>Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</p></li>
+<li><p>Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.</p></li>
+<li><p>Part three: Utilise the model from part two to make predictions, using aggregated data from players to provide team statistics</p></li>
+</ul>
+<p>####This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / practice piece on how to utilise aspects of selenium for other tricky websites.</p>
+<p>As always its best to start by loading any packages you might need. It’s likely that websites may require dynamic scraping, as such a combination of Rselenium and Rvest will likely work best, along with the tidyverse for general data cleanup.</p>
+<pre class="r"><code>library(tidyverse)
+library(RSelenium)
+library(rvest)
+library(httr)</code></pre>
+<p>Right, first things first lets find a good site to scrape match results from and see what I can pull, this will also need to include match stats for the model.</p>
+<pre class="r"><code>test_url &lt;- &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;st=101,103,104,106,117,111,211,213,313,312&quot;
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4444L)
+remDr &lt;- rD$client
+remDr$navigate(test_url)
+
+X &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+Scores &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=10, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+teams &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRqZkC&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value) %&gt;%
+  bind_cols(Scores)</code></pre>
+<p>Since all this works and pulls a nice set of data for a specific season and all clubs I can go ahead and start to iterate using purrr. For each season I’m going to collect some attacking and defending data, which involves selecting the urls by hand, making a list and then iterating. I do plan to automate this at a later point, but for now I’m happy with doing it by hand since there arent many URLs.</p>
+<pre class="r"><code>team_scraper &lt;- function(scrape_url){
+
+remDr$navigate(scrape_url)
+  
+Sys.sleep(10)
+
+page &lt;- read_html(remDr$getPageSource()[[1]])
+  
+headers &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+Scores &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=10, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+teams &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRqZkC&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value) %&gt;%
+  bind_cols(Scores)  
+   
+}
+
+name_vec &lt;- paste0(rep(c(&quot;Attacking&quot;, &quot;Defending&quot;),4),&quot;_&quot;,(c(&quot;15&quot;,&quot;15&quot;,&quot;16&quot;,&quot;16&quot;,&quot;17&quot;,&quot;17&quot;,&quot;18&quot;,&quot;18&quot;)))
+
+team_urls &lt;- c(&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;, &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;, &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;)
+
+team_url_df &lt;- tibble(x = name_vec,
+                 y = team_urls)
+
+team_url_list &lt;- as.list(team_url_df$y) %&gt;%
+  set_names(team_url_df$x)</code></pre>
+<p>Now the vectors and lists are all made up its time to collect the data!</p>
+<pre class="r"><code>rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4464L)
+remDr &lt;- rD$client
+
+match_stats &lt;- map(team_url_list, team_scraper)
+
+match_stats_df &lt;- map_df(match_stats, bind_rows, .id = &quot;Data&quot;)
+
+team_attack_stats &lt;- match_stats_df %&gt;%
+  filter(str_detect(Data, &quot;Attacking&quot;)) %&gt;%
+  select(1:12)
+
+sum(is.na(team_attack_stats))
+
+write_csv(team_attack_stats, &quot;team_attack_stats.csv&quot;)
+
+team_defence_stats &lt;- match_stats_df %&gt;%
+  filter(str_detect(Data, &quot;Defending&quot;)) %&gt;%
+  select(c(1:2, 13:22))
+
+sum(is.na(team_defence_stats))
+
+write_csv(team_defence_stats, &quot;team_defence_stats.csv&quot;)</code></pre>
+<p>Now we have all the club level data its time to collect the player level data! Luckily the same website holds player level information for the same stats, meaning I can utilise the same scraping infrastructure. However, it does need to be tweaked slightly to pull in the number of matches and also to scroll down the page and continue scraping, so we get all the players. As such, first thing to do is manually make a new list of URLs for the players and then test the old infrastructure to see where tweaks are required. Another issue after checked the data is that the website appears to not like showing more than 4 stats per player, or you start to get missing data. As such I’ve had to replicate the URLs.</p>
+<pre class="r"><code>player_table_vec &lt;- c(&quot;Attacking_16&quot;,  &quot;Attacking_17&quot;,&quot;Attacking_18&quot;, &quot;Defending_16&quot;, &quot;Defending_17&quot;, &quot;Defending_18&quot;)
+
+base_attacking_urls &lt;- c(&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;)
+
+base_defending_urls &lt;- c(&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;)
+
+first_four_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;101,103,104,105&quot;), paste0(base_defending_urls, &quot;312,307,401,402&quot;))
+
+second_three_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;117,111,113&quot;), paste0(base_defending_urls, &quot;406,502,503&quot;))
+
+final_two_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;211,212&quot;), paste0(base_defending_urls, &quot;602,604&quot;))
+
+all_player_urls &lt;- list(first_four_stats_player_urls, second_three_stats_player_urls, final_two_stats_player_urls)
+
+player_url_list &lt;- map(.x = all_player_urls, ~as.list(.x) %&gt;%
+                         set_names(player_table_vec))
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4454L)
+remDr &lt;- rD$client
+
+remDr$navigate(player_url_list[[1]][[1]])
+
+Y &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+scores &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=9, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+players &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jPUbTB&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value)
+  
+games &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRUmwo&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=1, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename(Games = V1) %&gt;%
+  mutate(Games = str_extract(Games, &quot;^.{2}&quot;))
+
+player_stats &lt;- bind_cols(players, games, scores)
+
+scroll &lt;- remDr$findElement(&#39;css&#39;, &quot;body&quot;)
+scroll$sendKeysToElement(list(key = &quot;end&quot;))
+
+more &lt;- remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;)
+more$clickElement()</code></pre>
+<p>Now that we have the infrastructure pieces set it’s time to build them up into a function! Sadly I had to resort to using a for loop within a function for this due to needing to load the URL once then scroll the page and then click the next button multiple times, without re-opening the original URL. I’m aware theres likely a much faster way to do this using purrr, so any feedback on that would be greatly welcomed! Also includes some error handling for the fact that the more button may dissapear.</p>
+<pre class="r"><code>player_stats_final &lt;- tibble()
+
+player_scraper &lt;- function(scrape_url, vec){
+
+remDr$navigate(scrape_url)
+Sys.sleep(5)
+  
+for(i in 1:length(vec)){
+
+Y &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+scores &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=length(headers), byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+players &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jPUbTB&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Name = value)
+  
+games &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRUmwo&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=1, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename(Games = V1) %&gt;%
+  mutate(Games = str_extract(Games, &quot;^.{2}&quot;))
+
+player_stats &lt;- bind_cols(players, games, scores)
+
+player_stats_final &lt;- bind_rows(player_stats_final, player_stats) %&gt;%
+  distinct(Name, .keep_all = T)
+
+scroll &lt;- remDr$findElement(&#39;css&#39;, &quot;body&quot;)
+
+scroll$sendKeysToElement(list(key = &quot;end&quot;))
+
+check &lt;- suppressMessages(try(remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;), silent = TRUE))
+
+if (any(class(check) != &quot;try-error&quot;)) {
+more &lt;- remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;)
+more$clickElement()} else {
+  Sys.sleep(1)
+}
+
+Sys.sleep(5)
+
+}
+return(player_stats_final)
+}
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4456L)
+remDr &lt;- rD$client
+remDr$setWindowSize(1530L, 825L)
+
+player_stats &lt;- map(player_url_list, ~map(.x, ~player_scraper(scrape_url = .x,
+                                                      vec = seq(1,20,1))))
+
+table_joiner &lt;- function(w, x, y, z){
+
+a &lt;- w[[1]][[x]]
+
+b &lt;- w[[2]][[x]]
+
+c &lt;- w[[3]][[x]]
+
+joined_frame_1 &lt;- inner_join(a,b, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(c, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_16&quot;)
+
+d &lt;- w[[1]][[y]]
+
+e &lt;- w[[2]][[y]]
+
+f &lt;- w[[3]][[y]]
+
+joined_frame_2 &lt;- inner_join(d,e, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(f, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_17&quot;)
+
+
+g &lt;- w[[1]][[z]]
+
+h &lt;- w[[2]][[z]]
+
+i &lt;- w[[3]][[z]]
+
+joined_frame_3 &lt;- inner_join(g,h, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(i, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_18&quot;)
+
+final_frame &lt;- bind_rows(joined_frame_1, joined_frame_2, joined_frame_3) %&gt;% select(length(.), everything())
+  
+}
+
+player_attack_stats &lt;- table_joiner(player_stats, 1, 2, 3)
+
+player_defence_stats &lt;- table_joiner(player_stats, 4, 5, 6)
+
+sum(is.na(player_attack_stats))
+
+write_csv(player_attack_stats, &quot;player_attack_stats.csv&quot;)
+
+sum(is.na(player_defence_stats))
+
+write_csv(player_defence_stats, &quot;player_defence_stats.csv&quot;)</code></pre>
+<p>Now we have all the player and team data we need to scrape the final piece, ie what clubs do the players play for now. Luckily we’re past the January transfer window so no one should be moving around, so I can just go ahead and scrape the current list of EPL players and their associated clubs. Once this is done we can move onto some EDA and starting to build the model using the parsnip package!</p>
+<pre class="r"><code>club_url &lt;- &quot;https://www.worldfootball.net/players_list/eng-premier-league-2018-2019/nach-name/&quot;
+
+page_vec &lt;- seq(1,12,1)
+
+club_urls &lt;- paste0(club_url, page_vec) %&gt;%
+  as.list()
+
+club_scraper &lt;- function(x){
+  
+  club_table &lt;- read_html(x) %&gt;%
+    html_node(xpath = &#39;//*[@id=&quot;site&quot;]/div[3]/div[1]/div/div[3]/div/table&#39;) %&gt;%
+    html_table()
+  
+}
+
+current_clubs &lt;- map(club_urls, club_scraper)
+
+current_clubs_df &lt;- map_df(current_clubs, bind_cols) %&gt;%
+  select(1,3) %&gt;%
+  separate(Player, c(&quot;First&quot;, &quot;Last&quot;), sep = &quot; &quot;, extra = &quot;merge&quot;)
+
+single_names &lt;- filter(current_clubs_df, is.na(Last)) %&gt;%
+  rename(Full_name = First) %&gt;%
+  select(-2)
+
+double_names &lt;- filter(current_clubs_df, !is.na(Last)) %&gt;%
+  mutate(Full_name = paste0(str_sub(First, 1, 1), &quot;.&quot;, &quot; &quot;, Last)) %&gt;%
+  select(4,3)
+
+all_players &lt;- bind_rows(double_names, single_names)
+
+write_csv(all_players, &quot;2019-19 players.csv&quot;)</code></pre>

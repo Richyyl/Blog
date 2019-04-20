@@ -1,33 +1,21 @@
 baseurl = "rlouden.netlify.com/"
 languageCode = "en-us"
 title = "A blog to document my foray into analytics and machine learning"
-theme = "hugo-xmin"
+theme = "beautifulhugo"
 googleAnalytics = ""
 disqusShortname = ""
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 preserveTaxonomyNames = true
 footnotereturnlinkcontents = "↩"
 
-[permalinks]
-    post = "/post/:year/:month/:day/:slug/"
-    note = "/note/:year/:month/:day/:slug/"
+[[social_icons]]
+id = "github"
+url = "https://github.com/Richyyl"
+title = "GitHub"
+icon = "fab fa-github"
 
-[[menu.main]]
-    name = "Home"
-    url = "rlouden.netlify.com/"
-    weight = 1
-[[menu.main]]
-    name = "Posts"
-    url = "/post/"
-    weight = 2
-[[menu.main]]
-    name = "GitHub"
-    url = "https://github.com/Richyyl"
-[[menu.main]]
-    name = "Twitter"
-    url = "https://twitter.com/richyyl"
-
-
-[params]
-    description = "A website built through Hugo and blogdown."
-    footer = "&copy; [Yihui Xie](https://yihui.name) 2017 -- 2019 | [Github](https://github.com/yihui) | [Twitter](https://twitter.com/xieyihui)"
+[[social_icons]]
+id = "twitter"
+url = "https://twitter.com/Richyyl"
+title = "Twitter"
+icon = "fab fa-twitter"

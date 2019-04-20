@@ -2,62 +2,61 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Home on A blog to document my foray into analytics and machine learning</title>
-    <link>/</link>
+    <link>/rlouden.netlify.com/</link>
     <description>Recent content in Home on A blog to document my foray into analytics and machine learning</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 14 Jun 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/rlouden.netlify.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Another Note on A blogdown Tutorial</title>
-      <link>/note/2017/06/14/another-note/</link>
+      <link>/rlouden.netlify.com/note/another-note/</link>
       <pubDate>Wed, 14 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>/note/2017/06/14/another-note/</guid>
+      <guid>/rlouden.netlify.com/note/another-note/</guid>
       <description>I just discovered an awesome tutorial on blogdown written by Alison. I have to admit this is the best blogdown tutorial I have seen so far.</description>
     </item>
     
     <item>
       <title>A Quick Note on Two Beautiful Websites</title>
-      <link>/note/2017/06/13/a-quick-note/</link>
+      <link>/rlouden.netlify.com/note/a-quick-note/</link>
       <pubDate>Tue, 13 Jun 2017 00:00:00 +0000</pubDate>
       
-      <guid>/note/2017/06/13/a-quick-note/</guid>
+      <guid>/rlouden.netlify.com/note/a-quick-note/</guid>
       <description>To me, the two most impressive websites based on blogdown are:
  Rob J Hyndman&amp;rsquo;s personal website. Live Free or Dichotomize by Lucy and Nick et al.  I&amp;rsquo;m sure there will be more.</description>
     </item>
     
     <item>
-      <title>A Plain Markdown Post</title>
-      <link>/post/2016/02/14/a-plain-markdown-post/</link>
-      <pubDate>Sun, 14 Feb 2016 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2016/02/14/a-plain-markdown-post/</guid>
-      <description>This sample post is mainly for blogdown users. If you do not use blogdown, you can skip the first section.
-1. Markdown or R Markdown This is a post written in plain Markdown (*.md) instead of R Markdown (*.Rmd). The major differences are:
- You cannot run any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```{r}); A plain Markdown post is rendered through Blackfriday, and an R Markdown document is compiled by rmarkdown and Pandoc.</description>
-    </item>
-    
-    <item>
-      <title>Lorem Ipsum</title>
-      <link>/post/2015/07/23/lorem-ipsum/</link>
-      <pubDate>Thu, 23 Jul 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2015/07/23/lorem-ipsum/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-Quisque mattis volutpat lorem vitae feugiat.</description>
-    </item>
-    
-    <item>
       <title>About Hugo XMin</title>
-      <link>/about/</link>
+      <link>/rlouden.netlify.com/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>/rlouden.netlify.com/about/</guid>
       <description>XMin is the first Hugo theme I have designed. The original reason that I wrote it was I needed a minimal example of Hugo themes when I was writing the blogdown book. Basically I wanted a simple theme that supports a navigation menu, a home page, other single pages, lists of pages, blog posts, categories, tags, and RSS. That is all. Nothing fancy. In terms of CSS and JavaScript, I really want to keep them minimal.</description>
+    </item>
+    
+    <item>
+      <title>EDA &amp; model building</title>
+      <link>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/</guid>
+      <description>####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</description>
+    </item>
+    
+    <item>
+      <title>EPL scraping</title>
+      <link>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/</guid>
+      <description>###This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</description>
     </item>
     
   </channel>
