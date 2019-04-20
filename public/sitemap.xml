@@ -16,7 +16,20 @@
   </url>
   
   <url>
+    <loc>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</loc>
+  </url>
+  
+  <url>
+    <loc>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</loc>
+  </url>
+  
+  <url>
     <loc>/rlouden.netlify.com/page/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/rlouden.netlify.com/post/</loc>
     <priority>0</priority>
   </url>
   

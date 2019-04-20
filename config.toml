@@ -1,7 +1,7 @@
 baseurl = "rlouden.netlify.com/"
 DefaultContentLanguage = "en"
 #DefaultContentLanguage = "ja"
-title = "Beautiful Hugo"
+title = "Upsupervised Learnings"
 theme = "beautifulhugo"
 metaDataFormat = "yaml"
 pygmentsStyle = "trac"
@@ -13,7 +13,7 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
-  logo = "img/avatar-icon.png" # Expecting square dimensions
+  logo = "img/avatar-icon.png"
   favicon = "img/favicon.ico"
   dateFormat = "April 20, 2019"
   commit = false
@@ -42,8 +42,8 @@ pygmentsCodefencesGuessSyntax = true
 [Author]
   name = "Rich Louden"
   website = "unsupervised-learnings.co.uk"
-  github = "Richyll"
-  twitter = "Richyll"
+  github = "https://github.com/Richyyl"
+  twitter = "https://twitter.com/Richyyl"
 
 
 [[menu.main]]

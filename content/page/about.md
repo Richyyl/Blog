@@ -1,16 +1,15 @@
 ---
 comments: false
-subtitle: Why you'd want to go on a date with me
 title: About me
 ---
 
-My name is Inigo Montoya. I have the following qualities:
+Hi there, my name is Rich, not Richard, that brings back memories of doing something bad during childhood!
 
-- I rock a great mustache
-- I'm extremely loyal to my family
+Things about me:
 
-What else do you need?
+- I love science and the wonders of life
+- I find plants amazingly interesting
+- I love coding and analysing data
+- I have a PhD in molecular biology
 
-### my history
-
-To be honest, I'm having some trouble remembering right now, so why don't you just watch [my movie](http://en.wikipedia.org/wiki/The_Princess_Bride_%28film%29) and it will answer **all** your questions.
+If you've eneded up at this site I'm not sure why, but I hope you gain something from my mad stumblings into learning new techniques around data science!

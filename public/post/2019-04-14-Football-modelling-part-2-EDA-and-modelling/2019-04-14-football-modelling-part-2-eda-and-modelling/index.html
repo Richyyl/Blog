@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>EDA &amp; model building - Upsupervised Learnings</title>
+  <meta property="og:title" content="EDA &amp; model building" />
+  <meta name="twitter:title" content="EDA &amp; model building" />
+  <meta name="description" content="####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.">
+  <meta property="og:description" content="####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.">
+  <meta name="twitter:description" content="####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team …">
+  <meta name="author" content="Rich Louden"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/rlouden.netlify.com\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/rlouden.netlify.com\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/rlouden.netlify.com\/post\/2019-04-14-football-modelling-part-2-eda-and-modelling\/2019-04-14-football-modelling-part-2-eda-and-modelling\/",
+          "name": "E d a \x26 model building"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Richyyl"
+  },
+  "headline": "EDA \x26 model building",
+  "description" : "####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.\nAs before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel \/ gghighlight to add tweaks to charts.",
+  "inLanguage" : "en",
+  "wordCount":  2878 ,
+  "datePublished" : "0001-01-01T00:00:00",
+  "dateModified" : "0001-01-01T00:00:00",
+  "image" : "\/rlouden.netlify.com\/img\/avatar-icon.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/rlouden.netlify.com\/post\/2019-04-14-football-modelling-part-2-eda-and-modelling\/2019-04-14-football-modelling-part-2-eda-and-modelling\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/rlouden.netlify.com\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/rlouden.netlify.com\/img\/avatar-icon.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="EDA &amp; model building" />
+<meta property="og:description" content="####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.">
+<meta property="og:image" content="/rlouden.netlify.com/img/avatar-icon.png" />
+<meta property="og:url" content="/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="EDA &amp; model building" />
+  <meta name="twitter:description" content="####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team …">
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar-icon.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@https://twitter.com/Richyyl" />
+  <meta name="twitter:creator" content="@https://twitter.com/Richyyl" />
+  <link href='/rlouden.netlify.com/img/favicon.ico' rel='icon' type='image/x-icon'/>
+  <meta property="og:image" content="/rlouden.netlify.com/img/avatar-icon.png" />
+  <meta name="twitter:image" content="/rlouden.netlify.com/img/avatar-icon.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@https://twitter.com/Richyyl" />
+  <meta name="twitter:creator" content="@https://twitter.com/Richyyl" />
+  <meta property="og:url" content="/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/rlouden.netlify.com/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/rlouden.netlify.com/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/rlouden.netlify.com/css/syntax.css" /><link rel="stylesheet" href="/rlouden.netlify.com/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Blog" href="/rlouden.netlify.com/post/">Blog</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/rlouden.netlify.com/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/rlouden.netlify.com/">
+            <img class="avatar-img" src="/rlouden.netlify.com/img/avatar-icon.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>EDA &amp; model building</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on April 10, 1019
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Richyyl
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>####This markdown document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.</p>
+<p>As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## -- Attaching packages ------------------------------------- tidyverse 1.2.1 --</code></pre>
+<pre><code>## v ggplot2 3.1.1       v purrr   0.3.2  
+## v tibble  2.1.1       v dplyr   0.8.0.1
+## v tidyr   0.8.3       v stringr 1.4.0  
+## v readr   1.3.1       v forcats 0.4.0</code></pre>
+<pre><code>## -- Conflicts ---------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(tidymodels)</code></pre>
+<pre><code>## -- Attaching packages ------------------------------------ tidymodels 0.0.2 --</code></pre>
+<pre><code>## v broom     0.5.2     v recipes   0.1.5
+## v dials     0.0.2     v rsample   0.0.4
+## v infer     0.4.0     v yardstick 0.0.3
+## v parsnip   0.0.2</code></pre>
+<pre><code>## -- Conflicts --------------------------------------- tidymodels_conflicts() --
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()</code></pre>
+<pre class="r"><code>library(janitor)
+library(ggrepel)
+library(gghighlight)
+library(ranger)
+library(glmnet)</code></pre>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: &#39;Matrix&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     expand</code></pre>
+<pre><code>## Loading required package: foreach</code></pre>
+<pre><code>## 
+## Attaching package: &#39;foreach&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:purrr&#39;:
+## 
+##     accumulate, when</code></pre>
+<pre><code>## Loaded glmnet 2.0-16</code></pre>
+<pre class="r"><code>theme_set(theme_minimal())</code></pre>
+<p>At the end of the last segement I’d managed to scrape five key datasets, the first two relating to attacking and defensive stats for clubs, the second two the same but at a player level and the final one a list of players and their current clubs. I’m going to start off exploring the player data just to make sure it can give the insight we need, and then move into a deeper dive of the club level data.</p>
+<pre class="r"><code>all_players &lt;- read_csv(&quot;2019-19 players.csv&quot;)
+
+player_attack &lt;- read_csv(&quot;player_attack_stats.csv&quot;)
+
+player_defence &lt;- read_csv(&quot;player_defence_stats.csv&quot;)
+
+current_players_attacking &lt;- inner_join(all_players, player_attack, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
+  janitor::clean_names()
+
+current_players_defending &lt;- inner_join(all_players, player_defence, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
+  janitor::clean_names()
+
+check_attacking_data &lt;- current_players_attacking %&gt;%
+  filter(data == &quot;Season_17&quot;) %&gt;%
+  arrange(desc(chances_created)) %&gt;%
+  View()
+
+check_defending_data &lt;- current_players_defending %&gt;%
+  filter(data == &quot;Season_17&quot;) %&gt;%
+  arrange(desc(tackles_made)) %&gt;%
+  View()
+
+players_per_team &lt;- current_players_attacking %&gt;%
+  filter(data == &quot;Season_18&quot;) %&gt;%
+  count(team)</code></pre>
+<p>Since the player data appears to be in a good shape, ie enough of it should be there with enough players to put together some teams for predictions, its time to have a good look at the team data and see what really impacts how many goals you score or concede.</p>
+<pre class="r"><code>team_attack &lt;- read_csv(&quot;team_attack_stats.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  mutate(avg_pass_length = as.numeric(str_remove(avg_pass_length, &quot;m&quot;))) %&gt;%
+         separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
+         mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
+                                   Season == &quot;16&quot; ~ &quot;16/17&quot;,
+                                   Season == &quot;17&quot; ~ &quot;17/18&quot;,
+                                   T ~ &quot;18/19&quot;),
+                Season = factor(Season))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `passes completed` = col_double(),
+##   `forward passes` = col_double(),
+##   `backward passes` = col_double(),
+##   `sideways passes` = col_double(),
+##   `chances created` = col_double(),
+##   `assists created` = col_double(),
+##   `avg pass length` = col_character(),
+##   `shots on target` = col_double(),
+##   `shots off target` = col_double(),
+##   `goals scored` = col_double()
+## )</code></pre>
+<pre class="r"><code>team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
+         mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
+                                   Season == &quot;16&quot; ~ &quot;16/17&quot;,
+                                   Season == &quot;17&quot; ~ &quot;17/18&quot;,
+                                   T ~ &quot;18/19&quot;),
+                Season = factor(Season))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `tackles made` = col_double(),
+##   `tackles won` = col_double(),
+##   intercept = col_double(),
+##   `total blocks` = col_double(),
+##   `total clearances` = col_double(),
+##   `total red cards` = col_double(),
+##   `total yellow cards` = col_double(),
+##   `total saves` = col_double(),
+##   `saves per goal` = col_double(),
+##   `totals goals conceded` = col_double()
+## )</code></pre>
+<p>First lets see how passing relates to goals scored, which you’d expect to be a fairly linear trend with some outliers, as most teams that pass lots and move well hold the ball and ultimatly score, however some teams are able to soak up the attacks and move on the counter. From the graph we can see that two teams who are at opposite ends of the passing spectrum show quite a significant difference in goals per 90 minutes.</p>
+<pre class="r"><code>passing_labels &lt;- team_attack %&gt;%
+  filter(team %in% c(&quot;Manchester City&quot;, &quot;Burnley&quot;))
+  
+team_attack %&gt;%
+  ggplot(aes(x = passes_completed, y = goals_scored)) +
+  geom_point(aes(col = Season), position = &quot;jitter&quot;) +
+  labs(x = &quot;Average completed passes, per 90 minutes&quot;,
+       y = &quot;Average goals scored, per 90 minutes&quot;,
+       col = &quot;Season&quot;,
+       title = &quot;Teams that pass more generally score more goals&quot;) +
+  gghighlight(team %in% c(&quot;Manchester City&quot;, &quot;Burnley&quot;), use_direct_label = F) +
+  scale_x_continuous(labels = scales::comma_format()) +
+  expand_limits(x = 0, y = 0) +
+  geom_text_repel(data = passing_labels, aes(x = passes_completed, y = goals_scored, label = team))</code></pre>
+<pre><code>## Warning: You set use_group_by = TRUE, but grouped calculation failed.
+## Falling back to ungrouped filter operation...</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20passing%20stats-1.png" width="672" />
+Again, when looking at changes against goals score we’d expect a linear trend here, as the more times you’re on to shoot the more you’re likely to score, which is shown by the clear linear trend. However, what is interesting is that more chances doesnt appear to improve your on target ratio, meaning its unlikely you’ll get better if you just keep shooting.</p>
+<pre class="r"><code>chances_labels &lt;- team_attack %&gt;%
+  filter(team %in% c(&quot;Manchester United&quot;, &quot;Newcastle United&quot;))
+  
+team_attack %&gt;%
+  ggplot(aes(x = chances_created, y = goals_scored)) +
+  geom_point(aes(col = Season), position = &quot;jitter&quot;) +
+  labs(x = &quot;Average chances created, per 90 minutes&quot;,
+       y = &quot;Average goals scored, per 90 minutes&quot;,
+       col = &quot;Season&quot;,
+       title = &quot;More chances leads to more goals&quot;) +
+  gghighlight(team %in% c(&quot;Manchester United&quot;, &quot;Newcastle United&quot;), use_direct_label = F) +
+  scale_x_continuous(labels = scales::comma_format()) +
+  expand_limits(x = 0, y = 0) +
+  geom_text_repel(data = chances_labels, aes(x = chances_created, y = goals_scored, label = team))</code></pre>
+<pre><code>## Warning: You set use_group_by = TRUE, but grouped calculation failed.
+## Falling back to ungrouped filter operation...</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20chances-1.png" width="672" /></p>
+<pre class="r"><code>team_attack %&gt;%
+  mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
+  ggplot(aes(x = chances_created, y = shot_ratio)) +
+  geom_point(aes(col = Season), position = &quot;jitter&quot;) +
+  labs(x = &quot;Average chances created, per 90 minutes&quot;,
+       y = &quot;Average shots on target - off target ratio, \nper 90 minutes&quot;,
+       col = &quot;Season&quot;,
+       title = &quot;More chances doesnt always mean you&#39;ll hit the target&quot;,
+       caption = &quot;Horizontal line highlights a 1-1 ratio&quot;) + 
+  expand_limits(x = 0, y = 0) +
+  geom_hline(yintercept = 1)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20chances-2.png" width="672" />
+Moving on to some defensive stats now, with both the number of tackles and tackle success on display below. As can be seen from the two charts there is little to no correlation between these metrics and how many goals you might concede, which probably isnt what you’d expect. Interestignly however there seems to be less tackling in this season so far, on average, than the past 3 seasons.</p>
+<pre class="r"><code>team_defence %&gt;%
+  ggplot(aes(x = tackles_made, y = totals_goals_conceded)) +
+  geom_point(aes(col = Season)) +
+  expand_limits(x = 0, y = 0) +
+  labs(x = &quot;Average number of tackles, per 90 minutes&quot;,
+       y = &quot;Average goals conceded, per 90 minutes&quot;,
+       title = &quot;There appears to be little correlation between\n how much you tackle and how much you concede&quot;)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20tackles-1.png" width="672" /></p>
+<pre class="r"><code>team_defence %&gt;%
+  mutate(tackle_success = tackles_won / tackles_made) %&gt;%
+  ggplot(aes(x = tackle_success, y = totals_goals_conceded)) +
+  geom_point(aes(col = Season)) +
+  expand_limits(x = 0, y = 0) +
+  labs(x = &quot;Average tackle success ratio, per 90 minutes&quot;,
+       y = &quot;Average goals conceded, per 90 minutes&quot;,
+       title = &quot;With tackle success also showing\n little correlation against goals conceded&quot;)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20tackles-2.png" width="672" />
+For the final defence metric I’m going to explore saves per goal, which you’d expect to increase with the number of goals conceded as it shows how much pressure the team is under, likely leading to mistakes. As predicted, there’s a slight linear trend between the two, with the graph also highlighting the low number of saves and goals conceded by Manchester Utd in recent seasons, under their more defensive approach spearheaded by the now absent Jose Mourinho.</p>
+<pre class="r"><code>saves_labels &lt;- team_defence %&gt;%
+  filter(team %in% c(&quot;Manchester United&quot;, &quot;Chelsea&quot;, &quot;Burnley&quot;))
+
+team_defence %&gt;%
+  ggplot(aes(x = total_saves, y = totals_goals_conceded)) +
+  geom_point(aes(col = Season)) +
+  expand_limits(x = 0, y = 0) +
+  labs(x = &quot;Average number of saves, per 90 minutes&quot;,
+       y = &quot;Average goals conceded, per 90 minutes&quot;,
+       title = &quot;Number of saves however does appear to\n upwardly trend with conceding goals&quot;) +
+  geom_text(data = saves_labels, aes(x = total_saves, y = totals_goals_conceded, label = team), hjust = 0.5, check_overlap = T, vjust = 1, nudge_x = -1)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20saves%20per%20goal-1.png" width="672" />
+Now that we’vce had a quick look at the data its time to build some models, starting with a simple linear regression and a random forest, with a parameter grid. Firstly however I need to split the data into test and training sets, and then further split the training sets into 5 fold cross validation sets, each with 5 repeats to provide averages for our assessment statistics.</p>
+<pre class="r"><code>attack_final &lt;- team_attack %&gt;%
+  mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
+  select(goals_scored, everything(),-team, -Stats, -Season)
+
+defence_final &lt;- team_defence %&gt;%
+  select(totals_goals_conceded, everything(),-team, -Stats, -Season)
+
+set.seed(101)
+
+#create initital train test splits and then produce 5 fold cross validation sets
+
+attack_split &lt;- initial_split(attack_final)
+
+defence_split &lt;- initial_split(defence_final)
+
+attack_train &lt;- training(attack_split)
+
+attack_test &lt;- testing(attack_split)
+
+defence_train &lt;- training(defence_split)
+
+defence_test &lt;- testing(defence_split)
+
+attack_cross &lt;- vfold_cv(attack_train, v = 5, repeats = 5)
+
+defence_cross &lt;- vfold_cv(defence_train, v = 5, repeats = 5)</code></pre>
+<p>With the data prepped its time to make the model objects, using the new interface provided by the parsnip package. In addition, this package allows easy creation of parameter grids, which can then be combined with the base model as a nested column of a dataframe.</p>
+<pre class="r"><code>linear_mod &lt;- linear_reg() %&gt;%
+  set_engine(&quot;lm&quot;)
+
+random_forest &lt;- rand_forest(mode = &quot;regression&quot;, mtry = varying(), trees = varying(), min_n = varying()) %&gt;%
+  set_engine(&quot;ranger&quot;, importance = &quot;impurity&quot;)
+
+forest_models &lt;- grid_random(
+  trees %&gt;% range_set(c(1000, 10000)),
+  min_n %&gt;% range_set(c(1, 12)),
+  mtry %&gt;% range_set(c(5,9)),
+  size = 5) %&gt;%
+  mutate(specs = merge(., random_forest))
+
+full_attack_rf &lt;- crossing(attack_cross, forest_models)
+
+full_defence_rf &lt;- crossing(defence_cross, forest_models)</code></pre>
+<p>Now its time to fit the models and calculate the assessment statistics, where I’ll be using the standard combo of R2 and RMSE to judge the models.</p>
+<pre class="r"><code>attack_form &lt;-formula(goals_scored ~ .)
+
+defence_form &lt;- formula(totals_goals_conceded ~ .)
+
+fit_model &lt;- function(split, spec, form) {
+fit(
+object = spec,
+formula = form,
+data = analysis(split) # &lt;- pull out training set
+)
+}
+
+attack_lm &lt;- attack_cross %&gt;%
+  mutate(model = map(splits, fit_model, linear_mod, attack_form))
+
+defence_lm &lt;- defence_cross %&gt;%
+  mutate(model = map(splits, fit_model, linear_mod, defence_form))
+
+attack_rf &lt;- full_attack_rf %&gt;%
+  mutate(model = map2(splits, specs, ~fit_model(split = .x, spec = .y, form = attack_form)))
+
+defence_rf &lt;- full_defence_rf %&gt;%
+  mutate(model = map2(splits, specs, ~fit_model(split = .x, spec = .y, form = defence_form)))</code></pre>
+<p>Now that we have the models built its time to make some predictions and asses the accuracy, using a couple of functions to pull out the appropriate data and either perform the prediction or assess it.</p>
+<pre class="r"><code>compute_pred &lt;- function(split, model) {
+# Extract the assessment set
+assess &lt;- assessment(split)
+# Compute predictions (a df is returned)
+pred &lt;- predict(model, new_data = assess)
+bind_cols(assess, pred)
+}
+
+compute_perf &lt;- function(pred_df, t) {
+# Create a function that calculates rmse and rsq and returns a data frame
+t &lt;- enquo(t)
+numeric_metrics &lt;- metric_set(rmse, rsq)
+numeric_metrics(
+pred_df,
+truth = !!t,
+estimate = .pred
+)
+}
+
+attack_lm &lt;- attack_lm %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = goals_scored)))
+
+defence_lm &lt;- defence_lm %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = totals_goals_conceded)))
+
+attack_rf &lt;- attack_rf %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = goals_scored)))
+
+defence_rf &lt;- defence_rf %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = totals_goals_conceded)))</code></pre>
+<p>As can be seen from the below charts, for both datasets the linear model appears to outshine any of the random forest models for both R2 and RMSE.</p>
+<pre class="r"><code>error_sum &lt;- function(x, a = NULL, b = NULL, c = NULL) {
+
+if(is.null(a)){
+
+  x %&gt;%
+unnest(perf) %&gt;%
+group_by(.metric) %&gt;%
+summarise(
+.avg = mean(.estimate),
+.sd = sd(.estimate)
+)} else{  
+a &lt;- ensym(a)
+b &lt;- ensym(b)
+c &lt;- ensym(c)
+
+x %&gt;%
+unnest(perf) %&gt;%
+group_by(.metric, !!a, !!b, !!c) %&gt;%
+summarise(
+.avg = mean(.estimate),
+.sd = sd(.estimate))
+}
+}
+
+attack_lm_error &lt;- error_sum(attack_lm)
+
+defence_lm_error &lt;- error_sum(defence_lm)
+
+attack_rf_error &lt;- error_sum(attack_rf, &quot;trees&quot;, &quot;min_n&quot;, &quot;mtry&quot;)
+
+defence_rf_error &lt;- error_sum(defence_rf, &quot;trees&quot;, &quot;min_n&quot;, &quot;mtry&quot;)
+
+attack_error &lt;- attack_lm_error %&gt;%
+  mutate(method = &quot;lm&quot;) %&gt;%
+  bind_rows(unite(attack_rf_error, method, trees, min_n, mtry, sep = &quot;-&quot;)) %&gt;%
+  mutate(ymin = .avg - .sd,
+         ymax = .avg + .sd)
+
+defence_error &lt;- defence_lm_error %&gt;%
+  mutate(method = &quot;lm&quot;) %&gt;%
+  bind_rows(unite(defence_rf_error, method, trees, min_n, mtry, sep = &quot;-&quot;)) %&gt;%
+  mutate(ymin = .avg - .sd,
+         ymax = .avg + .sd)
+
+attack_error %&gt;%
+  ggplot(aes(x = method, y = .avg, col = method)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  facet_wrap(~.metric)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Extract%20error%20and%20plot-1.png" width="672" /></p>
+<pre class="r"><code>defence_error %&gt;%
+  ggplot(aes(x = method, y = .avg, col = method)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  facet_wrap(~.metric)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Extract%20error%20and%20plot-2.png" width="672" /></p>
+<p>One of the better aspects of the random forest model is that we can look to see what variables had the biggest impact, which for regression models in ranger is given by which variables accounted for the largest decrease in variation at each node split. As can be seen from the below charts, chances, shots on target and assists were the most important for predicting goals scored and blocks, saves and clearances for predicting goals conceded.</p>
+<pre class="r"><code>attacking_variables &lt;- tibble(variable = names(attack_final[2:11]))
+
+attacking_importance &lt;- attack_rf %&gt;%
+  select(model) %&gt;%
+  .[[1]] %&gt;%
+  map(&quot;fit&quot;) %&gt;%
+  map(&quot;variable.importance&quot;) %&gt;%
+  bind_rows() %&gt;%
+  bind_cols(attacking_variables) %&gt;%
+  select(6, everything()) %&gt;%
+  gather(model, score, 2:6) %&gt;%
+  group_by(variable) %&gt;%
+  summarise(mean_var = mean(score)/100)
+
+attacking_importance %&gt;%
+  mutate(variable = str_to_sentence(str_replace_all(variable, &quot;_&quot;, &quot; &quot;)),
+         variable = fct_reorder(variable, -mean_var)) %&gt;%
+  ggplot(aes(x = variable, y = mean_var, col = reorder(variable, mean_var))) +
+  geom_point(show.legend = F) +
+  coord_flip() +
+  labs(y = &quot;Decrease in MSE at each node&quot;,
+       x = &quot;Variable&quot;,
+       title = &quot;Assists, shots and chances have the most impact\n on predicting goals scored&quot;,
+       col = &quot;&quot;) +
+  scale_y_continuous(labels = scales::percent_format())</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Produce%20variable%20importance%20plot%20for%20rf%20models-1.png" width="672" /></p>
+<pre class="r"><code>defensive_variables &lt;- tibble(variable = names(team_defence[2:10]))
+
+defensive_importance &lt;- defence_rf %&gt;%
+  select(model) %&gt;%
+  .[[1]] %&gt;%
+  map(&quot;fit&quot;) %&gt;%
+  map(&quot;variable.importance&quot;) %&gt;%
+  bind_rows() %&gt;%
+  bind_cols(defensive_variables) %&gt;%
+  select(6, everything()) %&gt;%
+  gather(model, score, 2:6) %&gt;%
+  group_by(variable) %&gt;%
+  summarise(mean_var = mean(score)/100)
+
+defensive_importance %&gt;%
+  mutate(variable = str_to_sentence(str_replace_all(variable, &quot;_&quot;, &quot; &quot;)),
+         variable = fct_reorder(variable, -mean_var)) %&gt;%
+  ggplot(aes(x = variable, y = mean_var, col = reorder(variable, mean_var))) +
+  geom_point(show.legend = F) +
+  coord_flip() +
+  labs(y = &quot;Decrease in MSE at each node&quot;,
+       x = &quot;Variable&quot;,
+       title = &quot;Clearances and saves have the most impact\n on predicting goals conceded&quot;,
+       col = &quot;&quot;) +
+  scale_y_continuous(labels = scales::percent_format())</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Produce%20variable%20importance%20plot%20for%20rf%20models-2.png" width="672" />
+Due to the large amount of variation accounted for by only a few variables in each model a good way to proceed would be to run a ridge regression, which due to the penalty against low impact variables may be able to outperform the more simplistic linear regression. As with the other sets of models, the parsnip interface is used to both construct the model object and a paramter grid to test different penalty values. However, again there appears to be no benefit to this method over the linear regression model, making lm the best choice to go forwards with for this analysis.</p>
+<pre class="r"><code>ridge_mod &lt;- linear_reg(penalty = varying(), mixture = 0) %&gt;%
+  set_engine(&quot;glmnet&quot;)
+  
+ridge_models &lt;- grid_regular(
+  penalty, levels = 15) %&gt;%
+  mutate(specs = merge(., ridge_mod))
+
+full_attack_ridge &lt;- crossing(attack_cross, ridge_models)
+
+full_defence_ridge &lt;- crossing(defence_cross, ridge_models)
+
+attack_ridge &lt;- full_attack_ridge %&gt;%
+  mutate(model = map2(splits, specs, ~fit_model(split = .x, spec = .y, form = attack_form))) %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = goals_scored)))
+
+defence_ridge &lt;- full_defence_ridge %&gt;%
+  mutate(model = map2(splits, specs, ~fit_model(split = .x, spec = .y, form = defence_form))) %&gt;%
+  mutate(pred = map2(splits, model, compute_pred),
+         perf = map(pred, ~compute_perf(pred_df = .x, t = totals_goals_conceded)))
+
+attack_ridge_error &lt;- error_sum(attack_ridge, &quot;penalty&quot;,&quot;penalty&quot;,&quot;penalty&quot;) %&gt;%
+  mutate(penalty = as.character(penalty))
+
+defence_ridge_error &lt;- error_sum(defence_ridge, &quot;penalty&quot;,&quot;penalty&quot;,&quot;penalty&quot;) %&gt;%
+  mutate(penalty = as.character(penalty))
+
+attack_ridge_error &lt;- attack_lm_error %&gt;%
+  mutate(penalty = &quot;lm&quot;) %&gt;%
+  bind_rows(attack_ridge_error) %&gt;%
+  mutate(ymin = .avg - .sd,
+         ymax = .avg + .sd)
+
+defence_ridge_error &lt;- defence_lm_error %&gt;%
+  mutate(penalty = &quot;lm&quot;) %&gt;%
+  bind_rows(defence_ridge_error) %&gt;%
+  mutate(ymin = .avg - .sd,
+         ymax = .avg + .sd)
+
+attack_ridge_error %&gt;%
+  ggplot(aes(x = penalty, y = .avg, col = penalty)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  facet_wrap(~.metric)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Attempt%20ridge%20regression%20and%20compare%20to%20lm-1.png" width="672" /></p>
+<pre class="r"><code>defence_ridge_error %&gt;%
+  ggplot(aes(x = penalty, y = .avg, col = penalty)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  facet_wrap(~.metric)</code></pre>
+<p><img src="/rlouden.netlify.com/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Attempt%20ridge%20regression%20and%20compare%20to%20lm-2.png" width="672" />
+The final stage of this section is to fit the a linear regression model to the full training data set and test its predictive capabiltities on the unseen test dataset. For the attacking dataset the lm showed an error of ~ 0.5 goals, covering around 91% of the variation in the dataset. For the defensive dataset the linear model showed an error of ~ 0.44 goals per game, covering around 93% variation. All in all these models seem appropriate to run with for this analysis, which I’ll be utilising them in combination with some aggregated player data to try and predict some outcomes of upcoming matches!</p>
+<pre class="r"><code>attack_final_lm &lt;- fit(object = linear_mod,
+formula = attack_form,
+data = attack_train)
+
+attack_pred_final &lt;- predict(attack_final_lm, select(attack_test, -goals_scored)) %&gt;%
+  bind_cols(select(attack_test, goals_scored)) %&gt;%
+  compute_perf(., goals_scored)
+
+defence_final_lm &lt;- fit(object = linear_mod,
+formula = defence_form,
+data = defence_train)
+
+defence_pred_final &lt;- predict(defence_final_lm, select(defence_test, -totals_goals_conceded)) %&gt;%
+  bind_cols(select(defence_test, totals_goals_conceded)) %&gt;%
+  compute_perf(., totals_goals_conceded)</code></pre>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/" data-toggle="tooltip" data-placement="top" title="EPL scraping">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="unsupervised-learnings.co.uk">Rich Louden</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            0001
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/rlouden.netlify.com/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/rlouden.netlify.com/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/rlouden.netlify.com/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+
