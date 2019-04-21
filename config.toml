@@ -40,16 +40,8 @@ pygmentsCodefencesGuessSyntax = true
 #  desc = "Hexagon"
 
 [Author]
-  name = "Rich Louden"
-  website = "unsupervised-learnings.co.uk"
   github = "Richyyl"
   twitter = "Richyyl"
-
-
-[[menu.main]]
-    name = "Blog"
-    url = "post/"
-    weight = 1
 
 [[menu.main]]
     name = "About"

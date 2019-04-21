@@ -3,7 +3,7 @@ comments: false
 title: About me
 ---
 
-Hi there, my name is Rich, not Richard, that brings back memories of doing something bad during childhood!
+Hi there, I'm Rich.
 
 Things about me:
 
