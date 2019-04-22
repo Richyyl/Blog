@@ -2,29 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Upsupervised Learnings</title>
-    <link>/rlouden.netlify.com/post/</link>
+    <link>/post/</link>
     <description>Recent content in Posts on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	<atom:link href="/rlouden.netlify.com/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>EDA &amp; model building</title>
-      <link>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</link>
+      <link>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</guid>
+      <guid>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</guid>
       <description>This document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
 As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</description>
     </item>
     
     <item>
       <title>EPL scraping</title>
-      <link>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</link>
+      <link>/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</guid>
+      <guid>/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</guid>
       <description>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
 Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</description>
     </item>
