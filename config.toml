@@ -13,8 +13,8 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
-  logo = "img/avatar.png"
-  favicon = "img/avatar.png"
+  logo = "public/img/avatar.PNG"
+  favicon = "public/img/avatar.PNG"
   dateFormat = "April 20, 19"
   commit = false
   rss = false
@@ -25,19 +25,7 @@ pygmentsCodefencesGuessSyntax = true
   socialShare = false
   delayDisqus = false
   showRelatedPosts = false
-#  gcse = "012345678901234567890:abcdefghijk" # Get your code from google.com/cse. Make sure to go to "Look and Feel" and change Layout to "Full Width" and Theme to "Classic"
 
-#[[Params.bigimg]]
-#  src = "img/triangle.jpg"
-#  desc = "Triangle"
-#[[Params.bigimg]]
-#  src = "img/sphere.jpg"
-#  desc = "Sphere"
-#  # position: see values of CSS background-position.
-#  position = "center top"
-#[[Params.bigimg]]
-#  src = "img/hexagon.jpg"
-#  desc = "Hexagon"
 
 [Author]
   github = "Richyyl"
