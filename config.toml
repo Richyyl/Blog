@@ -13,8 +13,7 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
-  logo = "public/img/avatar.PNG"
-  favicon = "public/img/avatar.PNG"
+  logo = "img/avatar.png"
   dateFormat = "April 20, 19"
   commit = false
   rss = false
