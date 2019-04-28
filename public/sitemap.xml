@@ -3,38 +3,38 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/</loc>
+    <loc>/rlouden.netlify.com/</loc>
   </url>
   
   <url>
-    <loc>/page/about/</loc>
+    <loc>/rlouden.netlify.com/page/about/</loc>
   </url>
   
   <url>
-    <loc>/categories/</loc>
+    <loc>/rlouden.netlify.com/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</loc>
+    <loc>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</loc>
   </url>
   
   <url>
-    <loc>/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</loc>
+    <loc>/rlouden.netlify.com/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</loc>
   </url>
   
   <url>
-    <loc>/page/</loc>
+    <loc>/rlouden.netlify.com/page/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/post/</loc>
+    <loc>/rlouden.netlify.com/post/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/</loc>
+    <loc>/rlouden.netlify.com/tags/</loc>
     <priority>0</priority>
   </url>
   

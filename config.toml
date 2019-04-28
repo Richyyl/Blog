@@ -1,6 +1,7 @@
-baseurl = ""
+baseurl = "rlouden.netlify.com/"
 DefaultContentLanguage = "en"
 #DefaultContentLanguage = "ja"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 title = "Upsupervised Learnings"
 theme = "beautifulhugo"
 metaDataFormat = "yaml"
@@ -29,6 +30,11 @@ pygmentsCodefencesGuessSyntax = true
 [Author]
   github = "Richyyl"
   twitter = "Richyyl"
+
+[[menu.main]]
+    name = "Home"
+    url = "#posts"
+    weight = 2
 
 [[menu.main]]
     name = "About"

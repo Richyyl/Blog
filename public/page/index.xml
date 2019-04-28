@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Pages on Upsupervised Learnings</title>
-    <link>/page/</link>
+    <link>/rlouden.netlify.com/page/</link>
     <description>Recent content in Pages on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	<atom:link href="/page/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/rlouden.netlify.com/page/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About me</title>
-      <link>/page/about/</link>
+      <link>/rlouden.netlify.com/page/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/page/about/</guid>
+      <guid>/rlouden.netlify.com/page/about/</guid>
       <description>Hi there, I&amp;rsquo;m Rich.
 Things about me:
  I love science and the wonders of life I find plants amazingly interesting I love coding and analysing data I have a PhD in molecular biology  If you&amp;rsquo;ve eneded up at this site I&amp;rsquo;m not sure why, but I hope you gain something from my mad stumblings into learning new techniques around data science!</description>
