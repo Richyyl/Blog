@@ -1,0 +1,404 @@
+---
+title: The life of Sam Vimes - A Discworld NLP project
+author: Rich Louden
+date: '2018-04-28'
+slug: the-life-of-sam-vimes-a-discworld-nlp-project
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
+draft: True
+---
+
+
+## the life of Sam Vimes analysis
+
+##check R bloggers the life-changing magic of tidying text and Rstudio pubs Game of thrones book analysis for ideas
+
+install.packages("pdftools")
+install.packages("cleanNLP")
+install.packages("readtext")
+library(plyr)
+library(tidyverse)
+library(pdftools)
+library(RColorBrewer)
+library(tidytext)
+library(readtext)
+
+
+### load in each book and convert to data frame
+
+PDF_extraction <- function(a){
+  pdf_text(a) %>%
+    paste(.,collapse = "") %>%
+    tibble(text = .) %>%
+    unnest_tokens(sentence, text, token = "sentences")
+    }
+
+WRD_extraction <- function(x){
+  readtext(x) %>%
+    unnest_tokens(sentence, text, "sentences") %>%
+                    select(-1)
+}
+
+GG <- WRD_extraction("D08 - Guards! Guards!.doc")
+
+
+MAA <- WRD_extraction("Men at arms.docx")
+
+
+FOC <- WRD_extraction("Feet of clay.docx")
+
+
+J <- WRD_extraction("Jingo.docx")
+
+
+FE <- WRD_extraction("The Fifth Elephant.docx")
+
+
+NW <- PDF_extraction("Night Watch.pdf")
+
+
+THUD <- PDF_extraction("Pratchett_Terry-Discworld_34-Thud-Pratchett_Terry.pdf")
+
+
+SNUFF <- PDF_extraction("Snuff - Terry Pratchett.pdf")
+
+
+####clean up each book and then add to a single data frame for use
+
+
+Clean_func <- function(a,b,c){
+  a %>%
+    slice(b) %>% 
+    mutate(Book = c,
+             Sentence_number = row_number())
+  }
+
+GG_DF <- Clean_func(GG, 8:10044, "Guards! Guards!")
+MAA_DF<- Clean_func(MAA, 1:11113, "Men At Arms")
+FOC_DF<- Clean_func(FOC, 2:10567, "Feet Of Clay")
+J_DF<- Clean_func(J, 1:11360, "Jingo")
+FE_DF<- Clean_func(FE, 2:11267, "Fifth Elephant")
+NW_DF<- Clean_func(NW, 2:11619, "Night Watch")
+THUD_DF<- Clean_func(THUD, 2:11195, "Thud")
+SNUFF_DF<- Clean_func(SNUFF, 10:8072, "Snuff")
+
+
+Watch_levels <- c("Guards! Guards!", 
+                 "Men At Arms", 
+                 "Feet Of Clay",
+                 "Jingo",
+                 "Fifth Elephant",
+                 "Night Watch", 
+                 "Thud",
+                 "Snuff")
+
+Watch_books <- bind_rows(GG_DF, MAA_DF, FOC_DF, J_DF, FE_DF, NW_DF, THUD_DF, SNUFF_DF) %>%
+  mutate(Book = factor(Book, levels = Watch_levels))
+
+
+###perform sentiment analysis on sentences
+
+
+Negative_sent <- sentiments %>%
+  filter(lexicon == "bing", sentiment == "negative")
+
+Positive_sent <- sentiments %>%
+  filter(lexicon == "bing", sentiment == "positive")
+
+Watch_books_words <- Watch_books %>%
+  unnest_tokens(word, sentence, token = "words") %>%
+  anti_join(stop_words) %>%
+  group_by(Book, Sentence_number) %>%
+  summarise(words = n())
+
+watch_books_neg_sentiment <- Watch_books %>%
+  unnest_tokens(word, sentence, token = "words") %>%
+  anti_join(stop_words) %>%
+  semi_join(Negative_sent)%>%
+  group_by(Book, Sentence_number) %>%
+  summarise(neg_words = n())
+  
+Watch_books_pos_sentiment <- Watch_books %>%
+  unnest_tokens(word, sentence, token = "words") %>%
+  anti_join(stop_words) %>%
+  semi_join(Positive_sent) %>%
+  group_by(Book, Sentence_number) %>%
+  summarise(pos_words = n())
+
+Watch_book_full_sentiment <- Watch_books %>%
+  left_join(watch_books_neg_sentiment, by = c("Book", "Sentence_number")) %>%
+  left_join(Watch_books_pos_sentiment,by = c("Book", "Sentence_number")) %>%
+  left_join(Watch_books_words,by = c("Book", "Sentence_number")) %>%
+  mutate(neg_words = recode(neg_words, 'NA = 0'),
+         pos_words = recode(pos_words, 'NA = 0')) %>%
+  filter(neg_words != 0 & pos_words != 0) %>%
+  mutate(neg_ratio = neg_words / words,
+         pos_ratio = pos_words / words,
+         sentiment = pos_ratio - neg_ratio) %>%
+  select(-neg_words, pos_words, words)
+  
+
+nrc_sentimeent_plot <- ggplot(data = Watch_book_full_sentiment, aes(x = Sentence_number, y = sentiment, fill = Book)) + 
+  geom_bar(stat = "identity", show.legend = F) + 
+  scale_color_viridis_c() +
+  facet_wrap(~Book, ncol = 3, scales = "free_x") +
+  theme_classic() +
+  labs(title = "Sentiment over the Night Watch history", y = "sentiment", x = "Sentence number") + 
+  theme(strip.text = element_text(face = "italic")) +
+  theme(panel.grid.minor = element_blank())
+  
+nrc_sentimeent_plot
+
+
+
+watch_books_AFINN <- Watch_books %>%
+  unnest_tokens(word, sentence, token = "words") %>%
+  inner_join(get_sentiments("afinn")) %>%
+  group_by(Book, Sentence_number) %>%
+  summarise(Sentiment_score = sum(score))
+  
+
+afinn_sentimeent_plot <- ggplot(data = watch_books_AFINN, aes(x = Sentence_number, y = Sentiment_score, fill = Book)) + 
+  geom_bar(stat = "identity", show.legend = F) + 
+  scale_color_viridis_c() +
+  facet_wrap(~Book, ncol = 3, scales = "free_x") +
+  theme_minimal() +
+  labs(title = "Sentiment over the Night Watch history", y = "sentiment", x = "Sentence number") + 
+  theme(strip.text = element_text(face = "italic")) +
+  theme(panel.grid.minor = element_blank())
+
+afinn_sentimeent_plot
+
+
+
+afinn_sent_summary <- watch_books_AFINN %>%
+  group_by(Book) %>%
+  summarise(Overall_sentiment = sum(Sentiment_score))
+
+afinn_summary_plot <- ggplot(data = afinn_sent_summary, aes(x = Book, y = Overall_sentiment, fill= Book, group = 1)) +
+  geom_line(show.legend = F, col = "red",lineend = "round", linejoin = "round", size = 1) +
+  geom_point(show.legend = F, col = "orange") +
+  theme_classic() +
+  labs(title = "Overall sentiment score across the Night Watch books", x = "Book", y = "Overall sentiment score") +
+  scale_color_brewer()
+
+afinn_summary_plot
+
+
+######### bigrams analysis
+
+
+
+Watch_books_bigrams <- Watch_books %>%
+  unnest_tokens(bigram, sentence, token = "ngrams", n = 2) %>%
+  separate(bigram, c("word1", "word2"), sep = " ") %>%
+  filter(!word1 %in% stop_words$word,
+         word1 != "NA",
+         !word2 %in% stop_words$word,
+         word2 != "NA") %>%
+  count(Book, word1, word2, sort = T) %>%
+  unite(Bigram, word1, word2, sep = " ") %>%
+  slice(-1) %>%
+  group_by(Book) %>%
+  top_n(10) %>%
+  arrange(Book, desc(n))
+
+Bigram_plot <- ggplot(data = Watch_books_bigrams, aes(x = reorder(Bigram,n), y = n, fill = Book)) + 
+  geom_col(show.legend = F) +
+  coord_flip() +
+  facet_wrap(~Book, nrow = 3, scales = "free_y") +
+  theme_minimal() +
+  labs(title = "Top ten bigrams in the Night Watch series",
+       x = "Bigram",
+       y = "Frequency") +
+  scale_color_brewer() +
+  theme(strip.text = element_text(face = "italic")) 
+  theme(panel.grid.minor = element_blank())
+
+Bigram_plot
+
+
+Gendered_bigrams <- Watch_books %>%
+  unnest_tokens(bigram, sentence, token = "ngrams", n = 2) %>%
+  separate(bigram, c("word1", "word2"), sep = " ") %>%
+  filter(word1 %in% c("He", "he", "She", "she")) %>%
+  count(Book, word1, word2, sort = T) %>%
+  mutate(Grouping = case_when(word1 == "He" ~ "Male",
+                              word1 == "he" ~ "Male",
+                              word1 == "She" ~ "Female",
+                              word1 == "she" ~ "Female"),
+         Grouping = factor(Grouping)) %>%
+  unite(Bigram, word1, word2, sep = " ") %>%
+group_by(Book) %>%
+  top_n(10, n) %>%
+  arrange(Book, desc(n))
+
+Gendered_bigram_plot <- ggplot(data = Gendered_bigrams, aes(x = reorder(Bigram,n), y = n, fill = Grouping)) + 
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~Book, nrow = 3, scales = "free_y") +
+  theme_minimal() +
+  labs(title = "Top ten Gendered bigrams in the Night Watch series",
+       x = "Bigram",
+       y = "Frequency") +
+  scale_color_brewer() +
+  theme(strip.text = element_text(face = "italic")) +
+  theme(panel.grid.minor = element_blank())
+
+Gendered_bigram_plot
+
+
+#####dependency analaysis (GOT)
+
+library(reticulate)
+library(cleanNLP)
+
+use_python("/Library/Frameworks/Python.framework/Versions/3.7/bin/python3")
+
+cnlp_init_spacy()
+
+setwd("~/Desktop/Sam Vimes")
+
+PDF_extraction_2 <- function(a){
+  pdf_text(a) %>%
+    paste(.,collapse = "")
+}
+
+WRD_extraction_2 <- function(x){
+  readtext(x) %>%
+    paste(.,collapse = "")
+}
+
+GG_2 <- WRD_extraction_2("D08 - Guards! Guards!.doc")
+
+
+MAA_2 <- WRD_extraction_2("Men at arms.docx")
+
+
+J_2 <- WRD_extraction_2("Jingo.docx")
+
+
+GG_obj <- cnlp_annotate(GG_2, as_strings = TRUE)
+
+MAA_obj <- cnlp_annotate(MAA_2, as_strings = TRUE)
+
+J_obj <- cnlp_annotate(J_2, as_strings = TRUE)
+
+Entities <- function(x){cnlp_get_entity(x) %>% 
+    filter(entity_type == "PERSON") %>%
+    group_by(entity) %>%
+    count %>%
+    ungroup()%>%
+    arrange(desc(n))}
+
+GG_people <- Entities(GG_obj)
+
+MAA_people <- Entities(MAA_obj)
+
+J_people <- Entities(J_obj)
+
+main_chars <- c("Carrot", "Nobby", "Angua", "Sergeant Colon", "Vimes", "Lady Ramkin", "Cuddy", "Gaspode")
+
+dependencies_GG <- cnlp_get_dependency(GG_obj, get_token = TRUE)
+
+dependencies_MAA <- cnlp_get_dependency(MAA_obj, get_token = TRUE)
+
+dependencies_J <- cnlp_get_dependency(J_obj, get_token = TRUE)
+
+full_dep <- bind_rows(dependencies_GG, dependencies_MAA, dependencies_J) %>%
+  select(relation, word, word_target) %>%
+  filter(word_target %in% main_chars & relation == 'nsubj' & word != "said") %>%
+  group_by(word_target, word, relation) %>%
+  count %>%
+  arrange(desc(n))
+
+full_dep <- read_csv("RStudio/Scripts/Other projects/Life of Sam Vimes/dependencies_DF.csv")
+
+full_dep <- dependencies_DF
+
+watch_tfidf <- bind_tf_idf(full_dep, word, word_target, n) %>%
+  group_by(word_target) %>%
+  top_n(10) %>%
+  arrange(word_target)
+
+watch_tfidf_plot <- ggplot(data = watch_tfidf, aes( x = reorder(word, tf_idf), y = tf_idf, fill = word_target)) +
+  geom_col(show.legend = F) +
+  theme_minimal() +
+  coord_flip() +
+  facet_wrap(~word_target, nrow = 3, scales = "free_y") +
+  labs(title = "TFIDF for charaters in Guards! Guards!, Men At Arms and Jingo!", x = "Word", y ="TFIDF")+
+  theme(axis.text.y.left = element_text(size = 6))
+
+
+watch_tfidf_plot
+
+
+
+#####topic modelling (Youtube - Julia Silge)
+
+install.packages("stm")
+install.packages("quanteda")
+library(stm)
+library(quanteda)
+
+Watch_dfm <- Watch_books %>%
+  unnest_tokens(word, sentence, token = "words") %>%
+  anti_join(stop_words) %>%
+  count(Book, word, sort = T) %>%
+  cast_dfm(Book, word, n)
+
+
+processed_books <- textProcessor(Watch_books$sentence, stem = F)
+
+prepped_books <- prepDocuments(processed_books$documents, processed_books$vocab,lower.thresh = 5)
+
+K_search<-searchK(prepped_books$documents,prepped_books$vocab,K=c(4:10))
+
+plot(K_search)
+
+
+##### held out liklihood - better models show increased likihood of held out documents - ie mor elikely to hold out docs in training
+##### residuals - lower residuals = model fits better to the data
+### semantic coherence - the probability of words ina  given topic co-occuring together, used to measure good topic quality. The higher the better
+### lower bound - an estimate of the lower bound of that distribution, used to estimate parameters, higher the better
+
+###6K model based on results
+
+Watch_books_stm <- stm(Watch_dfm, K = 6, init.type = "Spectral", verbose = F)
+
+tidy_stm <- tidy(Watch_books_stm)
+
+top_beta <- tidy_stm %>%
+  group_by(topic) %>%
+  top_n(10, beta) %>%
+  ungroup() %>%
+  mutate(topic = paste0("Topic ", topic))
+
+beta_plot <- ggplot(data = top_beta, aes(x = term, y = beta, fill = as.factor(topic))) +
+  geom_col(show.legend = F) +
+  coord_flip() +
+  facet_wrap(~topic, scales = "free_y", nrow = 2) +
+  labs(title = "Top ten terms per theme of the Night Watch books", x = "Term", y = "Beta") +
+  theme_minimal()
+
+beta_plot
+
+
+Watch_gamma <- tidy(Watch_books_stm, matrix = "gamma",                    
+                    document_names = rownames(Watch_books_stm)) %>%
+  mutate(topic = paste0("Topic ", topic))
+
+gamma_plot <- ggplot(Watch_gamma, aes(gamma, fill = as.factor(topic))) +
+  geom_histogram(show.legend = FALSE) +
+  facet_wrap(~ topic, nrow = 2) +
+  theme_minimal() +
+  labs(title = "Document probabilities spread for each topic",
+       y = "Number of books", x = "Gamma")
+
+gamma_plot
+
+topic_1_cloud <- cloud(Watch_books_stm, topic = 2)
+

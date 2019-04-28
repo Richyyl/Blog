@@ -1,4 +1,4 @@
-baseurl = "rlouden.netlify.com/"
+baseurl = ""
 DefaultContentLanguage = "en"
 #DefaultContentLanguage = "ja"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
@@ -33,7 +33,7 @@ pygmentsCodefencesGuessSyntax = true
 
 [[menu.main]]
     name = "Home"
-    url = "#posts"
+    url = "post/"
     weight = 2
 
 [[menu.main]]
