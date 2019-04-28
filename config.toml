@@ -3,6 +3,7 @@ DefaultContentLanguage = "en"
 #DefaultContentLanguage = "ja"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 title = "Upsupervised Learnings"
+copyright = "Logo copyright of zen pencils"
 theme = "beautifulhugo"
 metaDataFormat = "yaml"
 pygmentsStyle = "trac"
@@ -15,7 +16,7 @@ pygmentsCodefencesGuessSyntax = true
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
   logo = "img/avatar.png"
-  dateFormat = "April 20, 19"
+  date_format = "Mon, Jan 2, 2006"
   commit = false
   rss = false
   comments = false
@@ -33,10 +34,12 @@ pygmentsCodefencesGuessSyntax = true
 
 [[menu.main]]
     name = "Home"
-    url = "post/"
+    url = ""
+    logo = "img/avatar.png"
     weight = 2
 
 [[menu.main]]
     name = "About"
     url = "page/about/"
+    logo = "img/avatar.png"
     weight = 3

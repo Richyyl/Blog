@@ -1,10 +1,13 @@
 ---
-title: "EPL scraping"
-output: 
-  html_document: 
-    keep_md: yes
-editor_options: 
-  chunk_output_type: console
+title: Football Modelling part 1 - Web scraping
+author: Rich Louden
+date: '2019-04-14'
+slug: football-modelling-part-1-web-scraping
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
 ---
 
 ```{r setup, include=FALSE}

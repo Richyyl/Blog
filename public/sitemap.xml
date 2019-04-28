@@ -4,6 +4,23 @@
   
   <url>
     <loc>/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2019-04-14-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/football-modelling-part-2-eda-and-modelling/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2019-04-14T00:00:00+00:00</lastmod>
+    <priority>0</priority>
   </url>
   
   <url>
@@ -16,20 +33,7 @@
   </url>
   
   <url>
-    <loc>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/2019-04-14-football-modelling-part-2-eda-and-modelling/</loc>
-  </url>
-  
-  <url>
-    <loc>/post/2019-04-14-football-modelling-part-1-data-collection/2019-04-14-football-modelling-part-1-data-collection/</loc>
-  </url>
-  
-  <url>
     <loc>/page/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
     <priority>0</priority>
   </url>
   
