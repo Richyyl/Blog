@@ -33,13 +33,13 @@ pygmentsCodefencesGuessSyntax = true
   twitter = "Richyyl"
 
 [[menu.main]]
-  name = "Blog"
-  url = ""
+  name = "Posts"
+  url = "post/"
   logo = "img/avatar.png"
   weight = 2
 
 [[menu.main]]
   name = "About"
   logo = "img/avatar.png"
-  url = "page/about/"
+  url = "page/about"
   weight = 3
