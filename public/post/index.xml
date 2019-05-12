@@ -6,19 +6,19 @@
     <description>Recent content in Posts on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Logo copyright of zen pencils</copyright>
-    <lastBuildDate>Sun, 14 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 21 Apr 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Football Modelling part 1 - Web scraping</title>
-      <link>/post/2019-04-14-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/</link>
-      <pubDate>Sun, 14 Apr 2019 00:00:00 +0000</pubDate>
+      <title>Football Modelling part 3 - Team predictions</title>
+      <link>/post/2019-04-21-football-modelling-part-3-team-predictions/football-modelling-part-3-team-predictions/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
       
-      <guid>/post/2019-04-14-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/</guid>
-      <description>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
-Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</description>
+      <guid>/post/2019-04-21-football-modelling-part-3-team-predictions/football-modelling-part-3-team-predictions/</guid>
+      <description>This document will serve as the final part (part 3) of the premier league analysis / modelling, and will be focussed on the player data collected in part one, which will then be aggregated inot teams and used for predicting some old matches.
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse, for cleaning / iterating, and rvest to scrape some fixtures.</description>
     </item>
     
     <item>
@@ -29,6 +29,35 @@
       <guid>/post/2019-04-14-football-modelling-part-2-eda-and-modelling/football-modelling-part-2-eda-and-modelling/</guid>
       <description>This document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
 As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</description>
+    </item>
+    
+    <item>
+      <title>Football Modelling part 1 - Web scraping</title>
+      <link>/post/2019-04-07-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/</link>
+      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-04-07-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/</guid>
+      <description>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</description>
+    </item>
+    
+    <item>
+      <title>Clustering comparison</title>
+      <link>/post/2018-07-28-clustering-comparison/p-hacking/</link>
+      <pubDate>Sat, 28 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-07-28-clustering-comparison/p-hacking/</guid>
+      <description>IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository AnalysisFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.
+library(tidyverse)library(clustree)library(cluster)library(scales)library(gridExtra)library(devtools)library(gganimate)Now its time to load in the data set and tidy it up.</description>
+    </item>
+    
+    <item>
+      <title>The life of Sam Vimes - A Discworld NLP project</title>
+      <link>/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/the-life-of-sam-vimes-a-discworld-nlp-project/</link>
+      <pubDate>Sat, 28 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/the-life-of-sam-vimes-a-discworld-nlp-project/</guid>
+      <description>I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s.</description>
     </item>
     
   </channel>

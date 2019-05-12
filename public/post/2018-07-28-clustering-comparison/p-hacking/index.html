@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Clustering comparison - Upsupervised Learnings</title>
+  <meta property="og:title" content="Clustering comparison" />
+  <meta name="twitter:title" content="Clustering comparison" />
+  <meta name="description" content="IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository AnalysisFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.
+library(tidyverse)library(clustree)library(cluster)library(scales)library(gridExtra)library(devtools)library(gganimate)Now its time to load in the data set and tidy it up.">
+  <meta property="og:description" content="IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository AnalysisFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.
+library(tidyverse)library(clustree)library(cluster)library(scales)library(gridExtra)library(devtools)library(gganimate)Now its time to load in the data set and tidy it up.">
+  <meta name="twitter:description" content="IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository Analysis …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/2018-07-28-clustering-comparison\/p-hacking\/",
+          "name": "Clustering comparison"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "Clustering comparison",
+  "description" : "Intro\rThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository Analysis\rFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.\nlibrary(tidyverse)\rlibrary(clustree)\rlibrary(cluster)\rlibrary(scales)\rlibrary(gridExtra)\rlibrary(devtools)\rlibrary(gganimate)\rNow its time to load in the data set and tidy it up.",
+  "inLanguage" : "en",
+  "wordCount":  878 ,
+  "datePublished" : "2018-07-28T00:00:00",
+  "dateModified" : "2018-07-28T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/2018-07-28-clustering-comparison\/p-hacking\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Clustering comparison" />
+<meta property="og:description" content="IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository AnalysisFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.
+library(tidyverse)library(clustree)library(cluster)library(scales)library(gridExtra)library(devtools)library(gganimate)Now its time to load in the data set and tidy it up.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/2018-07-28-clustering-comparison/p-hacking/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="Clustering comparison" />
+  <meta name="twitter:description" content="IntroThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository Analysis …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/2018-07-28-clustering-comparison/p-hacking/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Clustering comparison</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on July 28, 2018
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<div id="intro" class="section level2">
+<h2>Intro</h2>
+<p>This short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository <img src="http://archive.ics.uci.edu/ml/datasets/seeds" alt="link" /></p>
+<div id="analysis" class="section level3">
+<h3>Analysis</h3>
+<p>First thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.</p>
+<pre class="r"><code>library(tidyverse)
+library(clustree)
+library(cluster)
+library(scales)
+library(gridExtra)
+library(devtools)
+library(gganimate)</code></pre>
+<p>Now its time to load in the data set and tidy it up. This involves setting a random seed for the later splitting of the data, assigning proper column names, rounding the values and removing any NAs</p>
+<pre class="r"><code>set.seed(101)
+
+seeds &lt;- read.delim(&quot;seeds_dataset.txt&quot;,
+                   sep = &quot;\t&quot;, header = FALSE)
+
+colnames(seeds) &lt;- c(&#39;area&#39;,&#39;perimeter&#39;,&#39;compactness&#39;,&#39;length_of_kernel&#39;,
+                     &#39;width_of_kernal&#39;,&#39;asymmetry_coefficient&#39;,&#39;length_of_kernel_groove&#39;,
+                     &#39;type_of_seed&#39;)
+
+seeds$type_of_seed &lt;- round(seeds$type_of_seed)
+
+seeds &lt;- drop_na(seeds)</code></pre>
+<p>Now that the data is clean it’s time to remove the label column and scale the data so that each value column has an equal SD and mean, to prevent different units impacting the analysis, IE a 2 foot change in height shouldn’t have the same impact as a 2kg change in weight.</p>
+<pre class="r"><code>seed_label &lt;- select(seeds, type_of_seed)
+
+seed_cluster &lt;- select(seeds, -type_of_seed)
+
+seed_cluster_scaled &lt;- as_tibble(scale(seed_cluster))</code></pre>
+<p>Now the data is ready it’s time to test the first methodology, hierarchical clustering, which in essence places each point in its own cluster and then combines them until you converge on a single cluster, using a chosen distance metric (Max, Min, Mean or Centroid). The first part of this process was creating two functions, one to run the clustering and one to plot it, as I wanted to run a few distance types and compare the results.</p>
+<pre class="r"><code>heir_func &lt;- function(x,y){
+  dist(x, method  = &quot;euclidean&quot;) %&gt;%
+    hclust(method = y)
+}
+
+plot_heir &lt;- function(x,y){
+  plot(x, hang = -1, cex = 0.4, main = paste(&quot;Seed clusters using&quot;,y,&quot;linkage&quot;) )
+}</code></pre>
+<p>Once the functions are set I can run each analysis and plot the results, as shown below.</p>
+<pre class="r"><code>seed_av &lt;- heir_func(seed_cluster_scaled, &quot;average&quot;)
+
+plot_heir(seed_av,y = &quot;average&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>seed_comp &lt;- heir_func(seed_cluster_scaled, &quot;complete&quot;)
+
+plot_heir(seed_comp, &quot;complete&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<pre class="r"><code>seed_cent &lt;- heir_func(seed_cluster_scaled, &quot;centroid&quot;)
+
+plot_heir(seed_cent, &quot;centroid&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<p>Now that we have a few clusters based on difference distances, we can plot them in an animated chart using gganimate and compare them to the actual clusters.</p>
+<pre class="r"><code>seeds_h_clust &lt;- mutate(seeds, Av_clus = cutree(seed_av, k = 3),
+                        Comp_clus = cutree(seed_comp, k = 3),
+                        Cent_clus = cutree(seed_cent, k = 3)) %&gt;%
+  select(c(1:2, 8:11)) %&gt;%
+  mutate_at(vars(3:6), funs(as.factor)) %&gt;%
+  rename(Actual = type_of_seed, Average = Av_clus, Complete = Comp_clus, Centroid = Cent_clus) %&gt;%
+  gather(key = &quot;Method&quot;, value = &quot;Cluster&quot;, c(3:6)) %&gt;%
+  mutate(Method = factor(Method, levels = c(&quot;Actual&quot;, &quot;Average&quot;, &quot;Complete&quot;, &quot;Centroid&quot;)))</code></pre>
+<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+## please use list() instead
+## 
+## # Before:
+## funs(name = f(.)
+## 
+## # After: 
+## list(name = ~f(.))
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>animated_clust &lt;- ggplot(seeds_h_clust, aes(area, perimeter, col = Cluster)) +
+    geom_point(alpha = 0.6) +
+    theme_minimal() +
+    labs(x = &quot;Seed Area&quot;, 
+         y = &quot;Seed perimeter&quot;, 
+         col = &quot;Type of seed&quot;,
+         title = paste(&quot;Heirarchical clustering using the {closest_state} linkage&quot;)) +
+transition_states(Method, transition_length = 4, state_length = 3)</code></pre>
+<p>Also just to help distinguish between them all, a static plot of the three test clusters and the real clusters was produced, using a function again to help with the repetition. This showed that…</p>
+<pre class="r"><code>clust_plot_func &lt;- function(x, y, z){
+  y &lt;- enquo(y)
+  h_clust_plot_true &lt;- seeds_h_clust %&gt;%
+    filter(Method == x) %&gt;%
+    ggplot(aes(area, perimeter, col = !!y)) +
+    geom_point(alpha = 0.6) +
+    theme_minimal() +
+    labs(x = &quot;Seed Area&quot;, y = &quot;Seed perimeter&quot;, col = &quot;Type of seed&quot;, title = paste(&quot;Heirarchical clustering using the&quot;, z, &quot;linkage&quot;))
+}
+
+h_clust_plot_true &lt;- clust_plot_func(&quot;Actual&quot;, Cluster, &quot;Actual&quot;) + 
+  theme(legend.position = &quot;none&quot;, 
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank())
+  
+
+h_clust_plot_av &lt;- clust_plot_func(&quot;Average&quot;, Cluster, &quot;Average&quot;) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank())
+
+h_clust_plot_comp &lt;- clust_plot_func(&quot;Complete&quot;, Cluster, &quot;Complete&quot;) +
+  theme(legend.position = &quot;none&quot;)
+
+h_clust_plot_cent &lt;- clust_plot_func(&quot;Centroid&quot;, Cluster, &quot;Centroid&quot;) +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank())
+
+grid.arrange(h_clust_plot_true, h_clust_plot_av, h_clust_plot_comp, h_clust_plot_cent, nrow = 2)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Next I moved on to K means clustering, which involves the production of k clusters through randomly assigning a start and adding new points based on a distance. This involves using the same scaled and cleaned data set from before, and specifying a few parameters for the algorithm, such as centers (how many clusters to form) and nstart(how many starts with a random new centroid)</p>
+<pre class="r"><code>seed_k_means &lt;- kmeans(seed_cluster_scaled,centers = 3, nstart = 10)
+
+clusplot(seed_cluster_scaled, seed_k_means$cluster, 
+                         color = T, shade  = F, lines = 0, label = 1,
+                         main = &quot;Three cluster K means analysis&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Now that we have our clusters, a more recent visualisation have been made showing how the data divides via a tree. To produce this I made a function to divide the data based on 1, 2 or 3 clusters, joined the cluster data and plotted it using the clustree package, which gives a nice visual regarding the split of the data.</p>
+<pre class="r"><code>clus_tree_ext &lt;- function(x,y){
+  kmeans(x,y, nstart = 10) %&gt;%
+    pluck(1) %&gt;%
+    as_tibble()
+}
+
+one_k &lt;- clus_tree_ext(seed_cluster_scaled, 1)</code></pre>
+<pre><code>## Warning: Calling `as_tibble()` on a vector is discouraged, because the behavior is likely to change in the future. Use `tibble::enframe(name = NULL)` instead.
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>two_k &lt;- clus_tree_ext(seed_cluster_scaled, 2)
+
+three_k &lt;- clus_tree_ext(seed_cluster_scaled, 3)
+
+seeds_k_clust &lt;- bind_cols(one_k, two_k, three_k) %&gt;%
+  rename(K1 = value, K2 = value1, K3 = value2)
+
+
+clustree(seeds_k_clust, prefix = &quot;K&quot;, layout = &quot;sugiyama&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>So that’s the end of this exploration on clustering, hopefully you’ve enjoyed it as much as I did researching it!</p>
+</div>
+</div>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/the-life-of-sam-vimes-a-discworld-nlp-project/" data-toggle="tooltip" data-placement="top" title="The life of Sam Vimes - A Discworld NLP project">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="/post/2019-04-07-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/" data-toggle="tooltip" data-placement="top" title="Football Modelling part 1 - Web scraping">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+

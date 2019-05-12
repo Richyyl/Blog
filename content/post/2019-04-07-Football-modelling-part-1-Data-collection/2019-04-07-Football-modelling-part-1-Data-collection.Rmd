@@ -1,7 +1,7 @@
 ---
 title: Football Modelling part 1 - Web scraping
 author: Rich Louden
-date: '2019-04-14'
+date: '2019-04-07'
 slug: football-modelling-part-1-web-scraping
 categories: []
 tags: []
@@ -24,7 +24,7 @@ This piece of work will focus on scraping football data and using it to build a 
 This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / practice piece on how to utilise aspects of selenium for other tricky websites.
 
 As always its best to start by loading any packages you might need. It's likely that websites may require dynamic scraping, as such a combination of Rselenium and Rvest will likely work best, along with the tidyverse for general data cleanup.
-```{r Load packages, eval = FALSE}
+```{r Load packages, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(RSelenium)
 library(rvest)

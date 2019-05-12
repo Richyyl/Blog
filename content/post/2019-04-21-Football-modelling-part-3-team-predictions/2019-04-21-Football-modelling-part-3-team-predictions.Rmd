@@ -1,0 +1,224 @@
+---
+title: Football Modelling part 3 - Team predictions
+author: Rich Louden
+date: '2019-04-21'
+slug: football-modelling-part-3-team-predictions
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This document will serve as the final part (part 3) of the premier league analysis / modelling, and will be focussed on the player data collected in part one, which will then be aggregated inot teams and used for predicting some old matches.
+
+As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse, for cleaning / iterating, and rvest to scrape some fixtures.
+```{r Load packages, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(janitor)
+library(rvest)
+library(knitr)
+theme_set(theme_minimal())
+
+```
+
+First I'll load in the player data, clean it up a little and just give a cursory check to see that it looks ok! From the tables below it seems that the data is in order and we have plenty of teams with more than 11 players from the scraping.
+```{r Load player data}
+
+all_players <- read_csv("2018-19 players.csv")
+
+player_attack <- read_csv( "player_attack_stats.csv")
+
+player_defence <- read_csv( "player_defence_stats.csv")
+
+current_players_attacking <- inner_join(all_players, player_attack, by = c("Full_name" = "Name")) %>%
+  janitor::clean_names()
+
+current_players_defending <- inner_join(all_players, player_defence, by = c("Full_name" = "Name")) %>%
+  janitor::clean_names()
+
+current_players_attacking %>%
+  filter(data == "Season_17") %>%
+  arrange(desc(chances_created)) %>%
+  top_n(10, chances_created) %>%
+  select(full_name, chances_created) %>%
+  kable()
+  
+current_players_defending %>%
+  filter(data == "Season_17") %>%
+  arrange(desc(tackles_made)) %>%
+   top_n(10, tackles_made) %>%
+  select(full_name, tackles_made) %>%
+  kable()
+
+current_players_attacking %>%
+  filter(data == "Season_18") %>%
+  count(team) %>%
+  top_n(10, n) %>%
+  select(team, players = n) %>%
+  kable()
+
+```
+
+Now its time to reload the team data and produce a simple linear model like in the last post, as this will be used to predict how many goals are scored and conceded for each time.
+```{r Load team data and reproduce models}
+
+team_attack <- read_csv("team_attack_stats.csv") %>%
+  janitor::clean_names() %>%
+  mutate(avg_pass_length = as.numeric(str_remove(avg_pass_length, "m"))) %>%
+         separate(data, into = c("Stats", "Season"), sep = "_") %>%
+         mutate(Season = case_when(Season == "15" ~ "15/16",
+                                   Season == "16" ~ "16/17",
+                                   Season == "17" ~ "17/18",
+                                   T ~ "18/19"),
+                Season = factor(Season))
+
+team_defence <- read_csv("team_defence_stats.csv") %>%
+  janitor::clean_names() %>%
+  separate(data, into = c("Stats", "Season"), sep = "_") %>%
+         mutate(Season = case_when(Season == "15" ~ "15/16",
+                                   Season == "16" ~ "16/17",
+                                   Season == "17" ~ "17/18",
+                                   T ~ "18/19"),
+                Season = factor(Season))
+
+attack_final <- team_attack %>%
+  mutate(shot_ratio = shots_on_target / shots_off_target) %>%
+  select(-team, -Stats, -Season)
+
+defence_final <- team_defence %>%
+  select(-team, -Stats, -Season)
+
+set.seed(101)
+
+attack_model <- lm(goals_scored ~ ., data = attack_final)
+
+defence_model <- lm(totals_goals_conceded ~ ., data = defence_final)
+
+```
+
+Now we have to arrange the player sinto their respective teams, making sure to only include teams where I've managed to get data for at least 11 players, in order to make a full squad.
+```{r Build up teams for predictions}
+
+attack_model_data <- current_players_attacking %>%
+  filter(data == "Season_18") %>%
+  arrange(team) %>%
+  group_by(team) %>%
+  add_count(team) %>%
+  filter(n > 10)
+
+defence_model_data <- current_players_defending %>%
+  filter(data == "Season_18") %>%
+  arrange(team) %>%
+  group_by(team) %>%
+  add_count(team) %>%
+  filter(n > 10)
+
+attack_data_list <- rep(list(attack_model_data), 500)
+
+defence_data_list <- rep(list(defence_model_data), 500)
+
+```
+
+Now since I dont have the squad list for the fixtures im using I figured the best approach was to randomly sample 11 players from each team over multiple iterations to give a distribution of goals for and against, with the mean of this distribution acting as a good proxy for potential goals.
+```{r Boostrap model process for a goal distribution}
+
+team_attack_modeller <- function(x){
+  
+  x %>%
+  sample_n(11) %>%
+  mutate(avg_pass_length = parse_number(avg_pass_length),
+         shot_ratio = shots_on_target / shots_off_target,
+         shot_ratio = if_else(shot_ratio == Inf, 1, shot_ratio)) %>%
+  select(-n) %>%
+  summarise_if(is.numeric, mean) %>%
+  mutate(goals_scored = predict(attack_model, newdata = .))
+}
+
+team_defence_modeller <- function(x){
+  
+  x %>%
+  sample_n(11) %>%
+  select(-n) %>%
+  summarise_if(is.numeric, mean) %>%
+  mutate(goals_conceded = predict(defence_model, newdata = .))
+}
+
+
+attack_models <- map_df(attack_data_list, ~team_attack_modeller(.x))
+
+defence_models <- map_df(defence_data_list, ~team_defence_modeller(.x))
+
+```
+
+So, whilst the model for predicting goals scored appears to working relatively well, except for predicting negative goals, the defensive model has fallen pretty flat, predicitng all teams will conceded around 4 goals. As such the best way forwards is to rely on the attacking model and use the difference to decide the winner! 
+```{r Check distributions of two teams}
+
+attack_models %>%
+  filter(team == "Manchester City") %>%
+  ggplot(aes(x = goals_scored)) +
+  geom_histogram(binwidth = .3)
+
+attack_models %>%
+  ggplot(aes(x = goals_scored)) +
+  geom_histogram(binwidth = .3)
+
+defence_models %>% 
+  filter(team == "Manchester City") %>%
+  ggplot(aes(x = goals_conceded)) +
+  geom_histogram(binwidth = .01)
+
+defence_models %>% 
+  ggplot(aes(x = goals_conceded)) +
+  geom_histogram(binwidth = .01)
+
+```
+
+So, the final predictions are in and they look okay in places and off in some, for instance it's highly unlikely that Southampton will beat Liverpool this weekend, and its confusing why they show such a low goal prediction based on their current form. However this was more a dive into webscraping and the parsnip interface rather than about getting accurate predictions, I'll leave that one to the gambling companies. As such, this is the end of the post, I hope you've enjoyed reading along!
+```{r Weekends predictions!}
+
+latest_fixtures <- read_html("https://www.theguardian.com/football/premierleague/fixtures") %>%
+  html_node(xpath = '//*[@id="article"]/div/div/div[1]/div[3]') %>%
+  html_text() %>%
+  enframe(name = NULL)
+
+latest_fixtures_clean <- latest_fixtures %>%
+  separate_rows(value, sep = "\n\n\n\n\n\n\n") %>%
+  slice(seq(2,122,2)) %>%
+  separate(value, into = c("Home", "Away"), sep = "\n\n\n\n\n\n") %>%
+  mutate_all(list(~str_replace_all(., c("C Palace" = "Crystal Palace",
+                                        "Everton" = "Everton FC",
+                                        "Huddersfield" = "Huddersfield Town",
+                                        "Arsenal" = "Arsenal FC",
+                                        "Cardiff" = "Cardiff City",
+                                        "Chelsea" = "Chelsea FC",
+                                        "Burnley" = "Burnley FC",
+                                        "Fulham" = "Fulham FC",
+                                        "Man Utd" = "Manchester United",
+                                        "Man City" = "Manchester City",
+                                        "Liverpool" = "Liverpool FC",
+                                        "Southampton" = "Southampton FC",
+                                        "Tottenham" = "Tottenham Hotspur",
+                                        "Newcastle" = "Newcastle United",
+                                        "Leicester" = "Leicester City",
+                                        "West Ham" = "West Ham United"))))
+
+
+average_goals <- attack_models %>%
+  group_by(team) %>%
+  summarise(goals_score = mean(goals_scored))
+
+
+latest_predictions <- latest_fixtures_clean %>%
+  inner_join(average_goals, by = c("Home" = "team")) %>%
+  inner_join(average_goals, by = c("Away" = "team")) %>%
+  mutate(result = goals_score.x - goals_score.y,
+         winner = if_else(result > 0, "Home", "Away")) %>%
+  kable()
+
+```
+

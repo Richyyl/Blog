@@ -1,0 +1,160 @@
+---
+title: Clustering comparison
+author: Rich Louden
+date: '2018-07-28'
+slug: p-hacking
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
+---
+
+
+
+<div id="intro" class="section level2">
+<h2>Intro</h2>
+<p>This short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository <img src="http://archive.ics.uci.edu/ml/datasets/seeds" alt="link" /></p>
+<div id="analysis" class="section level3">
+<h3>Analysis</h3>
+<p>First thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.</p>
+<pre class="r"><code>library(tidyverse)
+library(clustree)
+library(cluster)
+library(scales)
+library(gridExtra)
+library(devtools)
+library(gganimate)</code></pre>
+<p>Now its time to load in the data set and tidy it up. This involves setting a random seed for the later splitting of the data, assigning proper column names, rounding the values and removing any NAs</p>
+<pre class="r"><code>set.seed(101)
+
+seeds &lt;- read.delim(&quot;seeds_dataset.txt&quot;,
+                   sep = &quot;\t&quot;, header = FALSE)
+
+colnames(seeds) &lt;- c(&#39;area&#39;,&#39;perimeter&#39;,&#39;compactness&#39;,&#39;length_of_kernel&#39;,
+                     &#39;width_of_kernal&#39;,&#39;asymmetry_coefficient&#39;,&#39;length_of_kernel_groove&#39;,
+                     &#39;type_of_seed&#39;)
+
+seeds$type_of_seed &lt;- round(seeds$type_of_seed)
+
+seeds &lt;- drop_na(seeds)</code></pre>
+<p>Now that the data is clean it’s time to remove the label column and scale the data so that each value column has an equal SD and mean, to prevent different units impacting the analysis, IE a 2 foot change in height shouldn’t have the same impact as a 2kg change in weight.</p>
+<pre class="r"><code>seed_label &lt;- select(seeds, type_of_seed)
+
+seed_cluster &lt;- select(seeds, -type_of_seed)
+
+seed_cluster_scaled &lt;- as_tibble(scale(seed_cluster))</code></pre>
+<p>Now the data is ready it’s time to test the first methodology, hierarchical clustering, which in essence places each point in its own cluster and then combines them until you converge on a single cluster, using a chosen distance metric (Max, Min, Mean or Centroid). The first part of this process was creating two functions, one to run the clustering and one to plot it, as I wanted to run a few distance types and compare the results.</p>
+<pre class="r"><code>heir_func &lt;- function(x,y){
+  dist(x, method  = &quot;euclidean&quot;) %&gt;%
+    hclust(method = y)
+}
+
+plot_heir &lt;- function(x,y){
+  plot(x, hang = -1, cex = 0.4, main = paste(&quot;Seed clusters using&quot;,y,&quot;linkage&quot;) )
+}</code></pre>
+<p>Once the functions are set I can run each analysis and plot the results, as shown below.</p>
+<pre class="r"><code>seed_av &lt;- heir_func(seed_cluster_scaled, &quot;average&quot;)
+
+plot_heir(seed_av,y = &quot;average&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>seed_comp &lt;- heir_func(seed_cluster_scaled, &quot;complete&quot;)
+
+plot_heir(seed_comp, &quot;complete&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<pre class="r"><code>seed_cent &lt;- heir_func(seed_cluster_scaled, &quot;centroid&quot;)
+
+plot_heir(seed_cent, &quot;centroid&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-5-3.png" width="672" /></p>
+<p>Now that we have a few clusters based on difference distances, we can plot them in an animated chart using gganimate and compare them to the actual clusters.</p>
+<pre class="r"><code>seeds_h_clust &lt;- mutate(seeds, Av_clus = cutree(seed_av, k = 3),
+                        Comp_clus = cutree(seed_comp, k = 3),
+                        Cent_clus = cutree(seed_cent, k = 3)) %&gt;%
+  select(c(1:2, 8:11)) %&gt;%
+  mutate_at(vars(3:6), funs(as.factor)) %&gt;%
+  rename(Actual = type_of_seed, Average = Av_clus, Complete = Comp_clus, Centroid = Cent_clus) %&gt;%
+  gather(key = &quot;Method&quot;, value = &quot;Cluster&quot;, c(3:6)) %&gt;%
+  mutate(Method = factor(Method, levels = c(&quot;Actual&quot;, &quot;Average&quot;, &quot;Complete&quot;, &quot;Centroid&quot;)))</code></pre>
+<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+## please use list() instead
+## 
+## # Before:
+## funs(name = f(.)
+## 
+## # After: 
+## list(name = ~f(.))
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>animated_clust &lt;- ggplot(seeds_h_clust, aes(area, perimeter, col = Cluster)) +
+    geom_point(alpha = 0.6) +
+    theme_minimal() +
+    labs(x = &quot;Seed Area&quot;, 
+         y = &quot;Seed perimeter&quot;, 
+         col = &quot;Type of seed&quot;,
+         title = paste(&quot;Heirarchical clustering using the {closest_state} linkage&quot;)) +
+transition_states(Method, transition_length = 4, state_length = 3)</code></pre>
+<p>Also just to help distinguish between them all, a static plot of the three test clusters and the real clusters was produced, using a function again to help with the repetition. This showed that…</p>
+<pre class="r"><code>clust_plot_func &lt;- function(x, y, z){
+  y &lt;- enquo(y)
+  h_clust_plot_true &lt;- seeds_h_clust %&gt;%
+    filter(Method == x) %&gt;%
+    ggplot(aes(area, perimeter, col = !!y)) +
+    geom_point(alpha = 0.6) +
+    theme_minimal() +
+    labs(x = &quot;Seed Area&quot;, y = &quot;Seed perimeter&quot;, col = &quot;Type of seed&quot;, title = paste(&quot;Heirarchical clustering using the&quot;, z, &quot;linkage&quot;))
+}
+
+h_clust_plot_true &lt;- clust_plot_func(&quot;Actual&quot;, Cluster, &quot;Actual&quot;) + 
+  theme(legend.position = &quot;none&quot;, 
+        axis.title.x=element_blank(),
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank())
+  
+
+h_clust_plot_av &lt;- clust_plot_func(&quot;Average&quot;, Cluster, &quot;Average&quot;) +
+  theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(), 
+        axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank())
+
+h_clust_plot_comp &lt;- clust_plot_func(&quot;Complete&quot;, Cluster, &quot;Complete&quot;) +
+  theme(legend.position = &quot;none&quot;)
+
+h_clust_plot_cent &lt;- clust_plot_func(&quot;Centroid&quot;, Cluster, &quot;Centroid&quot;) +
+  theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(), 
+        axis.ticks.y=element_blank())
+
+grid.arrange(h_clust_plot_true, h_clust_plot_av, h_clust_plot_comp, h_clust_plot_cent, nrow = 2)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Next I moved on to K means clustering, which involves the production of k clusters through randomly assigning a start and adding new points based on a distance. This involves using the same scaled and cleaned data set from before, and specifying a few parameters for the algorithm, such as centers (how many clusters to form) and nstart(how many starts with a random new centroid)</p>
+<pre class="r"><code>seed_k_means &lt;- kmeans(seed_cluster_scaled,centers = 3, nstart = 10)
+
+clusplot(seed_cluster_scaled, seed_k_means$cluster, 
+                         color = T, shade  = F, lines = 0, label = 1,
+                         main = &quot;Three cluster K means analysis&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Now that we have our clusters, a more recent visualisation have been made showing how the data divides via a tree. To produce this I made a function to divide the data based on 1, 2 or 3 clusters, joined the cluster data and plotted it using the clustree package, which gives a nice visual regarding the split of the data.</p>
+<pre class="r"><code>clus_tree_ext &lt;- function(x,y){
+  kmeans(x,y, nstart = 10) %&gt;%
+    pluck(1) %&gt;%
+    as_tibble()
+}
+
+one_k &lt;- clus_tree_ext(seed_cluster_scaled, 1)</code></pre>
+<pre><code>## Warning: Calling `as_tibble()` on a vector is discouraged, because the behavior is likely to change in the future. Use `tibble::enframe(name = NULL)` instead.
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>two_k &lt;- clus_tree_ext(seed_cluster_scaled, 2)
+
+three_k &lt;- clus_tree_ext(seed_cluster_scaled, 3)
+
+seeds_k_clust &lt;- bind_cols(one_k, two_k, three_k) %&gt;%
+  rename(K1 = value, K2 = value1, K3 = value2)
+
+
+clustree(seeds_k_clust, prefix = &quot;K&quot;, layout = &quot;sugiyama&quot;)</code></pre>
+<p><img src="/post/2018-07-28-clustering-comparison/2018-07-28-clustering-comparison_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>So that’s the end of this exploration on clustering, hopefully you’ve enjoyed it as much as I did researching it!</p>
+</div>
+</div>

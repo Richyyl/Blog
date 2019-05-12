@@ -8,26 +8,34 @@ tags: []
 type: ''
 subtitle: ''
 image: ''
-draft: true
+editor_options: 
+  chunk_output_type: console
 ---
 
+I've never been a huge reader, though when I do tend to get into a book it's usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky's. Within these novels there are a range of story arcs, however my heart and soul favorite can only be given to those relating to Sam Vimes, a misanthropic, sarcastic copper that just wants to see the world in the right place. 
 
-## the life of Sam Vimes analysis
+As such, I decided to take some inspiration from two tutorials, the first relating to structural topic models ![silge](https://juliasilge.com/blog/sherlock-holmes-stm/) and the second a full text analysis of the GoT novels ![GOT](https://api.rpubs.com/julheimer/got)
 
-##check R bloggers the life-changing magic of tidying text and Rstudio pubs Game of thrones book analysis for ideas
 
-install.packages("pdftools")
-install.packages("cleanNLP")
-install.packages("readtext")
+So, as always the first thing to do is load the packages I'll need, with plyr and the tidyverse for general cleaning, tidytext, stm, quanteda, tm, reticulate and cleanNLP to deal with the text elements and analysis and pdftools / readtext to read in the books.
+```{r, warning=FALSE, message=FALSE}
 library(plyr)
 library(tidyverse)
 library(pdftools)
 library(RColorBrewer)
 library(tidytext)
 library(readtext)
+library(stm)
+library(quanteda)
+library(reticulate)
+library(cleanNLP)
+library(tm)
 
+```
 
-### load in each book and convert to data frame
+Now that we have our packages we need some data, which came from either a PDF or word document of the books. Since there was going to be a lot of repetition I designated two functions for either pdf or text extraction, which just read in the text, collapsed it and then unnested it into sentences.
+
+```{r}
 
 PDF_extraction <- function(a){
   pdf_text(a) %>%
@@ -42,6 +50,11 @@ WRD_extraction <- function(x){
                     select(-1)
 }
 
+
+```
+
+
+```{r}
 GG <- WRD_extraction("D08 - Guards! Guards!.doc")
 
 
@@ -64,10 +77,11 @@ THUD <- PDF_extraction("Pratchett_Terry-Discworld_34-Thud-Pratchett_Terry.pdf")
 
 
 SNUFF <- PDF_extraction("Snuff - Terry Pratchett.pdf")
+```
 
+Now that we have all then books split into sentences, it's time to clean up the text and bind all the books into a single data frame. The cleaning simply involved removing the unrequired lines from each data frame and adding in a row number column as a proxy for sentence number. Once clean they were then bound together, and an reordering applied to the titles based on the order of the books.
 
-####clean up each book and then add to a single data frame for use
-
+```{r}
 
 Clean_func <- function(a,b,c){
   a %>%
@@ -98,61 +112,13 @@ Watch_levels <- c("Guards! Guards!",
 Watch_books <- bind_rows(GG_DF, MAA_DF, FOC_DF, J_DF, FE_DF, NW_DF, THUD_DF, SNUFF_DF) %>%
   mutate(Book = factor(Book, levels = Watch_levels))
 
+```
 
-###perform sentiment analysis on sentences
+Now the data is clean and in one place, a logical starting place is a sentiment analysis of each book, using the AFINN word library, due to a better link with novels. Once the sentiments were calculated the words / scores could be counted and used to produce a ratio, which was then plotted for each sentence per novel for each dictionary, showing the positive / negative shift over the course of each book.
 
+From the below figure you can see that sentiment varies over the timeline of each book (as you would expect) with some seeming overall a bit more cheerful than other, for example comparing Men At Arms to Snuff. This makes sense as Snuff is mostly tasked with dissecting the persecution of the goblin race.
 
-Negative_sent <- sentiments %>%
-  filter(lexicon == "bing", sentiment == "negative")
-
-Positive_sent <- sentiments %>%
-  filter(lexicon == "bing", sentiment == "positive")
-
-Watch_books_words <- Watch_books %>%
-  unnest_tokens(word, sentence, token = "words") %>%
-  anti_join(stop_words) %>%
-  group_by(Book, Sentence_number) %>%
-  summarise(words = n())
-
-watch_books_neg_sentiment <- Watch_books %>%
-  unnest_tokens(word, sentence, token = "words") %>%
-  anti_join(stop_words) %>%
-  semi_join(Negative_sent)%>%
-  group_by(Book, Sentence_number) %>%
-  summarise(neg_words = n())
-  
-Watch_books_pos_sentiment <- Watch_books %>%
-  unnest_tokens(word, sentence, token = "words") %>%
-  anti_join(stop_words) %>%
-  semi_join(Positive_sent) %>%
-  group_by(Book, Sentence_number) %>%
-  summarise(pos_words = n())
-
-Watch_book_full_sentiment <- Watch_books %>%
-  left_join(watch_books_neg_sentiment, by = c("Book", "Sentence_number")) %>%
-  left_join(Watch_books_pos_sentiment,by = c("Book", "Sentence_number")) %>%
-  left_join(Watch_books_words,by = c("Book", "Sentence_number")) %>%
-  mutate(neg_words = recode(neg_words, 'NA = 0'),
-         pos_words = recode(pos_words, 'NA = 0')) %>%
-  filter(neg_words != 0 & pos_words != 0) %>%
-  mutate(neg_ratio = neg_words / words,
-         pos_ratio = pos_words / words,
-         sentiment = pos_ratio - neg_ratio) %>%
-  select(-neg_words, pos_words, words)
-  
-
-nrc_sentimeent_plot <- ggplot(data = Watch_book_full_sentiment, aes(x = Sentence_number, y = sentiment, fill = Book)) + 
-  geom_bar(stat = "identity", show.legend = F) + 
-  scale_color_viridis_c() +
-  facet_wrap(~Book, ncol = 3, scales = "free_x") +
-  theme_classic() +
-  labs(title = "Sentiment over the Night Watch history", y = "sentiment", x = "Sentence number") + 
-  theme(strip.text = element_text(face = "italic")) +
-  theme(panel.grid.minor = element_blank())
-  
-nrc_sentimeent_plot
-
-
+```{r}
 
 watch_books_AFINN <- Watch_books %>%
   unnest_tokens(word, sentence, token = "words") %>%
@@ -161,7 +127,8 @@ watch_books_AFINN <- Watch_books %>%
   summarise(Sentiment_score = sum(score))
   
 
-afinn_sentimeent_plot <- ggplot(data = watch_books_AFINN, aes(x = Sentence_number, y = Sentiment_score, fill = Book)) + 
+watch_books_AFINN %>%
+  ggplot(aes(x = Sentence_number, y = Sentiment_score, fill = Book)) + 
   geom_bar(stat = "identity", show.legend = F) + 
   scale_color_viridis_c() +
   facet_wrap(~Book, ncol = 3, scales = "free_x") +
@@ -170,27 +137,33 @@ afinn_sentimeent_plot <- ggplot(data = watch_books_AFINN, aes(x = Sentence_numbe
   theme(strip.text = element_text(face = "italic")) +
   theme(panel.grid.minor = element_blank())
 
-afinn_sentimeent_plot
 
+```
 
+In addition to looking at each book sentence by sentence, the overall sentiment of each book was calculated and tracked across the progression of the books. This shows a somewhat different picture compared to tracking each sentence, with Men At Arms showing a lower score (thus more negative) in comparison to Snuff and Thud hitting rock bottom (likely due to all the war threats and death!)
+
+```{r}
 
 afinn_sent_summary <- watch_books_AFINN %>%
   group_by(Book) %>%
   summarise(Overall_sentiment = sum(Sentiment_score))
 
-afinn_summary_plot <- ggplot(data = afinn_sent_summary, aes(x = Book, y = Overall_sentiment, fill= Book, group = 1)) +
+afinn_sent_summary %>%
+  ggplot(aes(x = Book, y = Overall_sentiment, fill= Book, group = 1)) +
   geom_line(show.legend = F, col = "red",lineend = "round", linejoin = "round", size = 1) +
   geom_point(show.legend = F, col = "orange") +
   theme_classic() +
   labs(title = "Overall sentiment score across the Night Watch books", x = "Book", y = "Overall sentiment score") +
   scale_color_brewer()
 
-afinn_summary_plot
+```
 
 
-######### bigrams analysis
+Another interesting aspect of text analysis, stole from Julia Silges wonderful ![blog](https://juliasilge.com/blog/gender-pronouns/) is that of gendered bigrams, IE what words are associated with he / she most commonly. So in order to do this the text had to be split into bigrams, stop words removed from each side and then put back together for counting / plotting. This was conducted for both bigrams in general and those associated with he / she.
 
+This analysis showed that, generally, the most common bigrams were full names (such as Sam Vimes or Lord Vetinari). However, there were some interesting in book findings, such as mhm mhm within the Fifth Elephant (a phase often muttered by Inigo Skinner) and po lees within Snuff (a phrase spoken by the goblins to mean police). With regards t the gendered aspect, in general male bigrams were far more prevalent, though there was little to speak for differences in terms of actions as they mostly related to speaking / thinking.
 
+```{r}
 
 Watch_books_bigrams <- Watch_books %>%
   unnest_tokens(bigram, sentence, token = "ngrams", n = 2) %>%
@@ -206,7 +179,8 @@ Watch_books_bigrams <- Watch_books %>%
   top_n(10) %>%
   arrange(Book, desc(n))
 
-Bigram_plot <- ggplot(data = Watch_books_bigrams, aes(x = reorder(Bigram,n), y = n, fill = Book)) + 
+Watch_books_bigrams %>%
+  ggplot(aes(x = reorder(Bigram,n), y = n, fill = Book)) + 
   geom_col(show.legend = F) +
   coord_flip() +
   facet_wrap(~Book, nrow = 3, scales = "free_y") +
@@ -217,8 +191,6 @@ Bigram_plot <- ggplot(data = Watch_books_bigrams, aes(x = reorder(Bigram,n), y =
   scale_color_brewer() +
   theme(strip.text = element_text(face = "italic")) 
   theme(panel.grid.minor = element_blank())
-
-Bigram_plot
 
 
 Gendered_bigrams <- Watch_books %>%
@@ -236,7 +208,8 @@ group_by(Book) %>%
   top_n(10, n) %>%
   arrange(Book, desc(n))
 
-Gendered_bigram_plot <- ggplot(data = Gendered_bigrams, aes(x = reorder(Bigram,n), y = n, fill = Grouping)) + 
+Gendered_bigrams %>%
+  ggplot(aes(x = reorder(Bigram,n), y = n, fill = Grouping)) + 
   geom_col() +
   coord_flip() +
   facet_wrap(~Book, nrow = 3, scales = "free_y") +
@@ -248,13 +221,14 @@ Gendered_bigram_plot <- ggplot(data = Gendered_bigrams, aes(x = reorder(Bigram,n
   theme(strip.text = element_text(face = "italic")) +
   theme(panel.grid.minor = element_blank())
 
-Gendered_bigram_plot
 
+```
 
-#####dependency analaysis (GOT)
+Moving on to inspirations from other areas, at the start I mentioned a text analysis based on ASOIAF, which also includes some neat dependency analysis using SPACY and the cleanNLP package via reticulate (though I had to do this on another laptop and import the data, I show the code here too). From this we can find the words most associated with specific characters, which can be used in conjunction with a term-frequency inverse document frequency analysis to find words strongly associated with a character that are less associated with other characters.
 
-library(reticulate)
-library(cleanNLP)
+This showed a few key differences between main characters, such as Angua being associated with bounding, Nobby edging (usually away from danger) and Vimes thinking / realising (as he becomes a better detective).
+
+```{reval=F, echo=T}
 
 use_python("/Library/Frameworks/Python.framework/Versions/3.7/bin/python3")
 
@@ -314,17 +288,18 @@ full_dep <- bind_rows(dependencies_GG, dependencies_MAA, dependencies_J) %>%
   group_by(word_target, word, relation) %>%
   count %>%
   arrange(desc(n))
+```
 
-full_dep <- read_csv("RStudio/Scripts/Other projects/Life of Sam Vimes/dependencies_DF.csv")
-
-full_dep <- dependencies_DF
+```{r}
+full_dep <- read_csv("dependencies_DF.csv")
 
 watch_tfidf <- bind_tf_idf(full_dep, word, word_target, n) %>%
   group_by(word_target) %>%
   top_n(10) %>%
   arrange(word_target)
 
-watch_tfidf_plot <- ggplot(data = watch_tfidf, aes( x = reorder(word, tf_idf), y = tf_idf, fill = word_target)) +
+watch_tfidf %>%
+  ggplot(aes( x = reorder(word, tf_idf), y = tf_idf, fill = word_target)) +
   geom_col(show.legend = F) +
   theme_minimal() +
   coord_flip() +
@@ -332,18 +307,12 @@ watch_tfidf_plot <- ggplot(data = watch_tfidf, aes( x = reorder(word, tf_idf), y
   labs(title = "TFIDF for charaters in Guards! Guards!, Men At Arms and Jingo!", x = "Word", y ="TFIDF")+
   theme(axis.text.y.left = element_text(size = 6))
 
-
-watch_tfidf_plot
-
+```
 
 
-#####topic modelling (Youtube - Julia Silge)
+The final piece of analysis for this project was to perform subject topic modelling on the full series of books, aiming to divide them up into a number of related topics. This involved two different data prep approaches, the first being the conversion of the tokenised text into a document frequency matrix for modelling, and the second using the internal processing functions of the stm package to prepare the texts for a K search (in order to find an ideal number of topics). The two approaches were used due to some difficulty with using a dfm with the K search function. Once a suitable number of topics was chosen through the K search (6) the stm model was ran. 
 
-install.packages("stm")
-install.packages("quanteda")
-library(stm)
-library(quanteda)
-
+```{r}
 Watch_dfm <- Watch_books %>%
   unnest_tokens(word, sentence, token = "words") %>%
   anti_join(stop_words) %>%
@@ -359,14 +328,10 @@ K_search<-searchK(prepped_books$documents,prepped_books$vocab,K=c(4:10))
 
 plot(K_search)
 
+```
 
-##### held out liklihood - better models show increased likihood of held out documents - ie mor elikely to hold out docs in training
-##### residuals - lower residuals = model fits better to the data
-### semantic coherence - the probability of words ina  given topic co-occuring together, used to measure good topic quality. The higher the better
-### lower bound - an estimate of the lower bound of that distribution, used to estimate parameters, higher the better
-
-###6K model based on results
-
+The outputs of this model could then be extracted from the model object, namely the top terms per topic (beta) and the distribution of books to topics (gamma). The terms graph of this data reveal that Vimes is fairly key for all except topic 2, and a number of terms were highlighted which indicate which book fits with each topic (IE the term carcer is included for topic 4, indicating this is likely fitted to the Night Watch book). The distribution graph shows that four books sit solely within one topic, whilst the other four books are spread between the two topics, two a piece. If I were to guess which these were I’d say Fifth Elephant and Thud fall into topic 1 (due to the dwarf and troll terms), leaving Jingo and Feet of Clay to fall into topic 6.
+```{r}
 Watch_books_stm <- stm(Watch_dfm, K = 6, init.type = "Spectral", verbose = F)
 
 tidy_stm <- tidy(Watch_books_stm)
@@ -377,28 +342,26 @@ top_beta <- tidy_stm %>%
   ungroup() %>%
   mutate(topic = paste0("Topic ", topic))
 
-beta_plot <- ggplot(data = top_beta, aes(x = term, y = beta, fill = as.factor(topic))) +
+top_beta %>%
+  ggplot(aes(x = term, y = beta, fill = as.factor(topic))) +
   geom_col(show.legend = F) +
   coord_flip() +
   facet_wrap(~topic, scales = "free_y", nrow = 2) +
   labs(title = "Top ten terms per theme of the Night Watch books", x = "Term", y = "Beta") +
   theme_minimal()
 
-beta_plot
-
-
 Watch_gamma <- tidy(Watch_books_stm, matrix = "gamma",                    
                     document_names = rownames(Watch_books_stm)) %>%
   mutate(topic = paste0("Topic ", topic))
 
-gamma_plot <- ggplot(Watch_gamma, aes(gamma, fill = as.factor(topic))) +
+Watch_gamma %>%
+  ggplot(aes(gamma, fill = as.factor(topic))) +
   geom_histogram(show.legend = FALSE) +
   facet_wrap(~ topic, nrow = 2) +
   theme_minimal() +
   labs(title = "Document probabilities spread for each topic",
        y = "Number of books", x = "Gamma")
 
-gamma_plot
+```
 
-topic_1_cloud <- cloud(Watch_books_stm, topic = 2)
-
+So, this brings me to the end of my analysis of the Night Watch books, using a few interesting techniques I’ve picked up from tutorials (mostly delivered by Julia Silge), hopefully you’ve enjoyed it!

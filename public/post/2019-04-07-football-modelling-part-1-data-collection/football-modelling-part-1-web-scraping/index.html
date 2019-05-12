@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Football Modelling part 1 - Web scraping - Upsupervised Learnings</title>
+  <meta property="og:title" content="Football Modelling part 1 - Web scraping" />
+  <meta name="twitter:title" content="Football Modelling part 1 - Web scraping" />
+  <meta name="description" content="This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches">
+  <meta property="og:description" content="This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches">
+  <meta name="twitter:description" content="This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/2019-04-07-football-modelling-part-1-data-collection\/football-modelling-part-1-web-scraping\/",
+          "name": "Football modelling part 1 web scraping"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "Football Modelling part 1 - Web scraping",
+  "description" : "This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.\n\rPart one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches",
+  "inLanguage" : "en",
+  "wordCount":  1508 ,
+  "datePublished" : "2019-04-07T00:00:00",
+  "dateModified" : "2019-04-07T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/2019-04-07-football-modelling-part-1-data-collection\/football-modelling-part-1-web-scraping\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Football Modelling part 1 - Web scraping" />
+<meta property="og:description" content="This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.
+Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/2019-04-07-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="Football Modelling part 1 - Web scraping" />
+  <meta name="twitter:description" content="This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/2019-04-07-football-modelling-part-1-data-collection/football-modelling-part-1-web-scraping/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Football Modelling part 1 - Web scraping</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on April 7, 2019
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>This piece of work will focus on scraping football data and using it to build a statistical model to predict the outcomes of premier league matches in England. It will be comprised of three parts, all aiming to use skills I have acquired over the past couple of years.</p>
+<ul>
+<li><p>Part one: Obtaining data on both current players (past three years) and teams for the last four seasons of matches</p></li>
+<li><p>Part two: Building a statistical model to determine what variables have the largest impact on the number of goals scored and conceded.</p></li>
+<li><p>Part three: Utilise the model from part two to make predictions, using aggregated data from players to provide team statistics</p></li>
+</ul>
+<p>This markdown document will serve as part one, focussing on obtaining the data through webscraping. Though something important to note is since I started writing this piece the website in question appears to have stopped functioning properly, as such it more serves as a tutorial / practice piece on how to utilise aspects of selenium for other tricky websites.</p>
+<p>As always its best to start by loading any packages you might need. It’s likely that websites may require dynamic scraping, as such a combination of Rselenium and Rvest will likely work best, along with the tidyverse for general data cleanup.</p>
+<pre class="r"><code>library(tidyverse)
+library(RSelenium)
+library(rvest)
+library(httr)</code></pre>
+<p>Right, first things first lets find a good site to scrape match results from and see what I can pull, this will also need to include match stats for the model.</p>
+<pre class="r"><code>test_url &lt;- &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;st=101,103,104,106,117,111,211,213,313,312&quot;
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4444L)
+remDr &lt;- rD$client
+remDr$navigate(test_url)
+
+X &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+Scores &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=10, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+teams &lt;- X %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRqZkC&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value) %&gt;%
+  bind_cols(Scores)</code></pre>
+<p>Since all this works and pulls a nice set of data for a specific season and all clubs I can go ahead and start to iterate using purrr. For each season I’m going to collect some attacking and defending data, which involves selecting the urls by hand, making a list and then iterating. I do plan to automate this at a later point, but for now I’m happy with doing it by hand since there arent many URLs.</p>
+<pre class="r"><code>team_scraper &lt;- function(scrape_url){
+
+remDr$navigate(scrape_url)
+  
+Sys.sleep(10)
+
+page &lt;- read_html(remDr$getPageSource()[[1]])
+  
+headers &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+Scores &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=10, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+teams &lt;- page %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRqZkC&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value) %&gt;%
+  bind_cols(Scores)  
+   
+}
+
+name_vec &lt;- paste0(rep(c(&quot;Attacking&quot;, &quot;Defending&quot;),4),&quot;_&quot;,(c(&quot;15&quot;,&quot;15&quot;,&quot;16&quot;,&quot;16&quot;,&quot;17&quot;,&quot;17&quot;,&quot;18&quot;,&quot;18&quot;)))
+
+team_urls &lt;- c(&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;, &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=1&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;,&quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;display=numeric&amp;st=101,103,104,105,117,111,113,211,212,201&quot;, &quot;http://www.squawka.com/en/football-team-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;display=numeric&amp;st=312,307,401,402,406,502,503,602,604,701&quot;)
+
+team_url_df &lt;- tibble(x = name_vec,
+                 y = team_urls)
+
+team_url_list &lt;- as.list(team_url_df$y) %&gt;%
+  set_names(team_url_df$x)</code></pre>
+<p>Now the vectors and lists are all made up its time to collect the data!</p>
+<pre class="r"><code>rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4464L)
+remDr &lt;- rD$client
+
+match_stats &lt;- map(team_url_list, team_scraper)
+
+match_stats_df &lt;- map_df(match_stats, bind_rows, .id = &quot;Data&quot;)
+
+team_attack_stats &lt;- match_stats_df %&gt;%
+  filter(str_detect(Data, &quot;Attacking&quot;)) %&gt;%
+  select(1:12)
+
+sum(is.na(team_attack_stats))
+
+write_csv(team_attack_stats, &quot;team_attack_stats.csv&quot;)
+
+team_defence_stats &lt;- match_stats_df %&gt;%
+  filter(str_detect(Data, &quot;Defending&quot;)) %&gt;%
+  select(c(1:2, 13:22))
+
+sum(is.na(team_defence_stats))
+
+write_csv(team_defence_stats, &quot;team_defence_stats.csv&quot;)</code></pre>
+<p>Now we have all the club level data its time to collect the player level data! Luckily the same website holds player level information for the same stats, meaning I can utilise the same scraping infrastructure. However, it does need to be tweaked slightly to pull in the number of matches and also to scroll down the page and continue scraping, so we get all the players. As such, first thing to do is manually make a new list of URLs for the players and then test the old infrastructure to see where tweaks are required. Another issue after checked the data is that the website appears to not like showing more than 4 stats per player, or you start to get missing data. As such I’ve had to replicate the URLs.</p>
+<pre class="r"><code>player_table_vec &lt;- c(&quot;Attacking_16&quot;,  &quot;Attacking_17&quot;,&quot;Attacking_18&quot;, &quot;Defending_16&quot;, &quot;Defending_17&quot;, &quot;Defending_18&quot;)
+
+base_attacking_urls &lt;- c(&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;)
+
+base_defending_urls &lt;- c(&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=4&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=97&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;,&quot;http://www.squawka.com/en/football-player-rankings?c=29&amp;s=100&amp;period=ninety-minutes&amp;played=true&amp;display=numeric&amp;st=&quot;)
+
+first_four_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;101,103,104,105&quot;), paste0(base_defending_urls, &quot;312,307,401,402&quot;))
+
+second_three_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;117,111,113&quot;), paste0(base_defending_urls, &quot;406,502,503&quot;))
+
+final_two_stats_player_urls &lt;- c(paste0(base_attacking_urls, &quot;211,212&quot;), paste0(base_defending_urls, &quot;602,604&quot;))
+
+all_player_urls &lt;- list(first_four_stats_player_urls, second_three_stats_player_urls, final_two_stats_player_urls)
+
+player_url_list &lt;- map(.x = all_player_urls, ~as.list(.x) %&gt;%
+                         set_names(player_table_vec))
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4454L)
+remDr &lt;- rD$client
+
+remDr$navigate(player_url_list[[1]][[1]])
+
+Y &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+scores &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=9, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+players &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jPUbTB&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Team = value)
+  
+games &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRUmwo&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=1, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename(Games = V1) %&gt;%
+  mutate(Games = str_extract(Games, &quot;^.{2}&quot;))
+
+player_stats &lt;- bind_cols(players, games, scores)
+
+scroll &lt;- remDr$findElement(&#39;css&#39;, &quot;body&quot;)
+scroll$sendKeysToElement(list(key = &quot;end&quot;))
+
+more &lt;- remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;)
+more$clickElement()</code></pre>
+<p>Now that we have the infrastructure pieces set it’s time to build them up into a function! Sadly I had to resort to using a for loop within a function for this due to needing to load the URL once then scroll the page and then click the next button multiple times, without re-opening the original URL. I’m aware theres likely a much faster way to do this using purrr, so any feedback on that would be greatly welcomed! Also includes some error handling for the fact that the more button may dissapear.</p>
+<pre class="r"><code>player_stats_final &lt;- tibble()
+
+player_scraper &lt;- function(scrape_url, vec){
+
+remDr$navigate(scrape_url)
+Sys.sleep(5)
+  
+for(i in 1:length(vec)){
+
+Y &lt;- read_html(remDr$getPageSource()[[1]])
+
+headers &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jgckrp&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  unique()
+
+scores &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;bRLgxe&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=length(headers), byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename_all(funs(c(headers)))
+
+players &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;jPUbTB&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL) %&gt;%
+  rename(Name = value)
+  
+games &lt;- Y %&gt;%
+  html_nodes(xpath = &#39;//*[contains(concat( &quot; &quot;, @class, &quot; &quot; ), concat( &quot; &quot;, &quot;gRUmwo&quot;, &quot; &quot; ))]&#39;) %&gt;%
+  html_text() %&gt;%
+  matrix(ncol=1, byrow=TRUE) %&gt;%
+  as_tibble() %&gt;%
+  rename(Games = V1) %&gt;%
+  mutate(Games = str_extract(Games, &quot;^.{2}&quot;))
+
+player_stats &lt;- bind_cols(players, games, scores)
+
+player_stats_final &lt;- bind_rows(player_stats_final, player_stats) %&gt;%
+  distinct(Name, .keep_all = T)
+
+scroll &lt;- remDr$findElement(&#39;css&#39;, &quot;body&quot;)
+
+scroll$sendKeysToElement(list(key = &quot;end&quot;))
+
+check &lt;- suppressMessages(try(remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;), silent = TRUE))
+
+if (any(class(check) != &quot;try-error&quot;)) {
+more &lt;- remDr$findElement(using = &#39;css selector&#39;, &quot;span:nth-child(1) &gt; div&quot;)
+more$clickElement()} else {
+  Sys.sleep(1)
+}
+
+Sys.sleep(5)
+
+}
+return(player_stats_final)
+}
+
+rD &lt;- rsDriver(browser = &quot;firefox&quot;, port = 4456L)
+remDr &lt;- rD$client
+remDr$setWindowSize(1530L, 825L)
+
+player_stats &lt;- map(player_url_list, ~map(.x, ~player_scraper(scrape_url = .x,
+                                                      vec = seq(1,20,1))))
+
+table_joiner &lt;- function(w, x, y, z){
+
+a &lt;- w[[1]][[x]]
+
+b &lt;- w[[2]][[x]]
+
+c &lt;- w[[3]][[x]]
+
+joined_frame_1 &lt;- inner_join(a,b, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(c, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_16&quot;)
+
+d &lt;- w[[1]][[y]]
+
+e &lt;- w[[2]][[y]]
+
+f &lt;- w[[3]][[y]]
+
+joined_frame_2 &lt;- inner_join(d,e, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(f, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_17&quot;)
+
+
+g &lt;- w[[1]][[z]]
+
+h &lt;- w[[2]][[z]]
+
+i &lt;- w[[3]][[z]]
+
+joined_frame_3 &lt;- inner_join(g,h, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  inner_join(i, by = c(&quot;Name&quot;, &quot;Games&quot;)) %&gt;%
+  mutate(data = &quot;Season_18&quot;)
+
+final_frame &lt;- bind_rows(joined_frame_1, joined_frame_2, joined_frame_3) %&gt;% select(length(.), everything())
+  
+}
+
+player_attack_stats &lt;- table_joiner(player_stats, 1, 2, 3)
+
+player_defence_stats &lt;- table_joiner(player_stats, 4, 5, 6)
+
+sum(is.na(player_attack_stats))
+
+write_csv(player_attack_stats, &quot;player_attack_stats.csv&quot;)
+
+sum(is.na(player_defence_stats))
+
+write_csv(player_defence_stats, &quot;player_defence_stats.csv&quot;)</code></pre>
+<p>Now we have all the player and team data we need to scrape the final piece, ie what clubs do the players play for now. Luckily we’re past the January transfer window so no one should be moving around, so I can just go ahead and scrape the current list of EPL players and their associated clubs. Once this is done we can move onto some EDA and starting to build the model using the parsnip package!</p>
+<pre class="r"><code>club_url &lt;- &quot;https://www.worldfootball.net/players_list/eng-premier-league-2018-2019/nach-name/&quot;
+
+page_vec &lt;- seq(1,12,1)
+
+club_urls &lt;- paste0(club_url, page_vec) %&gt;%
+  as.list()
+
+club_scraper &lt;- function(x){
+  
+  club_table &lt;- read_html(x) %&gt;%
+    html_node(xpath = &#39;//*[@id=&quot;site&quot;]/div[3]/div[1]/div/div[3]/div/table&#39;) %&gt;%
+    html_table()
+  
+}
+
+current_clubs &lt;- map(club_urls, club_scraper)
+
+current_clubs_df &lt;- map_df(current_clubs, bind_cols) %&gt;%
+  select(1,3) %&gt;%
+  separate(Player, c(&quot;First&quot;, &quot;Last&quot;), sep = &quot; &quot;, extra = &quot;merge&quot;)
+
+single_names &lt;- filter(current_clubs_df, is.na(Last)) %&gt;%
+  rename(Full_name = First) %&gt;%
+  select(-2)
+
+double_names &lt;- filter(current_clubs_df, !is.na(Last)) %&gt;%
+  mutate(Full_name = paste0(str_sub(First, 1, 1), &quot;.&quot;, &quot; &quot;, Last)) %&gt;%
+  select(4,3)
+
+all_players &lt;- bind_rows(double_names, single_names)
+
+write_csv(all_players, &quot;2019-19 players.csv&quot;)</code></pre>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2018-07-28-clustering-comparison/p-hacking/" data-toggle="tooltip" data-placement="top" title="Clustering comparison">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="/post/2019-04-14-football-modelling-part-2-eda-and-modelling/football-modelling-part-2-eda-and-modelling/" data-toggle="tooltip" data-placement="top" title="Football Modelling part 2 - EDA and Modelling">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+

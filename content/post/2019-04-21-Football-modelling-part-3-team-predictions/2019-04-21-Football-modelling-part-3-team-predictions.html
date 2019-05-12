@@ -1,0 +1,408 @@
+---
+title: Football Modelling part 3 - Team predictions
+author: Rich Louden
+date: '2019-04-21'
+slug: football-modelling-part-3-team-predictions
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
+---
+
+
+
+<p>This document will serve as the final part (part 3) of the premier league analysis / modelling, and will be focussed on the player data collected in part one, which will then be aggregated inot teams and used for predicting some old matches.</p>
+<p>As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse, for cleaning / iterating, and rvest to scrape some fixtures.</p>
+<pre class="r"><code>library(tidyverse)
+library(janitor)
+library(rvest)
+library(knitr)
+theme_set(theme_minimal())</code></pre>
+<p>First I’ll load in the player data, clean it up a little and just give a cursory check to see that it looks ok! From the tables below it seems that the data is in order and we have plenty of teams with more than 11 players from the scraping.</p>
+<pre class="r"><code>all_players &lt;- read_csv(&quot;2018-19 players.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Full_name = col_character(),
+##   Team = col_character()
+## )</code></pre>
+<pre class="r"><code>player_attack &lt;- read_csv( &quot;player_attack_stats.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   data = col_character(),
+##   Name = col_character(),
+##   Games = col_character(),
+##   `passes completed` = col_double(),
+##   `forward passes` = col_double(),
+##   `backward passes` = col_double(),
+##   `sideways passes` = col_double(),
+##   `chances created` = col_double(),
+##   `assists created` = col_double(),
+##   `avg pass length` = col_character(),
+##   `shots on target` = col_double(),
+##   `shots off target` = col_double()
+## )</code></pre>
+<pre class="r"><code>player_defence &lt;- read_csv( &quot;player_defence_stats.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   data = col_character(),
+##   Name = col_character(),
+##   Games = col_character(),
+##   `tackles made` = col_double(),
+##   `tackles won` = col_double(),
+##   intercept = col_double(),
+##   `total blocks` = col_double(),
+##   `total clearances` = col_double(),
+##   `total red cards` = col_double(),
+##   `total yellow cards` = col_double(),
+##   `total saves` = col_double(),
+##   `saves per goal` = col_double()
+## )</code></pre>
+<pre class="r"><code>current_players_attacking &lt;- inner_join(all_players, player_attack, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
+  janitor::clean_names()
+
+current_players_defending &lt;- inner_join(all_players, player_defence, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
+  janitor::clean_names()
+
+current_players_attacking %&gt;%
+  filter(data == &quot;Season_17&quot;) %&gt;%
+  arrange(desc(chances_created)) %&gt;%
+  top_n(10, chances_created) %&gt;%
+  select(full_name, chances_created) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">full_name</th>
+<th align="right">chances_created</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">K. De Bruyne</td>
+<td align="right">3.44</td>
+</tr>
+<tr class="even">
+<td align="left">C. Eriksen</td>
+<td align="right">2.92</td>
+</tr>
+<tr class="odd">
+<td align="left">P. Groß</td>
+<td align="right">2.85</td>
+</tr>
+<tr class="even">
+<td align="left">X. Shaqiri</td>
+<td align="right">2.63</td>
+</tr>
+<tr class="odd">
+<td align="left">D. Silva</td>
+<td align="right">2.58</td>
+</tr>
+<tr class="even">
+<td align="left">G. Deulofeu</td>
+<td align="right">2.29</td>
+</tr>
+<tr class="odd">
+<td align="left">M. Salah</td>
+<td align="right">2.08</td>
+</tr>
+<tr class="even">
+<td align="left">O. Zinchenko</td>
+<td align="right">2.03</td>
+</tr>
+<tr class="odd">
+<td align="left">B. Davies</td>
+<td align="right">1.90</td>
+</tr>
+<tr class="even">
+<td align="left">R. Mahrez</td>
+<td align="right">1.89</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>current_players_defending %&gt;%
+  filter(data == &quot;Season_17&quot;) %&gt;%
+  arrange(desc(tackles_made)) %&gt;%
+   top_n(10, tackles_made) %&gt;%
+  select(full_name, tackles_made) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">full_name</th>
+<th align="right">tackles_made</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A. Wan-Bissaka</td>
+<td align="right">9.19</td>
+</tr>
+<tr class="even">
+<td align="left">M. Diamé</td>
+<td align="right">4.69</td>
+</tr>
+<tr class="odd">
+<td align="left">W. Ndidi</td>
+<td align="right">4.66</td>
+</tr>
+<tr class="even">
+<td align="left">I. Gueye</td>
+<td align="right">4.49</td>
+</tr>
+<tr class="odd">
+<td align="left">V. Wanyama</td>
+<td align="right">3.80</td>
+</tr>
+<tr class="even">
+<td align="left">Kenedy</td>
+<td align="right">3.78</td>
+</tr>
+<tr class="odd">
+<td align="left">J. McCarthy</td>
+<td align="right">3.77</td>
+</tr>
+<tr class="even">
+<td align="left">J. Hogg</td>
+<td align="right">3.73</td>
+</tr>
+<tr class="odd">
+<td align="left">N. Kanté</td>
+<td align="right">3.66</td>
+</tr>
+<tr class="even">
+<td align="left">T. Kongolo</td>
+<td align="right">3.57</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>current_players_attacking %&gt;%
+  filter(data == &quot;Season_18&quot;) %&gt;%
+  count(team) %&gt;%
+  top_n(10, n) %&gt;%
+  select(team, players = n) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">team</th>
+<th align="right">players</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">AFC Bournemouth</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">Arsenal FC</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">Brighton &amp; Hove Albion</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">Everton FC</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">Huddersfield Town</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">Leicester City</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">Liverpool FC</td>
+<td align="right">17</td>
+</tr>
+<tr class="even">
+<td align="left">Manchester City</td>
+<td align="right">18</td>
+</tr>
+<tr class="odd">
+<td align="left">Manchester United</td>
+<td align="right">17</td>
+</tr>
+<tr class="even">
+<td align="left">Newcastle United</td>
+<td align="right">17</td>
+</tr>
+<tr class="odd">
+<td align="left">Tottenham Hotspur</td>
+<td align="right">17</td>
+</tr>
+<tr class="even">
+<td align="left">Watford FC</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">West Ham United</td>
+<td align="right">17</td>
+</tr>
+</tbody>
+</table>
+<p>Now its time to reload the team data and produce a simple linear model like in the last post, as this will be used to predict how many goals are scored and conceded for each time.</p>
+<pre class="r"><code>team_attack &lt;- read_csv(&quot;team_attack_stats.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  mutate(avg_pass_length = as.numeric(str_remove(avg_pass_length, &quot;m&quot;))) %&gt;%
+         separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
+         mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
+                                   Season == &quot;16&quot; ~ &quot;16/17&quot;,
+                                   Season == &quot;17&quot; ~ &quot;17/18&quot;,
+                                   T ~ &quot;18/19&quot;),
+                Season = factor(Season))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `passes completed` = col_double(),
+##   `forward passes` = col_double(),
+##   `backward passes` = col_double(),
+##   `sideways passes` = col_double(),
+##   `chances created` = col_double(),
+##   `assists created` = col_double(),
+##   `avg pass length` = col_character(),
+##   `shots on target` = col_double(),
+##   `shots off target` = col_double(),
+##   `goals scored` = col_double()
+## )</code></pre>
+<pre class="r"><code>team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
+  janitor::clean_names() %&gt;%
+  separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
+         mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
+                                   Season == &quot;16&quot; ~ &quot;16/17&quot;,
+                                   Season == &quot;17&quot; ~ &quot;17/18&quot;,
+                                   T ~ &quot;18/19&quot;),
+                Season = factor(Season))</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   Data = col_character(),
+##   Team = col_character(),
+##   `tackles made` = col_double(),
+##   `tackles won` = col_double(),
+##   intercept = col_double(),
+##   `total blocks` = col_double(),
+##   `total clearances` = col_double(),
+##   `total red cards` = col_double(),
+##   `total yellow cards` = col_double(),
+##   `total saves` = col_double(),
+##   `saves per goal` = col_double(),
+##   `totals goals conceded` = col_double()
+## )</code></pre>
+<pre class="r"><code>attack_final &lt;- team_attack %&gt;%
+  mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
+  select(-team, -Stats, -Season)
+
+defence_final &lt;- team_defence %&gt;%
+  select(-team, -Stats, -Season)
+
+set.seed(101)
+
+attack_model &lt;- lm(goals_scored ~ ., data = attack_final)
+
+defence_model &lt;- lm(totals_goals_conceded ~ ., data = defence_final)</code></pre>
+<p>Now we have to arrange the player sinto their respective teams, making sure to only include teams where I’ve managed to get data for at least 11 players, in order to make a full squad.</p>
+<pre class="r"><code>attack_model_data &lt;- current_players_attacking %&gt;%
+  filter(data == &quot;Season_18&quot;) %&gt;%
+  arrange(team) %&gt;%
+  group_by(team) %&gt;%
+  add_count(team) %&gt;%
+  filter(n &gt; 10)
+
+defence_model_data &lt;- current_players_defending %&gt;%
+  filter(data == &quot;Season_18&quot;) %&gt;%
+  arrange(team) %&gt;%
+  group_by(team) %&gt;%
+  add_count(team) %&gt;%
+  filter(n &gt; 10)
+
+attack_data_list &lt;- rep(list(attack_model_data), 500)
+
+defence_data_list &lt;- rep(list(defence_model_data), 500)</code></pre>
+<p>Now since I dont have the squad list for the fixtures im using I figured the best approach was to randomly sample 11 players from each team over multiple iterations to give a distribution of goals for and against, with the mean of this distribution acting as a good proxy for potential goals.</p>
+<pre class="r"><code>team_attack_modeller &lt;- function(x){
+  
+  x %&gt;%
+  sample_n(11) %&gt;%
+  mutate(avg_pass_length = parse_number(avg_pass_length),
+         shot_ratio = shots_on_target / shots_off_target,
+         shot_ratio = if_else(shot_ratio == Inf, 1, shot_ratio)) %&gt;%
+  select(-n) %&gt;%
+  summarise_if(is.numeric, mean) %&gt;%
+  mutate(goals_scored = predict(attack_model, newdata = .))
+}
+
+team_defence_modeller &lt;- function(x){
+  
+  x %&gt;%
+  sample_n(11) %&gt;%
+  select(-n) %&gt;%
+  summarise_if(is.numeric, mean) %&gt;%
+  mutate(goals_conceded = predict(defence_model, newdata = .))
+}
+
+
+attack_models &lt;- map_df(attack_data_list, ~team_attack_modeller(.x))
+
+defence_models &lt;- map_df(defence_data_list, ~team_defence_modeller(.x))</code></pre>
+<p>So, whilst the model for predicting goals scored appears to working relatively well, except for predicting negative goals, the defensive model has fallen pretty flat, predicitng all teams will conceded around 4 goals. As such the best way forwards is to rely on the attacking model and use the difference to decide the winner!</p>
+<pre class="r"><code>attack_models %&gt;%
+  filter(team == &quot;Manchester City&quot;) %&gt;%
+  ggplot(aes(x = goals_scored)) +
+  geom_histogram(binwidth = .3)</code></pre>
+<p><img src="/post/2019-04-21-Football-modelling-part-3-team-predictions/2019-04-21-Football-modelling-part-3-team-predictions_files/figure-html/Check%20distributions%20of%20two%20teams-1.png" width="672" /></p>
+<pre class="r"><code>attack_models %&gt;%
+  ggplot(aes(x = goals_scored)) +
+  geom_histogram(binwidth = .3)</code></pre>
+<p><img src="/post/2019-04-21-Football-modelling-part-3-team-predictions/2019-04-21-Football-modelling-part-3-team-predictions_files/figure-html/Check%20distributions%20of%20two%20teams-2.png" width="672" /></p>
+<pre class="r"><code>defence_models %&gt;% 
+  filter(team == &quot;Manchester City&quot;) %&gt;%
+  ggplot(aes(x = goals_conceded)) +
+  geom_histogram(binwidth = .01)</code></pre>
+<p><img src="/post/2019-04-21-Football-modelling-part-3-team-predictions/2019-04-21-Football-modelling-part-3-team-predictions_files/figure-html/Check%20distributions%20of%20two%20teams-3.png" width="672" /></p>
+<pre class="r"><code>defence_models %&gt;% 
+  ggplot(aes(x = goals_conceded)) +
+  geom_histogram(binwidth = .01)</code></pre>
+<p><img src="/post/2019-04-21-Football-modelling-part-3-team-predictions/2019-04-21-Football-modelling-part-3-team-predictions_files/figure-html/Check%20distributions%20of%20two%20teams-4.png" width="672" /></p>
+<p>So, the final predictions are in and they look okay in places and off in some, for instance it’s highly unlikely that Southampton will beat Liverpool this weekend, and its confusing why they show such a low goal prediction based on their current form. However this was more a dive into webscraping and the parsnip interface rather than about getting accurate predictions, I’ll leave that one to the gambling companies. As such, this is the end of the post, I hope you’ve enjoyed reading along!</p>
+<pre class="r"><code>latest_fixtures &lt;- read_html(&quot;https://www.theguardian.com/football/premierleague/fixtures&quot;) %&gt;%
+  html_node(xpath = &#39;//*[@id=&quot;article&quot;]/div/div/div[1]/div[3]&#39;) %&gt;%
+  html_text() %&gt;%
+  enframe(name = NULL)
+
+latest_fixtures_clean &lt;- latest_fixtures %&gt;%
+  separate_rows(value, sep = &quot;\n\n\n\n\n\n\n&quot;) %&gt;%
+  slice(seq(2,122,2)) %&gt;%
+  separate(value, into = c(&quot;Home&quot;, &quot;Away&quot;), sep = &quot;\n\n\n\n\n\n&quot;) %&gt;%
+  mutate_all(list(~str_replace_all(., c(&quot;C Palace&quot; = &quot;Crystal Palace&quot;,
+                                        &quot;Everton&quot; = &quot;Everton FC&quot;,
+                                        &quot;Huddersfield&quot; = &quot;Huddersfield Town&quot;,
+                                        &quot;Arsenal&quot; = &quot;Arsenal FC&quot;,
+                                        &quot;Cardiff&quot; = &quot;Cardiff City&quot;,
+                                        &quot;Chelsea&quot; = &quot;Chelsea FC&quot;,
+                                        &quot;Burnley&quot; = &quot;Burnley FC&quot;,
+                                        &quot;Fulham&quot; = &quot;Fulham FC&quot;,
+                                        &quot;Man Utd&quot; = &quot;Manchester United&quot;,
+                                        &quot;Man City&quot; = &quot;Manchester City&quot;,
+                                        &quot;Liverpool&quot; = &quot;Liverpool FC&quot;,
+                                        &quot;Southampton&quot; = &quot;Southampton FC&quot;,
+                                        &quot;Tottenham&quot; = &quot;Tottenham Hotspur&quot;,
+                                        &quot;Newcastle&quot; = &quot;Newcastle United&quot;,
+                                        &quot;Leicester&quot; = &quot;Leicester City&quot;,
+                                        &quot;West Ham&quot; = &quot;West Ham United&quot;))))
+
+
+average_goals &lt;- attack_models %&gt;%
+  group_by(team) %&gt;%
+  summarise(goals_score = mean(goals_scored))
+
+
+latest_predictions &lt;- latest_fixtures_clean %&gt;%
+  inner_join(average_goals, by = c(&quot;Home&quot; = &quot;team&quot;)) %&gt;%
+  inner_join(average_goals, by = c(&quot;Away&quot; = &quot;team&quot;)) %&gt;%
+  mutate(result = goals_score.x - goals_score.y,
+         winner = if_else(result &gt; 0, &quot;Home&quot;, &quot;Away&quot;)) %&gt;%
+  kable()</code></pre>

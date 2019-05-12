@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>The life of Sam Vimes - A Discworld NLP project - Upsupervised Learnings</title>
+  <meta property="og:title" content="The life of Sam Vimes - A Discworld NLP project" />
+  <meta name="twitter:title" content="The life of Sam Vimes - A Discworld NLP project" />
+  <meta name="description" content="I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s.">
+  <meta property="og:description" content="I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s.">
+  <meta name="twitter:description" content="I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en\/the-life-of-sam-vimes-a-discworld-nlp-project\/",
+          "name": "The life of sam vimes a discworld n l p project"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "The life of Sam Vimes - A Discworld NLP project",
+  "description" : "I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s.",
+  "inLanguage" : "en",
+  "wordCount":  16340 ,
+  "datePublished" : "2018-04-28T00:00:00",
+  "dateModified" : "2018-04-28T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en\/the-life-of-sam-vimes-a-discworld-nlp-project\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="The life of Sam Vimes - A Discworld NLP project" />
+<meta property="og:description" content="I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/the-life-of-sam-vimes-a-discworld-nlp-project/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="The life of Sam Vimes - A Discworld NLP project" />
+  <meta name="twitter:description" content="I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/the-life-of-sam-vimes-a-discworld-nlp-project/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.1" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about/">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>The life of Sam Vimes - A Discworld NLP project</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on April 28, 2018
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>I’ve never been a huge reader, though when I do tend to get into a book it’s usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky’s. Within these novels there are a range of story arcs, however my heart and soul favorite can only be given to those relating to Sam Vimes, a misanthropic, sarcastic copper that just wants to see the world in the right place.</p>
+<p>As such, I decided to take some inspiration from two tutorials, the first relating to structural topic models <img src="https://juliasilge.com/blog/sherlock-holmes-stm/" alt="silge" /> and the second a full text analysis of the GoT novels <img src="https://api.rpubs.com/julheimer/got" alt="GOT" /></p>
+<p>So, as always the first thing to do is load the packages I’ll need, with plyr and the tidyverse for general cleaning, tidytext, stm, quanteda, tm, reticulate and cleanNLP to deal with the text elements and analysis and pdftools / readtext to read in the books.</p>
+<pre class="r"><code>library(plyr)
+library(tidyverse)
+library(pdftools)
+library(RColorBrewer)
+library(tidytext)
+library(readtext)
+library(stm)
+library(quanteda)
+library(reticulate)
+library(cleanNLP)
+library(tm)</code></pre>
+<p>Now that we have our packages we need some data, which came from either a PDF or word document of the books. Since there was going to be a lot of repetition I designated two functions for either pdf or text extraction, which just read in the text, collapsed it and then unnested it into sentences.</p>
+<pre class="r"><code>PDF_extraction &lt;- function(a){
+  pdf_text(a) %&gt;%
+    paste(.,collapse = &quot;&quot;) %&gt;%
+    tibble(text = .) %&gt;%
+    unnest_tokens(sentence, text, token = &quot;sentences&quot;)
+    }
+
+WRD_extraction &lt;- function(x){
+  readtext(x) %&gt;%
+    unnest_tokens(sentence, text, &quot;sentences&quot;) %&gt;%
+                    select(-1)
+}</code></pre>
+<pre class="r"><code>GG &lt;- WRD_extraction(&quot;D08 - Guards! Guards!.doc&quot;)
+
+
+MAA &lt;- WRD_extraction(&quot;Men at arms.docx&quot;)
+
+
+FOC &lt;- WRD_extraction(&quot;Feet of clay.docx&quot;)
+
+
+J &lt;- WRD_extraction(&quot;Jingo.docx&quot;)
+
+
+FE &lt;- WRD_extraction(&quot;The Fifth Elephant.docx&quot;)
+
+
+NW &lt;- PDF_extraction(&quot;Night Watch.pdf&quot;)
+
+
+THUD &lt;- PDF_extraction(&quot;Pratchett_Terry-Discworld_34-Thud-Pratchett_Terry.pdf&quot;)
+
+
+SNUFF &lt;- PDF_extraction(&quot;Snuff - Terry Pratchett.pdf&quot;)</code></pre>
+<p>Now that we have all then books split into sentences, it’s time to clean up the text and bind all the books into a single data frame. The cleaning simply involved removing the unrequired lines from each data frame and adding in a row number column as a proxy for sentence number. Once clean they were then bound together, and an reordering applied to the titles based on the order of the books.</p>
+<pre class="r"><code>Clean_func &lt;- function(a,b,c){
+  a %&gt;%
+    slice(b) %&gt;% 
+    mutate(Book = c,
+             Sentence_number = row_number())
+  }
+
+GG_DF &lt;- Clean_func(GG, 8:10044, &quot;Guards! Guards!&quot;)
+MAA_DF&lt;- Clean_func(MAA, 1:11113, &quot;Men At Arms&quot;)
+FOC_DF&lt;- Clean_func(FOC, 2:10567, &quot;Feet Of Clay&quot;)
+J_DF&lt;- Clean_func(J, 1:11360, &quot;Jingo&quot;)
+FE_DF&lt;- Clean_func(FE, 2:11267, &quot;Fifth Elephant&quot;)
+NW_DF&lt;- Clean_func(NW, 2:11619, &quot;Night Watch&quot;)
+THUD_DF&lt;- Clean_func(THUD, 2:11195, &quot;Thud&quot;)
+SNUFF_DF&lt;- Clean_func(SNUFF, 10:8072, &quot;Snuff&quot;)
+
+
+Watch_levels &lt;- c(&quot;Guards! Guards!&quot;, 
+                 &quot;Men At Arms&quot;, 
+                 &quot;Feet Of Clay&quot;,
+                 &quot;Jingo&quot;,
+                 &quot;Fifth Elephant&quot;,
+                 &quot;Night Watch&quot;, 
+                 &quot;Thud&quot;,
+                 &quot;Snuff&quot;)
+
+Watch_books &lt;- bind_rows(GG_DF, MAA_DF, FOC_DF, J_DF, FE_DF, NW_DF, THUD_DF, SNUFF_DF) %&gt;%
+  mutate(Book = factor(Book, levels = Watch_levels))</code></pre>
+<p>Now the data is clean and in one place, a logical starting place is a sentiment analysis of each book, using the AFINN word library, due to a better link with novels. Once the sentiments were calculated the words / scores could be counted and used to produce a ratio, which was then plotted for each sentence per novel for each dictionary, showing the positive / negative shift over the course of each book.</p>
+<p>From the below figure you can see that sentiment varies over the timeline of each book (as you would expect) with some seeming overall a bit more cheerful than other, for example comparing Men At Arms to Snuff. This makes sense as Snuff is mostly tasked with dissecting the persecution of the goblin race.</p>
+<pre class="r"><code>watch_books_AFINN &lt;- Watch_books %&gt;%
+  unnest_tokens(word, sentence, token = &quot;words&quot;) %&gt;%
+  inner_join(get_sentiments(&quot;afinn&quot;)) %&gt;%
+  group_by(Book, Sentence_number) %&gt;%
+  summarise(Sentiment_score = sum(score))</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code>watch_books_AFINN %&gt;%
+  ggplot(aes(x = Sentence_number, y = Sentiment_score, fill = Book)) + 
+  geom_bar(stat = &quot;identity&quot;, show.legend = F) + 
+  scale_color_viridis_c() +
+  facet_wrap(~Book, ncol = 3, scales = &quot;free_x&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Sentiment over the Night Watch history&quot;, y = &quot;sentiment&quot;, x = &quot;Sentence number&quot;) + 
+  theme(strip.text = element_text(face = &quot;italic&quot;)) +
+  theme(panel.grid.minor = element_blank())</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>In addition to looking at each book sentence by sentence, the overall sentiment of each book was calculated and tracked across the progression of the books. This shows a somewhat different picture compared to tracking each sentence, with Men At Arms showing a lower score (thus more negative) in comparison to Snuff and Thud hitting rock bottom (likely due to all the war threats and death!)</p>
+<pre class="r"><code>afinn_sent_summary &lt;- watch_books_AFINN %&gt;%
+  group_by(Book) %&gt;%
+  summarise(Overall_sentiment = sum(Sentiment_score))
+
+afinn_sent_summary %&gt;%
+  ggplot(aes(x = Book, y = Overall_sentiment, fill= Book, group = 1)) +
+  geom_line(show.legend = F, col = &quot;red&quot;,lineend = &quot;round&quot;, linejoin = &quot;round&quot;, size = 1) +
+  geom_point(show.legend = F, col = &quot;orange&quot;) +
+  theme_classic() +
+  labs(title = &quot;Overall sentiment score across the Night Watch books&quot;, x = &quot;Book&quot;, y = &quot;Overall sentiment score&quot;) +
+  scale_color_brewer()</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Another interesting aspect of text analysis, stole from Julia Silges wonderful <img src="https://juliasilge.com/blog/gender-pronouns/" alt="blog" /> is that of gendered bigrams, IE what words are associated with he / she most commonly. So in order to do this the text had to be split into bigrams, stop words removed from each side and then put back together for counting / plotting. This was conducted for both bigrams in general and those associated with he / she.</p>
+<p>This analysis showed that, generally, the most common bigrams were full names (such as Sam Vimes or Lord Vetinari). However, there were some interesting in book findings, such as mhm mhm within the Fifth Elephant (a phase often muttered by Inigo Skinner) and po lees within Snuff (a phrase spoken by the goblins to mean police). With regards t the gendered aspect, in general male bigrams were far more prevalent, though there was little to speak for differences in terms of actions as they mostly related to speaking / thinking.</p>
+<pre class="r"><code>Watch_books_bigrams &lt;- Watch_books %&gt;%
+  unnest_tokens(bigram, sentence, token = &quot;ngrams&quot;, n = 2) %&gt;%
+  separate(bigram, c(&quot;word1&quot;, &quot;word2&quot;), sep = &quot; &quot;) %&gt;%
+  filter(!word1 %in% stop_words$word,
+         word1 != &quot;NA&quot;,
+         !word2 %in% stop_words$word,
+         word2 != &quot;NA&quot;) %&gt;%
+  count(Book, word1, word2, sort = T) %&gt;%
+  unite(Bigram, word1, word2, sep = &quot; &quot;) %&gt;%
+  slice(-1) %&gt;%
+  group_by(Book) %&gt;%
+  top_n(10) %&gt;%
+  arrange(Book, desc(n))</code></pre>
+<pre><code>## Selecting by n</code></pre>
+<pre class="r"><code>Watch_books_bigrams %&gt;%
+  ggplot(aes(x = reorder(Bigram,n), y = n, fill = Book)) + 
+  geom_col(show.legend = F) +
+  coord_flip() +
+  facet_wrap(~Book, nrow = 3, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Top ten bigrams in the Night Watch series&quot;,
+       x = &quot;Bigram&quot;,
+       y = &quot;Frequency&quot;) +
+  scale_color_brewer() +
+  theme(strip.text = element_text(face = &quot;italic&quot;)) </code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>  theme(panel.grid.minor = element_blank())</code></pre>
+<pre><code>## List of 1
+##  $ panel.grid.minor: list()
+##   ..- attr(*, &quot;class&quot;)= chr [1:2] &quot;element_blank&quot; &quot;element&quot;
+##  - attr(*, &quot;class&quot;)= chr [1:2] &quot;theme&quot; &quot;gg&quot;
+##  - attr(*, &quot;complete&quot;)= logi FALSE
+##  - attr(*, &quot;validate&quot;)= logi TRUE</code></pre>
+<pre class="r"><code>Gendered_bigrams &lt;- Watch_books %&gt;%
+  unnest_tokens(bigram, sentence, token = &quot;ngrams&quot;, n = 2) %&gt;%
+  separate(bigram, c(&quot;word1&quot;, &quot;word2&quot;), sep = &quot; &quot;) %&gt;%
+  filter(word1 %in% c(&quot;He&quot;, &quot;he&quot;, &quot;She&quot;, &quot;she&quot;)) %&gt;%
+  count(Book, word1, word2, sort = T) %&gt;%
+  mutate(Grouping = case_when(word1 == &quot;He&quot; ~ &quot;Male&quot;,
+                              word1 == &quot;he&quot; ~ &quot;Male&quot;,
+                              word1 == &quot;She&quot; ~ &quot;Female&quot;,
+                              word1 == &quot;she&quot; ~ &quot;Female&quot;),
+         Grouping = factor(Grouping)) %&gt;%
+  unite(Bigram, word1, word2, sep = &quot; &quot;) %&gt;%
+group_by(Book) %&gt;%
+  top_n(10, n) %&gt;%
+  arrange(Book, desc(n))
+
+Gendered_bigrams %&gt;%
+  ggplot(aes(x = reorder(Bigram,n), y = n, fill = Grouping)) + 
+  geom_col() +
+  coord_flip() +
+  facet_wrap(~Book, nrow = 3, scales = &quot;free_y&quot;) +
+  theme_minimal() +
+  labs(title = &quot;Top ten Gendered bigrams in the Night Watch series&quot;,
+       x = &quot;Bigram&quot;,
+       y = &quot;Frequency&quot;) +
+  scale_color_brewer() +
+  theme(strip.text = element_text(face = &quot;italic&quot;)) +
+  theme(panel.grid.minor = element_blank())</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+<p>Moving on to inspirations from other areas, at the start I mentioned a text analysis based on ASOIAF, which also includes some neat dependency analysis using SPACY and the cleanNLP package via reticulate (though I had to do this on another laptop and import the data, I show the code here too). From this we can find the words most associated with specific characters, which can be used in conjunction with a term-frequency inverse document frequency analysis to find words strongly associated with a character that are less associated with other characters.</p>
+<p>This showed a few key differences between main characters, such as Angua being associated with bounding, Nobby edging (usually away from danger) and Vimes thinking / realising (as he becomes a better detective).</p>
+<pre class="reval"><code>
+use_python(&quot;/Library/Frameworks/Python.framework/Versions/3.7/bin/python3&quot;)
+
+cnlp_init_spacy()
+
+setwd(&quot;~/Desktop/Sam Vimes&quot;)
+
+PDF_extraction_2 &lt;- function(a){
+  pdf_text(a) %&gt;%
+    paste(.,collapse = &quot;&quot;)
+}
+
+WRD_extraction_2 &lt;- function(x){
+  readtext(x) %&gt;%
+    paste(.,collapse = &quot;&quot;)
+}
+
+GG_2 &lt;- WRD_extraction_2(&quot;D08 - Guards! Guards!.doc&quot;)
+
+
+MAA_2 &lt;- WRD_extraction_2(&quot;Men at arms.docx&quot;)
+
+
+J_2 &lt;- WRD_extraction_2(&quot;Jingo.docx&quot;)
+
+
+GG_obj &lt;- cnlp_annotate(GG_2, as_strings = TRUE)
+
+MAA_obj &lt;- cnlp_annotate(MAA_2, as_strings = TRUE)
+
+J_obj &lt;- cnlp_annotate(J_2, as_strings = TRUE)
+
+Entities &lt;- function(x){cnlp_get_entity(x) %&gt;% 
+    filter(entity_type == &quot;PERSON&quot;) %&gt;%
+    group_by(entity) %&gt;%
+    count %&gt;%
+    ungroup()%&gt;%
+    arrange(desc(n))}
+
+GG_people &lt;- Entities(GG_obj)
+
+MAA_people &lt;- Entities(MAA_obj)
+
+J_people &lt;- Entities(J_obj)
+
+main_chars &lt;- c(&quot;Carrot&quot;, &quot;Nobby&quot;, &quot;Angua&quot;, &quot;Sergeant Colon&quot;, &quot;Vimes&quot;, &quot;Lady Ramkin&quot;, &quot;Cuddy&quot;, &quot;Gaspode&quot;)
+
+dependencies_GG &lt;- cnlp_get_dependency(GG_obj, get_token = TRUE)
+
+dependencies_MAA &lt;- cnlp_get_dependency(MAA_obj, get_token = TRUE)
+
+dependencies_J &lt;- cnlp_get_dependency(J_obj, get_token = TRUE)
+
+full_dep &lt;- bind_rows(dependencies_GG, dependencies_MAA, dependencies_J) %&gt;%
+  select(relation, word, word_target) %&gt;%
+  filter(word_target %in% main_chars &amp; relation == &#39;nsubj&#39; &amp; word != &quot;said&quot;) %&gt;%
+  group_by(word_target, word, relation) %&gt;%
+  count %&gt;%
+  arrange(desc(n))</code></pre>
+<pre class="r"><code>full_dep &lt;- read_csv(&quot;dependencies_DF.csv&quot;)</code></pre>
+<pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   X1 = col_double(),
+##   word_target = col_character(),
+##   word = col_character(),
+##   relation = col_character(),
+##   n = col_double()
+## )</code></pre>
+<pre class="r"><code>watch_tfidf &lt;- bind_tf_idf(full_dep, word, word_target, n) %&gt;%
+  group_by(word_target) %&gt;%
+  top_n(10) %&gt;%
+  arrange(word_target)</code></pre>
+<pre><code>## Selecting by tf_idf</code></pre>
+<pre class="r"><code>watch_tfidf %&gt;%
+  ggplot(aes( x = reorder(word, tf_idf), y = tf_idf, fill = word_target)) +
+  geom_col(show.legend = F) +
+  theme_minimal() +
+  coord_flip() +
+  facet_wrap(~word_target, nrow = 3, scales = &quot;free_y&quot;) +
+  labs(title = &quot;TFIDF for charaters in Guards! Guards!, Men At Arms and Jingo!&quot;, x = &quot;Word&quot;, y =&quot;TFIDF&quot;)+
+  theme(axis.text.y.left = element_text(size = 6))</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The final piece of analysis for this project was to perform subject topic modelling on the full series of books, aiming to divide them up into a number of related topics. This involved two different data prep approaches, the first being the conversion of the tokenised text into a document frequency matrix for modelling, and the second using the internal processing functions of the stm package to prepare the texts for a K search (in order to find an ideal number of topics). The two approaches were used due to some difficulty with using a dfm with the K search function. Once a suitable number of topics was chosen through the K search (6) the stm model was ran.</p>
+<pre class="r"><code>Watch_dfm &lt;- Watch_books %&gt;%
+  unnest_tokens(word, sentence, token = &quot;words&quot;) %&gt;%
+  anti_join(stop_words) %&gt;%
+  count(Book, word, sort = T) %&gt;%
+  cast_dfm(Book, word, n)</code></pre>
+<pre><code>## Joining, by = &quot;word&quot;</code></pre>
+<pre class="r"><code>processed_books &lt;- textProcessor(Watch_books$sentence, stem = F)</code></pre>
+<pre><code>## Building corpus... 
+## Converting to Lower Case... 
+## Removing punctuation... 
+## Removing stopwords... 
+## Removing numbers... 
+## Creating Output...</code></pre>
+<pre class="r"><code>prepped_books &lt;- prepDocuments(processed_books$documents, processed_books$vocab,lower.thresh = 5)</code></pre>
+<pre><code>## Removing 24063 of 31149 terms (40174 of 430025 tokens) due to frequency 
+## Removing 932 Documents with No Words 
+## Your corpus now has 79303 documents, 7086 terms and 389851 tokens.</code></pre>
+<pre class="r"><code>K_search&lt;-searchK(prepped_books$documents,prepped_books$vocab,K=c(4:10))</code></pre>
+<pre><code>## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      ....
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -7.844) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.692, relative change = 1.935e-02) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.623, relative change = 9.033e-03) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.586, relative change = 4.851e-03) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.564, relative change = 2.836e-03) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.551, relative change = 1.785e-03) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.542, relative change = 1.195e-03) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.535, relative change = 8.413e-04) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.531, relative change = 6.173e-04) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.527, relative change = 4.683e-04) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.525, relative change = 3.652e-04) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.522, relative change = 2.913e-04) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.521, relative change = 2.370e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.519, relative change = 1.959e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.518, relative change = 1.643e-04) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.517, relative change = 1.394e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.516, relative change = 1.196e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.515, relative change = 1.036e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.514, relative change = 9.045e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.514, relative change = 7.957e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.513, relative change = 7.046e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.513, relative change = 6.273e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.512, relative change = 5.624e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.512, relative change = 5.066e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.512, relative change = 4.584e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.511, relative change = 4.166e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.511, relative change = 3.798e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.511, relative change = 3.477e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.511, relative change = 3.195e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.510, relative change = 2.945e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.510, relative change = 2.722e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.510, relative change = 2.522e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.510, relative change = 2.341e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.510, relative change = 2.176e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.510, relative change = 2.026e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.509, relative change = 1.890e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.509, relative change = 1.764e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.509, relative change = 1.650e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.509, relative change = 1.544e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.509, relative change = 1.448e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.509, relative change = 1.360e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.509, relative change = 1.280e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.509, relative change = 1.206e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.509, relative change = 1.137e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.508, relative change = 1.075e-05) 
+## Topic 1: sir, got, dont, thought, nobby 
+##  Topic 2: like, just, carrot, get, going 
+##  Topic 3: said, one, well, right, now 
+##  Topic 4: vimes, know, back, yes, man 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.508, relative change = 1.018e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      .....
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -7.900) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.738, relative change = 2.055e-02) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.655, relative change = 1.066e-02) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.609, relative change = 6.022e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.581, relative change = 3.619e-03) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, something 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.564, relative change = 2.312e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.552, relative change = 1.561e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.544, relative change = 1.104e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.538, relative change = 8.120e-04) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.533, relative change = 6.166e-04) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.529, relative change = 4.808e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.526, relative change = 3.832e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.524, relative change = 3.111e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.522, relative change = 2.566e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.521, relative change = 2.146e-04) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.519, relative change = 1.817e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.518, relative change = 1.555e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.517, relative change = 1.344e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.516, relative change = 1.170e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.515, relative change = 1.027e-04) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.515, relative change = 9.075e-05) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.514, relative change = 8.070e-05) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.514, relative change = 7.218e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.513, relative change = 6.493e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.513, relative change = 5.867e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.512, relative change = 5.323e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.512, relative change = 4.846e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.512, relative change = 4.427e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.511, relative change = 4.056e-05) 
+## ....................................................................................................
+## Completed E-Step (15 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.511, relative change = 3.725e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.511, relative change = 3.430e-05) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.510, relative change = 3.165e-05) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.510, relative change = 2.929e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.510, relative change = 2.715e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.510, relative change = 2.523e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.510, relative change = 2.349e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.510, relative change = 2.192e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.509, relative change = 2.048e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.509, relative change = 1.918e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.509, relative change = 1.799e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.509, relative change = 1.692e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.509, relative change = 1.591e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.509, relative change = 1.501e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.509, relative change = 1.417e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.509, relative change = 1.341e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.508, relative change = 1.270e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.508, relative change = 1.205e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.508, relative change = 1.144e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.508, relative change = 1.087e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.508, relative change = 1.034e-05) 
+## Topic 1: just, got, back, going, angua 
+##  Topic 2: well, man, looked, around, nobby 
+##  Topic 3: vimes, now, yes, can, get 
+##  Topic 4: said, one, sir, right, see 
+##  Topic 5: like, know, carrot, people, even 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      ......
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -7.952) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.765, relative change = 2.352e-02) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.677, relative change = 1.137e-02) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.626, relative change = 6.534e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.595, relative change = 4.065e-03) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: man, got, nobby, little, something 
+##  Topic 3: one, now, angua, old, hed 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, said, sir, see, dont 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.575, relative change = 2.669e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.561, relative change = 1.836e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.551, relative change = 1.314e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.544, relative change = 9.738e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.538, relative change = 7.427e-04) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, old, hed 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, said, see, dont 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.534, relative change = 5.807e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.530, relative change = 4.637e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.528, relative change = 3.770e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.525, relative change = 3.113e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.523, relative change = 2.607e-04) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, said, see, dont 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.522, relative change = 2.209e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.520, relative change = 1.891e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.519, relative change = 1.634e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.518, relative change = 1.423e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.517, relative change = 1.248e-04) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.516, relative change = 1.102e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.515, relative change = 9.782e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.515, relative change = 8.727e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.514, relative change = 7.830e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.514, relative change = 7.054e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.513, relative change = 6.385e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.513, relative change = 5.803e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.512, relative change = 5.291e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.512, relative change = 4.845e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.512, relative change = 4.446e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.511, relative change = 4.094e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.511, relative change = 3.781e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.511, relative change = 3.502e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.510, relative change = 3.251e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.510, relative change = 3.025e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.510, relative change = 2.822e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.510, relative change = 2.636e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.510, relative change = 2.469e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.509, relative change = 2.316e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.509, relative change = 2.175e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.509, relative change = 2.047e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.509, relative change = 1.928e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.509, relative change = 1.820e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.509, relative change = 1.719e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.509, relative change = 1.628e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.509, relative change = 1.543e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.508, relative change = 1.466e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.508, relative change = 1.395e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.508, relative change = 1.329e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.508, relative change = 1.271e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 51 (approx. per word bound = -7.508, relative change = 1.214e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 52 (approx. per word bound = -7.508, relative change = 1.164e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 53 (approx. per word bound = -7.508, relative change = 1.116e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 54 (approx. per word bound = -7.508, relative change = 1.071e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 55 (approx. per word bound = -7.508, relative change = 1.028e-05) 
+## Topic 1: well, right, carrot, yes, can 
+##  Topic 2: got, man, nobby, little, something 
+##  Topic 3: one, now, angua, hed, old 
+##  Topic 4: just, know, back, people, looked 
+##  Topic 5: said, like, good, thought, will 
+##  Topic 6: vimes, sir, see, dont, think 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      .......
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (17 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -7.988) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.806, relative change = 2.274e-02) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.710, relative change = 1.238e-02) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.652, relative change = 7.483e-03) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.615, relative change = 4.786e-03) 
+## Topic 1: got, dont, can, get, look 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.591, relative change = 3.196e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.574, relative change = 2.220e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.562, relative change = 1.599e-03) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.553, relative change = 1.189e-03) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.546, relative change = 9.094e-04) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.541, relative change = 7.122e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.537, relative change = 5.695e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.533, relative change = 4.634e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.530, relative change = 3.829e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.528, relative change = 3.205e-04) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.526, relative change = 2.713e-04) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.524, relative change = 2.321e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.523, relative change = 2.004e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.521, relative change = 1.744e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.520, relative change = 1.529e-04) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.519, relative change = 1.351e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.518, relative change = 1.200e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.517, relative change = 1.073e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.517, relative change = 9.643e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.516, relative change = 8.703e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.515, relative change = 7.891e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.515, relative change = 7.184e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.514, relative change = 6.565e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.514, relative change = 6.026e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.513, relative change = 5.553e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.513, relative change = 5.136e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.513, relative change = 4.758e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.512, relative change = 4.399e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.512, relative change = 4.067e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.512, relative change = 3.768e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.512, relative change = 3.500e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.511, relative change = 3.261e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.511, relative change = 3.045e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.511, relative change = 2.851e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.511, relative change = 2.673e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.510, relative change = 2.512e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.510, relative change = 2.364e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.510, relative change = 2.229e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.510, relative change = 2.106e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.510, relative change = 1.992e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.510, relative change = 1.886e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.510, relative change = 1.788e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.509, relative change = 1.697e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.509, relative change = 1.612e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.509, relative change = 1.532e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 51 (approx. per word bound = -7.509, relative change = 1.459e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 52 (approx. per word bound = -7.509, relative change = 1.390e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 53 (approx. per word bound = -7.509, relative change = 1.327e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 54 (approx. per word bound = -7.509, relative change = 1.267e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 55 (approx. per word bound = -7.509, relative change = 1.212e-05) 
+## Topic 1: got, dont, can, get, say 
+##  Topic 2: one, sir, well, carrot, good 
+##  Topic 3: vimes, right, way, will, thing 
+##  Topic 4: man, time, something, sergeant, watch 
+##  Topic 5: like, see, people, nobby, little 
+##  Topic 6: said, just, now, colon, things 
+##  Topic 7: know, back, yes, think, thought 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 56 (approx. per word bound = -7.509, relative change = 1.160e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 57 (approx. per word bound = -7.509, relative change = 1.111e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 58 (approx. per word bound = -7.508, relative change = 1.065e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 59 (approx. per word bound = -7.508, relative change = 1.022e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      ........
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -7.996) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.824, relative change = 2.149e-02) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.728, relative change = 1.232e-02) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.669, relative change = 7.637e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.630, relative change = 5.061e-03) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, get 
+##  Topic 4: dont, something, thats, nobby, little 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, said 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, colon, going, thing, really 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.603, relative change = 3.524e-03) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.584, relative change = 2.527e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.570, relative change = 1.856e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.559, relative change = 1.396e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.551, relative change = 1.072e-03) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.545, relative change = 8.407e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.540, relative change = 6.715e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.536, relative change = 5.453e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.532, relative change = 4.493e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.530, relative change = 3.751e-04) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.527, relative change = 3.169e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.525, relative change = 2.705e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.523, relative change = 2.330e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.522, relative change = 2.025e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.521, relative change = 1.774e-04) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.519, relative change = 1.567e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.518, relative change = 1.393e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.517, relative change = 1.246e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.517, relative change = 1.120e-04) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.516, relative change = 1.008e-04) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.515, relative change = 9.089e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.514, relative change = 8.198e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.514, relative change = 7.410e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.513, relative change = 6.722e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.513, relative change = 6.125e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.513, relative change = 5.611e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.512, relative change = 5.163e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.512, relative change = 4.767e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.511, relative change = 4.417e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.511, relative change = 4.102e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.511, relative change = 3.819e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.511, relative change = 3.562e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.510, relative change = 3.332e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.510, relative change = 3.124e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.510, relative change = 2.937e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.510, relative change = 2.767e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.509, relative change = 2.610e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.509, relative change = 2.464e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.509, relative change = 2.328e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.509, relative change = 2.201e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.509, relative change = 2.083e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.509, relative change = 1.973e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.508, relative change = 1.871e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.508, relative change = 1.776e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.508, relative change = 1.685e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 51 (approx. per word bound = -7.508, relative change = 1.599e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 52 (approx. per word bound = -7.508, relative change = 1.517e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 53 (approx. per word bound = -7.508, relative change = 1.439e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 54 (approx. per word bound = -7.508, relative change = 1.364e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 55 (approx. per word bound = -7.508, relative change = 1.293e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 56 (approx. per word bound = -7.508, relative change = 1.227e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 57 (approx. per word bound = -7.508, relative change = 1.167e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 58 (approx. per word bound = -7.507, relative change = 1.110e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 59 (approx. per word bound = -7.507, relative change = 1.059e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 60 (approx. per word bound = -7.507, relative change = 1.011e-05) 
+## Topic 1: said, old, youre, men, detritus 
+##  Topic 2: just, well, got, sergeant, angua 
+##  Topic 3: sir, now, back, yes, see 
+##  Topic 4: dont, nobby, little, something, thats 
+##  Topic 5: like, can, thought, time, captain 
+##  Topic 6: vimes, one, know, right, man 
+##  Topic 7: carrot, looked, around, will, head 
+##  Topic 8: think, going, colon, thing, really 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      .........
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -8.029) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.851, relative change = 2.216e-02) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.751, relative change = 1.275e-02) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.687, relative change = 8.219e-03) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.644, relative change = 5.567e-03) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, face, troll, small, mister 
+##  Topic 3: right, got, nobby, time, things 
+##  Topic 4: get, thats, will, can, want 
+##  Topic 5: vimes, around, colon, even, didnt 
+##  Topic 6: know, good, going, much, come 
+##  Topic 7: sir, one, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.615, relative change = 3.881e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.594, relative change = 2.780e-03) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.578, relative change = 2.045e-03) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.566, relative change = 1.542e-03) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.557, relative change = 1.192e-03) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, face, two, troll, small 
+##  Topic 3: right, got, nobby, time, things 
+##  Topic 4: get, can, thats, will, want 
+##  Topic 5: vimes, around, colon, thought, even 
+##  Topic 6: know, good, going, much, come 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.550, relative change = 9.402e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.545, relative change = 7.553e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.540, relative change = 6.159e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.536, relative change = 5.093e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.533, relative change = 4.265e-04) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, come 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.530, relative change = 3.613e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.528, relative change = 3.089e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.526, relative change = 2.663e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.524, relative change = 2.311e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.523, relative change = 2.019e-04) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.521, relative change = 1.774e-04) 
+## ....................................................................................................
+## Completed E-Step (15 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.520, relative change = 1.569e-04) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.519, relative change = 1.396e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.518, relative change = 1.249e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.517, relative change = 1.124e-04) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.516, relative change = 1.015e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.516, relative change = 9.212e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.515, relative change = 8.391e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.515, relative change = 7.667e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.514, relative change = 7.024e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.514, relative change = 6.453e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.513, relative change = 5.945e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.513, relative change = 5.491e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.512, relative change = 5.083e-05) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.512, relative change = 4.723e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.512, relative change = 4.400e-05) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.511, relative change = 4.113e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.511, relative change = 3.857e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.511, relative change = 3.630e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.510, relative change = 3.426e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.510, relative change = 3.240e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.510, relative change = 3.067e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.510, relative change = 2.907e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.510, relative change = 2.755e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.509, relative change = 2.609e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.509, relative change = 2.468e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.509, relative change = 2.330e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.509, relative change = 2.195e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.509, relative change = 2.065e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.509, relative change = 1.941e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 51 (approx. per word bound = -7.508, relative change = 1.826e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 52 (approx. per word bound = -7.508, relative change = 1.721e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 53 (approx. per word bound = -7.508, relative change = 1.627e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 54 (approx. per word bound = -7.508, relative change = 1.541e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 55 (approx. per word bound = -7.508, relative change = 1.462e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 56 (approx. per word bound = -7.508, relative change = 1.390e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 57 (approx. per word bound = -7.508, relative change = 1.324e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 58 (approx. per word bound = -7.508, relative change = 1.262e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 59 (approx. per word bound = -7.508, relative change = 1.205e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 60 (approx. per word bound = -7.507, relative change = 1.153e-05) 
+## Topic 1: said, like, people, captain, put 
+##  Topic 2: dont, two, face, troll, small 
+##  Topic 3: right, got, time, nobby, things 
+##  Topic 4: can, get, thats, will, want 
+##  Topic 5: vimes, thought, around, colon, even 
+##  Topic 6: know, good, going, much, head 
+##  Topic 7: one, sir, man, looked, way 
+##  Topic 8: just, well, carrot, back, yes 
+##  Topic 9: now, see, think, something, look 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 61 (approx. per word bound = -7.507, relative change = 1.104e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 62 (approx. per word bound = -7.507, relative change = 1.060e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 63 (approx. per word bound = -7.507, relative change = 1.018e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Model Converged 
+## Beginning Spectral Initialization 
+##   Calculating the gram matrix...
+##   Finding anchor words...
+##      ..........
+##   Recovering initialization...
+##      ......................................................................
+## Initialization complete.
+## ....................................................................................................
+## Completed E-Step (16 seconds). 
+## Completed M-Step. 
+## Completing Iteration 1 (approx. per word bound = -8.024) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 2 (approx. per word bound = -7.869, relative change = 1.931e-02) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 3 (approx. per word bound = -7.772, relative change = 1.241e-02) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 4 (approx. per word bound = -7.705, relative change = 8.593e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 5 (approx. per word bound = -7.659, relative change = 5.996e-03) 
+## Topic 1: like, thought, way, time, around 
+##  Topic 2: sir, people, looked, sergeant, went 
+##  Topic 3: said, good, can, think, carrot 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, hes, big 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, tell 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, things, away, door 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 6 (approx. per word bound = -7.626, relative change = 4.281e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 7 (approx. per word bound = -7.602, relative change = 3.112e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 8 (approx. per word bound = -7.585, relative change = 2.310e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 9 (approx. per word bound = -7.571, relative change = 1.750e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 10 (approx. per word bound = -7.561, relative change = 1.351e-03) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, went 
+##  Topic 3: said, carrot, good, can, think 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, tell 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, things, away 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 11 (approx. per word bound = -7.553, relative change = 1.061e-03) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 12 (approx. per word bound = -7.547, relative change = 8.483e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 13 (approx. per word bound = -7.541, relative change = 6.892e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 14 (approx. per word bound = -7.537, relative change = 5.678e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 15 (approx. per word bound = -7.534, relative change = 4.737e-04) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, two 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 16 (approx. per word bound = -7.531, relative change = 3.996e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 17 (approx. per word bound = -7.528, relative change = 3.404e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 18 (approx. per word bound = -7.526, relative change = 2.924e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 19 (approx. per word bound = -7.524, relative change = 2.534e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 20 (approx. per word bound = -7.522, relative change = 2.213e-04) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, two 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 21 (approx. per word bound = -7.521, relative change = 1.945e-04) 
+## ....................................................................................................
+## Completed E-Step (13 seconds). 
+## Completed M-Step. 
+## Completing Iteration 22 (approx. per word bound = -7.520, relative change = 1.720e-04) 
+## ....................................................................................................
+## Completed E-Step (15 seconds). 
+## Completed M-Step. 
+## Completing Iteration 23 (approx. per word bound = -7.518, relative change = 1.528e-04) 
+## ....................................................................................................
+## Completed E-Step (14 seconds). 
+## Completed M-Step. 
+## Completing Iteration 24 (approx. per word bound = -7.517, relative change = 1.364e-04) 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 25 (approx. per word bound = -7.516, relative change = 1.225e-04) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, two 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (12 seconds). 
+## Completed M-Step. 
+## Completing Iteration 26 (approx. per word bound = -7.516, relative change = 1.104e-04) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 27 (approx. per word bound = -7.515, relative change = 9.997e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 28 (approx. per word bound = -7.514, relative change = 9.090e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 29 (approx. per word bound = -7.514, relative change = 8.296e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 30 (approx. per word bound = -7.513, relative change = 7.599e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 31 (approx. per word bound = -7.512, relative change = 6.981e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 32 (approx. per word bound = -7.512, relative change = 6.420e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 33 (approx. per word bound = -7.512, relative change = 5.909e-05) 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 34 (approx. per word bound = -7.511, relative change = 5.447e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 35 (approx. per word bound = -7.511, relative change = 5.035e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (11 seconds). 
+## Completed M-Step. 
+## Completing Iteration 36 (approx. per word bound = -7.510, relative change = 4.666e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 37 (approx. per word bound = -7.510, relative change = 4.333e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 38 (approx. per word bound = -7.510, relative change = 4.035e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 39 (approx. per word bound = -7.509, relative change = 3.767e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 40 (approx. per word bound = -7.509, relative change = 3.526e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 41 (approx. per word bound = -7.509, relative change = 3.310e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 42 (approx. per word bound = -7.509, relative change = 3.116e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 43 (approx. per word bound = -7.509, relative change = 2.941e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 44 (approx. per word bound = -7.508, relative change = 2.783e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 45 (approx. per word bound = -7.508, relative change = 2.640e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 46 (approx. per word bound = -7.508, relative change = 2.508e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 47 (approx. per word bound = -7.508, relative change = 2.388e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 48 (approx. per word bound = -7.508, relative change = 2.279e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 49 (approx. per word bound = -7.507, relative change = 2.182e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 50 (approx. per word bound = -7.507, relative change = 2.093e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 51 (approx. per word bound = -7.507, relative change = 2.012e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 52 (approx. per word bound = -7.507, relative change = 1.936e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 53 (approx. per word bound = -7.507, relative change = 1.861e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 54 (approx. per word bound = -7.507, relative change = 1.784e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 55 (approx. per word bound = -7.507, relative change = 1.702e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 56 (approx. per word bound = -7.506, relative change = 1.615e-05) 
+## ....................................................................................................
+## Completed E-Step (9 seconds). 
+## Completed M-Step. 
+## Completing Iteration 57 (approx. per word bound = -7.506, relative change = 1.525e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Completing Iteration 58 (approx. per word bound = -7.506, relative change = 1.437e-05) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 59 (approx. per word bound = -7.506, relative change = 1.354e-05) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 60 (approx. per word bound = -7.506, relative change = 1.279e-05) 
+## Topic 1: like, thought, time, way, around 
+##  Topic 2: sir, people, looked, sergeant, another 
+##  Topic 3: said, carrot, good, think, can 
+##  Topic 4: see, dont, get, look, didnt 
+##  Topic 5: one, just, know, even, watch 
+##  Topic 6: nobby, hed, make, big, hes 
+##  Topic 7: right, now, something, angua, old 
+##  Topic 8: vimes, come, city, dwarfs, made 
+##  Topic 9: well, got, back, yes, colon 
+##  Topic 10: man, going, little, away, things 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 61 (approx. per word bound = -7.506, relative change = 1.212e-05) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 62 (approx. per word bound = -7.506, relative change = 1.153e-05) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 63 (approx. per word bound = -7.506, relative change = 1.099e-05) 
+## ....................................................................................................
+## Completed E-Step (8 seconds). 
+## Completed M-Step. 
+## Completing Iteration 64 (approx. per word bound = -7.506, relative change = 1.046e-05) 
+## ....................................................................................................
+## Completed E-Step (10 seconds). 
+## Completed M-Step. 
+## Model Converged</code></pre>
+<pre class="r"><code>plot(K_search)</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The outputs of this model could then be extracted from the model object, namely the top terms per topic (beta) and the distribution of books to topics (gamma). The terms graph of this data reveal that Vimes is fairly key for all except topic 2, and a number of terms were highlighted which indicate which book fits with each topic (IE the term carcer is included for topic 4, indicating this is likely fitted to the Night Watch book). The distribution graph shows that four books sit solely within one topic, whilst the other four books are spread between the two topics, two a piece. If I were to guess which these were I’d say Fifth Elephant and Thud fall into topic 1 (due to the dwarf and troll terms), leaving Jingo and Feet of Clay to fall into topic 6.</p>
+<pre class="r"><code>Watch_books_stm &lt;- stm(Watch_dfm, K = 6, init.type = &quot;Spectral&quot;, verbose = F)
+
+tidy_stm &lt;- tidy(Watch_books_stm)
+
+top_beta &lt;- tidy_stm %&gt;%
+  group_by(topic) %&gt;%
+  top_n(10, beta) %&gt;%
+  ungroup() %&gt;%
+  mutate(topic = paste0(&quot;Topic &quot;, topic))
+
+top_beta %&gt;%
+  ggplot(aes(x = term, y = beta, fill = as.factor(topic))) +
+  geom_col(show.legend = F) +
+  coord_flip() +
+  facet_wrap(~topic, scales = &quot;free_y&quot;, nrow = 2) +
+  labs(title = &quot;Top ten terms per theme of the Night Watch books&quot;, x = &quot;Term&quot;, y = &quot;Beta&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>Watch_gamma &lt;- tidy(Watch_books_stm, matrix = &quot;gamma&quot;,                    
+                    document_names = rownames(Watch_books_stm)) %&gt;%
+  mutate(topic = paste0(&quot;Topic &quot;, topic))
+
+Watch_gamma %&gt;%
+  ggplot(aes(gamma, fill = as.factor(topic))) +
+  geom_histogram(show.legend = FALSE) +
+  facet_wrap(~ topic, nrow = 2) +
+  theme_minimal() +
+  labs(title = &quot;Document probabilities spread for each topic&quot;,
+       y = &quot;Number of books&quot;, x = &quot;Gamma&quot;)</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="/post/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en/2018-04-28-the-life-of-sam-vimes-a-discworld-nlp-project.en_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p>So, this brings me to the end of my analysis of the Night Watch books, using a few interesting techniques I’ve picked up from tutorials (mostly delivered by Julia Silge), hopefully you’ve enjoyed it!</p>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+          
+            <li class="next">
+              <a href="/post/2018-07-28-clustering-comparison/p-hacking/" data-toggle="tooltip" data-placement="top" title="Clustering comparison">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.1</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+

@@ -14,74 +14,16 @@ image: ''
 
 <p>This document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.</p>
 <p>As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.</p>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages -------------------------------------------- tidyverse 1.2.1 --</code></pre>
-<pre><code>## v ggplot2 3.1.1       v purrr   0.3.2  
-## v tibble  2.1.1       v dplyr   0.8.0.1
-## v tidyr   0.8.3       v stringr 1.4.0  
-## v readr   1.3.1       v forcats 0.4.0</code></pre>
-<pre><code>## -- Conflicts ----------------------------------------------- tidyverse_conflicts() --
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(tidymodels)</code></pre>
-<pre><code>## -- Attaching packages ------------------------------------------- tidymodels 0.0.2 --</code></pre>
-<pre><code>## v broom     0.5.2     v recipes   0.1.5
-## v dials     0.0.2     v rsample   0.0.4
-## v infer     0.4.0     v yardstick 0.0.3
-## v parsnip   0.0.2</code></pre>
-<pre><code>## -- Conflicts ---------------------------------------------- tidymodels_conflicts() --
-## x scales::discard() masks purrr::discard()
-## x dplyr::filter()   masks stats::filter()
-## x recipes::fixed()  masks stringr::fixed()
-## x dplyr::lag()      masks stats::lag()
-## x yardstick::spec() masks readr::spec()
-## x recipes::step()   masks stats::step()</code></pre>
-<pre class="r"><code>library(janitor)
+<pre class="r"><code>library(tidyverse)
+library(tidymodels)
+library(janitor)
 library(ggrepel)
 library(gghighlight)
 library(ranger)
-library(glmnet)</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## 
-## Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
-## 
-##     expand</code></pre>
-<pre><code>## Loading required package: foreach</code></pre>
-<pre><code>## 
-## Attaching package: &#39;foreach&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:purrr&#39;:
-## 
-##     accumulate, when</code></pre>
-<pre><code>## Loaded glmnet 2.0-16</code></pre>
-<pre class="r"><code>theme_set(theme_minimal())</code></pre>
-<p>At the end of the last segement I’d managed to scrape five key datasets, the first two relating to attacking and defensive stats for clubs, the second two the same but at a player level and the final one a list of players and their current clubs. I’m going to start off exploring the player data just to make sure it can give the insight we need, and then move into a deeper dive of the club level data.</p>
-<pre class="r"><code>all_players &lt;- read_csv(&quot;2019-19 players.csv&quot;)
-
-player_attack &lt;- read_csv(&quot;player_attack_stats.csv&quot;)
-
-player_defence &lt;- read_csv(&quot;player_defence_stats.csv&quot;)
-
-current_players_attacking &lt;- inner_join(all_players, player_attack, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
-  janitor::clean_names()
-
-current_players_defending &lt;- inner_join(all_players, player_defence, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
-  janitor::clean_names()
-
-check_attacking_data &lt;- current_players_attacking %&gt;%
-  filter(data == &quot;Season_17&quot;) %&gt;%
-  arrange(desc(chances_created)) %&gt;%
-  View()
-
-check_defending_data &lt;- current_players_defending %&gt;%
-  filter(data == &quot;Season_17&quot;) %&gt;%
-  arrange(desc(tackles_made)) %&gt;%
-  View()
-
-players_per_team &lt;- current_players_attacking %&gt;%
-  filter(data == &quot;Season_18&quot;) %&gt;%
-  count(team)</code></pre>
-<p>Since the player data appears to be in a good shape, ie enough of it should be there with enough players to put together some teams for predictions, its time to have a good look at the team data and see what really impacts how many goals you score or concede.</p>
+library(glmnet)
+theme_set(theme_minimal())</code></pre>
+<p>At the end of the last segement I’d managed to scrape five key datasets, the first two relating to attacking and defensive stats for clubs, the second two the same but at a player level and the final one a list of players and their current clubs.</p>
+<p>So in order to build a model to use at club level, I’ll have to start with club level data and see what really impacts how many goals you score or concede.</p>
 <pre class="r"><code>team_attack &lt;- read_csv(&quot;team_attack_stats.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   mutate(avg_pass_length = as.numeric(str_remove(avg_pass_length, &quot;m&quot;))) %&gt;%
