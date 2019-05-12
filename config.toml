@@ -15,8 +15,8 @@ pygmentsCodefencesGuessSyntax = true
 [Params]
   homeTitle = "Upsupervised Learnings"
   subtitle = "A blog to showcase my foray into analytics and data science"
-  logo = "img/avatar.png"
   date_format = "Mon, Jan 2, 2006"
+  logo = "img/avatar.png"
   commit = false
   rss = false
   comments = false
@@ -33,13 +33,13 @@ pygmentsCodefencesGuessSyntax = true
   twitter = "Richyyl"
 
 [[menu.main]]
-    name = "Home"
-    url = ""
-    logo = "img/avatar.png"
-    weight = 2
+  name = "Home"
+  url = ""
+  logo = "img/avatar.png"
+  weight = 2
 
 [[menu.main]]
-    name = "About"
-    url = "page/about/"
-    logo = "img/avatar.png"
-    weight = 3
+  name = "About"
+  url = "page/about/"
+  logo = "img/avatar.png"
+  weight = 3
