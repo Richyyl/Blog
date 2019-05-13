@@ -6,10 +6,12 @@ title = "Upsupervised Learnings"
 copyright = "Logo copyright of zen pencils"
 theme = "beautifulhugo"
 metaDataFormat = "yaml"
-pygmentsStyle = "trac"
+#pygmentsStyle = "trac"
 pygmentsUseClasses = true
 pygmentsCodeFences = true
 pygmentsCodefencesGuessSyntax = true
+#pygmentsUseClassic = true
+#pygmentOptions = "linenos=inline"
 
 
 [Params]
