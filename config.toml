@@ -37,11 +37,9 @@ pygmentsCodefencesGuessSyntax = true
 [[menu.main]]
   name = "Home"
   url = ""
-  logo = "img/avatar.png"
   weight = 2
 
 [[menu.main]]
   name = "About"
-  logo = "img/avatar.png"
   url = "page/about"
   weight = 3
