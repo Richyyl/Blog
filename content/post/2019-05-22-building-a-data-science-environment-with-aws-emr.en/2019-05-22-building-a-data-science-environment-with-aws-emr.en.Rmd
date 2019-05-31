@@ -97,11 +97,9 @@ alias python="/usr/bin/python3.6"
 
 which python
 
-sudo su
-
 python3.6 -m pip install --upgrade pip
 
-python3.6 -m pip install pandas
+python3.6 -m pip install pandas pyspark findspark jupyter
 
 ```
 
@@ -110,10 +108,6 @@ Now that we have the anaconda version set up as default we can change the spark 
 ```{}
 
 sudo sed -i -e '$a\export PYSPARK_PYTHON=/usr/bin/python3.6' /etc/spark/conf/spark-env.sh
-
-pyspark
-
-exit()
 
 ```
 
@@ -125,6 +119,10 @@ The next step is to load / update some neccesary packages, done with the followi
 ```{r, eval=FALSE, echo=FALSE}
 
 install.packages(c("reticulate", "readr", "dpylr", "rmarkdown", "rprojroot", "png"))
+
+
+
+install.packages(c("dplyr", "readr", "reticulate", "rmarkdown", "rprojroot", "png"))
 
 Sys.setenv(RETICULATE_PYTHON = "/usr/bin/python3.6")
 
@@ -141,4 +139,29 @@ use_python("/usr/bin/python3.6", required = T)
 ```
 
 
+
+```{r}
+import findspark
+findspark.init()
+import pyspark
+import random
+sc = pyspark.SparkContext(appName="Pi")
+num_samples = 100000000
+def inside(p):     
+  x, y = random.random(), random.random()
+  return x*x + y*y < 1
+count = sc.parallelize(range(0, num_samples)).filter(inside).count()
+pi = 4 * count / num_samples
+print(pi)
+sc.stop()
+```
+
+
+```{r}
+
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook --no-browser --port=8888'
+source .bashrc
+
+```
 
