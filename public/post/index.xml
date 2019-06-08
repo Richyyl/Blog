@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Logo copyright of zen pencils</copyright>
-    <lastBuildDate>Sun, 21 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Intro to Spark and building an AWS EMR cluster</title>
+      <link>/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/building-a-data-science-environment-with-aws-emr/</link>
+      <pubDate>Sat, 08 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/building-a-data-science-environment-with-aws-emr/</guid>
+      <description>This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.</description>
+    </item>
     
     <item>
       <title>Football Modelling part 3 - Team predictions</title>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Intro to Spark and building an AWS EMR cluster - Upsupervised Learnings</title>
+  <meta property="og:title" content="Intro to Spark and building an AWS EMR cluster" />
+  <meta name="twitter:title" content="Intro to Spark and building an AWS EMR cluster" />
+  <meta name="description" content="This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.">
+  <meta property="og:description" content="This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.">
+  <meta name="twitter:description" content="This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/2019-05-22-building-a-data-science-environment-with-aws-emr.en\/building-a-data-science-environment-with-aws-emr\/",
+          "name": "Intro to spark and building an a w s e m r cluster"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "Intro to Spark and building an AWS EMR cluster",
+  "description" : "This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.",
+  "inLanguage" : "en",
+  "wordCount":  956 ,
+  "datePublished" : "2019-06-08T00:00:00",
+  "dateModified" : "2019-06-08T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/2019-05-22-building-a-data-science-environment-with-aws-emr.en\/building-a-data-science-environment-with-aws-emr\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Intro to Spark and building an AWS EMR cluster" />
+<meta property="og:description" content="This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/building-a-data-science-environment-with-aws-emr/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="Intro to Spark and building an AWS EMR cluster" />
+  <meta name="twitter:description" content="This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/building-a-data-science-environment-with-aws-emr/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Intro to Spark and building an AWS EMR cluster</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on June 8, 2019
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster. However, I beleive that this is not possible now and as such had to pivot into utilising a jupyter notebook and rpy2 to allow me to utilise R within the session.</p>
+<div id="part-1-a-quick-introduction-to-spark" class="section level2">
+<h2>Part 1: A quick introduction to spark</h2>
+<div id="what-is-spark" class="section level3">
+<h3>What is spark?</h3>
+<p>Spark is a computing engine designed for large scale data computation, IE focused on cleaning and analyzing and not storage. It was developed at UC Berkeley and then donated to the Apache Software Federation, where it is maintained on an open source basis.</p>
+</div>
+<div id="how-does-it-work" class="section level3">
+<h3>How does it work?</h3>
+<p>Spark works through a number of servers joined together in a cluster, with one server acting as the master node in order to control the cluster and the others acting as executor nodes to distribute the data across (known as partitions) and perform actions, as shown below.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/clusters.jpg" />{:height=50% width=50%}</p>
+<p>These actions are evaluated lazily, meaning that operations are not carried out until an action is required. For example multiplying a column will not occur until account is required of the output. This strategy allows spark to calculate and optimise a plan in which to run the operations across the cluster, increasing speed.</p>
+<p>In addition to being performed lazily, transformations can either be narrow or wide, which is explained below and also shown on the below diagram.</p>
+<ul>
+<li><p>Narrow transformation - Data in each partition can only be data in one partition, for example multiplying a column of numbers by a constant</p></li>
+<li><p>Wide transformation - Data in each partition can become data in multiple other partitions, for example sorting a partition.</p></li>
+</ul>
+<p>The latter of these two is known as a shuffle, as it moves around the partitions, and involves writing the data to disk, where as narrow transformations are performed in memory, leading to differences in speed.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/transformations.jpg" />{:height=50% width=50%}</p>
+</div>
+<div id="how-is-a-cluster-operated" class="section level3">
+<h3>How is a cluster operated?</h3>
+<p>The majority of times a cluster will be operated via what is referred to as structured API, which acts as a bridge between a more common programming language and the native spark language. Currently these are available for scala, java, python SQL and R, where code written in these languages is translated within a spark session. A summation of the process is shown below, which involves a user propositioning the cluster manager, on the master node, for resources, leading to the creation of a spark driver process which includes the user code and a spark session. Once the full plan is determined, via the spark session, it is communicated to the cluster manager, which then allocates resources to run each process. The results of these processes are then fed back to the master node.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/structured%20running.jpg" />{:height=50% width=50%}</p>
+</div>
+</div>
+<div id="part-2-setting-up-an-aws-emr" class="section level2">
+<h2>Part 2: Setting up an AWS EMR</h2>
+<div id="step-1---setting-up-the-emr-cluster" class="section level3">
+<h3>Step 1 - setting up the EMR cluster</h3>
+<p>The first step is finding your was to the emr homepage within AWS, which looks like below, where you can initiate a cluster from.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/EMR%20home.jpg" />{ width=50% :height=50% width=50%
+By clicking on create a cluster you’ll find yourself being able to select your cluster options, including the name and software etc, choose spark and pick your key pair and you’re good to launch. One additional thing you’ll want to do is allow access to your S3 buckets, so that you can pull in data to use. A good guide for this is at the following <a href="https://medium.com/@serkansakinmaz/how-to-connect-amazon-s3-via-emr-based-pyspark-42707d540881">link</a></p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/EMR%20config.jpg" />{:height=50% width=50%}</p>
+<p>Once you’ve launched you can then set the security options, though only the first time you launch, these can be found on your cluster page post launch. Here you need to edit the inbound rules on both the master and slave nodes as open port 22 for your IP, via SSH, and a custom TCP for port 8888 which is open to all ips for jupyter notebooks.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/EMR%20SG.jpg" />{:height=50% width=50%}</p>
+<p>Once you’ve waiting the 10 or so minutes for the cluster to gear up you can ssh in, which needs to be conducted with port forwarding to allow your machine to connect to the master node and access the jupyter notebook via the browser. The command for this is shown below.</p>
+<p>Once you’re in you, which may requiring entering a passcode you set earlier if you’re using putty, should see the friendly screen below!</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/EMR%20login.jpg" />{:height=50% width=50%}</p>
+</div>
+<div id="step-2---updating-the-emr-with-required-software" class="section level3">
+<h3>Step 2 - Updating the EMR with required software</h3>
+<p>Now that we have our servers up and running and we’ve ssh’d into the main node it’s time to update our software. For me this involves changing our default python on pyspark to python 3, installing libraries and setting jupyter to drive the spark processes.</p>
+<p>Now we need to install some packages that we will likely need later on.</p>
+<p>Now we need to change the default version of python used by spark, which is pretty easy going. This requires the following lines of code, which alters the python path in the spark config and sets the driver to our jupyter notebook.</p>
+</div>
+<div id="step-3---jupyter-notebook" class="section level3">
+<h3>Step 3 - Jupyter notebook</h3>
+<p>Now the infrastructure is all set up its time to open the notebook and login. This is done by accessing pyspark as below and copying the provided token. Once this is done you can start a new notebook which will be commected to your EMR cluster, as such you can utilise it analyse large datasets that are stored within your S3 buckets, providing you have set up the access already.</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/Spark%20jupyter.jpg" />{:height=50% width=50%}</p>
+<p><img src="content/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/Jupyter.jpg" />{:height=50% width=50%}</p>
+</div>
+</div>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2019-04-21-football-modelling-part-3-team-predictions/football-modelling-part-3-team-predictions/" data-toggle="tooltip" data-placement="top" title="Football Modelling part 3 - Team predictions">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.6</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+
