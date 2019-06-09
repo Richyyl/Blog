@@ -62,7 +62,7 @@
   "headline": "Intro to Spark and building an AWS EMR cluster",
   "description" : "This post has mainly been written for me, so that in the future I have a general reference guide for spark and so I don’t have to piece together the various bits I’ve found strewn across the internet in order to build an EMR instance that I like. Also I originally wanted to build this to test whether reticulate could be used to link in with Spark on an EMR (elastic map reduce) cluster.",
   "inLanguage" : "en",
-  "wordCount":  1128 ,
+  "wordCount":  1169 ,
   "datePublished" : "2019-06-08T00:00:00",
   "dateModified" : "2019-06-08T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -276,13 +276,13 @@
 </div>
 <div id="how-does-it-work" class="section level3">
 <h3>How does it work?</h3>
-<p>Spark works through a number of servers joined together in a cluster, with one server acting as the master node in order to control the cluster and the others acting as executor nodes to distribute the data across (known as partitions) and perform actions, as shown below.</p>
+<p>Spark works through a number of servers joined together in a cluster, with one server acting as the master node in order to control the cluster and the others acting as executor nodes to distribute the data across (known as partitions) and perform actions, as shown below (with the T shaped objects representing a two column dataframe).</p>
 <p><img src="/img/EMR/clusters.jpg" style="width:50.0%;height:50.0%" /></p>
-<p>These actions are evaluated lazily, meaning that operations are not carried out until an action is required. For example multiplying a column will not occur until account is required of the output. This strategy allows spark to calculate and optimise a plan in which to run the operations across the cluster, increasing speed.</p>
+<p>These actions are evaluated lazily, meaning that operations are not carried out until an action is required. For example multiplying a column will not occur until a count of the output is required. This strategy allows spark to calculate and optimise a plan in which to run the operations across the cluster, increasing speed.</p>
 <p>In addition to being performed lazily, transformations can either be narrow or wide, which is explained below and also shown on the below diagram.</p>
 <ul>
-<li><p>Narrow transformation - Data in each partition can only be data in one partition, for example multiplying a column of numbers by a constant</p></li>
-<li><p>Wide transformation - Data in each partition can become data in multiple other partitions, for example sorting a partition.</p></li>
+<li><p>Narrow transformation - A row in a partition will be in the same position in the same modified partition post transformation, for example multiplying a column of numbers by a constant which forms a new column.</p></li>
+<li><p>Wide transformation - Data in each partition can become spread across multiple other partitions, for example sorting a partition may lead to 4 values from partition 1 being placed in new partitions 1, 2 3 and 4.</p></li>
 </ul>
 <p>The latter of these two is known as a shuffle, as it moves around the partitions, and involves writing the data to disk, where as narrow transformations are performed in memory, leading to differences in speed.</p>
 <p><img src="/img/EMR/transformations_2.jpg" style="width:75.0%;height:75.0%" /></p>
@@ -334,7 +334,7 @@ source .bashrc
 <div id="step-3---launching-a-jupyter-notebook" class="section level3">
 <h3>Step 3 - Launching a Jupyter notebook</h3>
 <p>Now the infrastructure is all set up its time to open the notebook and login. This is done by accessing pyspark as below and copying the provided token. Once this is done you can start a new notebook which will be connected to your EMR cluster, as such you can utilise it analyse large data sets that are stored within your S3 buckets, providing you have set up the access already.</p>
-<pre class="base"><code>pyspark</code></pre>
+<pre class="bash"><code>pyspark</code></pre>
 <p><img src="/img/EMR/Spark%20jupyter.jpg" style="width:100.0%;height:100.0%" /></p>
 <p><br></p>
 <p><img src="/img/EMR/Jupyter.jpg" style="width:100.0%;height:100.0%" /></p>

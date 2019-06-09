@@ -22,17 +22,17 @@ Spark is a computing engine designed for large scale data computation, IE focuse
 
 ### How does it work?
 
-Spark works through a number of servers joined together in a cluster, with one server acting as the master node in order to control the cluster and the others acting as executor nodes to distribute the data across (known as partitions) and perform actions, as shown below. 
+Spark works through a number of servers joined together in a cluster, with one server acting as the master node in order to control the cluster and the others acting as executor nodes to distribute the data across (known as partitions) and perform actions, as shown below (with the T shaped objects representing a two column dataframe). 
 
 ![](/img/EMR/clusters.jpg){height=50% width=50%}
 
-These actions are evaluated lazily, meaning that operations are not carried out until an action is required. For example multiplying a column will not occur until account is required of the output. This strategy allows spark to calculate and optimise a plan in which to run the operations across the cluster, increasing speed. 
+These actions are evaluated lazily, meaning that operations are not carried out until an action is required. For example multiplying a column will not occur until a count of the output is required. This strategy allows spark to calculate and optimise a plan in which to run the operations across the cluster, increasing speed. 
 
 In addition to being performed lazily, transformations can either be narrow or wide, which is explained below and also shown on the below diagram.
 
-* Narrow transformation - Data in each partition can only be data in one partition, for example multiplying a column of numbers by a constant
+* Narrow transformation - A row in a partition will be in the same position in the same modified partition post transformation, for example multiplying a column of numbers by a constant which forms a new column.
 
-* Wide transformation - Data in each partition can become data in multiple other partitions, for example sorting a partition.
+* Wide transformation - Data in each partition can become spread across multiple other partitions, for example sorting a partition may lead to 4 values from partition 1 being placed in new partitions 1, 2 3 and 4.
 
 The latter of these two is known as a shuffle, as it moves around the partitions, and involves writing the data to disk, where as narrow transformations are performed in memory, leading to differences in speed.
 
@@ -45,7 +45,6 @@ The majority of times a cluster will be operated via what is referred to as stru
 ![](/img/EMR/structured running.jpg){height=50% width=50%}
 
 ## Part 2: Setting up an AWS EMR
-
 
 ### Step 1 - setting up the EMR cluster
 
@@ -110,7 +109,7 @@ source .bashrc
 Now the infrastructure is all set up its time to open the notebook and login. This is done by accessing pyspark as below and copying the provided token. Once this is done you can start a new notebook which will be connected to your EMR cluster, as such you can utilise it analyse large data sets that are stored within your S3 buckets, providing you have set up the access already.
 
 
-```{base, eval=FALSE}
+```{bash, eval=FALSE}
 pyspark
 ```
 
