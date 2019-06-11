@@ -298,9 +298,9 @@
 <div id="step-1---setting-up-the-emr-cluster" class="section level3">
 <h3>Step 1 - setting up the EMR cluster</h3>
 <p>The first step is finding your was to the emr homepage within AWS, which looks like below, where you can initiate a cluster from.</p>
-<p><img src="/img/EMR/EMR%20home.jpg" style="width:50.0%;height:50.0%" />
+<p><img src="/img/EMR/EMR%20home.jpg" style="width:100.0%;height:100.0%" />
 By clicking on create a cluster you’ll find yourself being able to select your cluster options, including the name and software etc, choose spark and pick your key pair and you’re good to launch. One additional thing you’ll want to do is allow access to your S3 buckets, so that you can pull in data to use. A good guide for this is at the following <a href="https://medium.com/@serkansakinmaz/how-to-connect-amazon-s3-via-emr-based-pyspark-42707d540881">link</a></p>
-<p><img src="/img/EMR/EMR%20config.jpg" style="width:50.0%;height:50.0%" /></p>
+<p><img src="/img/EMR/EMR%20config.jpg" style="width:100.0%;height:100.0%" /></p>
 <p>Once you’ve launched you can then set the security options, though only the first time you launch, these can be found on your cluster page post launch. Here you need to edit the inbound rules on both the master and slave nodes as open port 22 for your IP, via SSH, and a custom TCP for port 8888 which is open to all ips for jupyter notebooks.</p>
 <p><img src="/img/EMR/EMR%20SG.jpg" style="width:100.0%;height:100.0%" /></p>
 <p>Once you’ve waiting the 10 or so minutes for the cluster to gear up you can ssh in, which needs to be conducted with port forwarding to allow your machine to connect to the master node and access the jupyter notebook via the browser. The command for this is shown below.</p>
@@ -340,7 +340,7 @@ source .bashrc
 <p><img src="/img/EMR/Jupyter.jpg" style="width:100.0%;height:100.0%" /></p>
 <p><br></p>
 <p>Now that we’re in the notebook lets see if we can get R running. This involves loading the rpy2 package, running the command to allow cells to run R code and then testing this. The following is shown in the below code snippet and also in the attached image, which also shows the output of a base R plot. In order to do anything outside of base R you’ll need to install packages within the R console, which can be done by running the R() command in the terminal and running install.packages().</p>
-<p><img src="/img/EMR/R%20notebook.jpg" style="width:50.0%;height:50.0%" /></p>
+<p><img src="/img/EMR/R%20notebook.jpg" style="width:100.0%;height:100.0%" /></p>
 <p>Well that’s all that will be covered in this post, but hopefully it’s enough to give you a bit of background into spark and also boot up your first EMR cluster with both python and R available!</p>
 </div>
 </div>
