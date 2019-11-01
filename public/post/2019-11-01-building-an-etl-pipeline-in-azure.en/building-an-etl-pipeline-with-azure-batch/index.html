@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Building an ETL pipeline with Azure Batch - Upsupervised Learnings</title>
+  <meta property="og:title" content="Building an ETL pipeline with Azure Batch" />
+  <meta name="twitter:title" content="Building an ETL pipeline with Azure Batch" />
+  <meta name="description" content="So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform.">
+  <meta property="og:description" content="So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform.">
+  <meta name="twitter:description" content="So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/2019-11-01-building-an-etl-pipeline-in-azure.en\/building-an-etl-pipeline-with-azure-batch\/",
+          "name": "Building an e t l pipeline with azure batch"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "Building an ETL pipeline with Azure Batch",
+  "description" : "So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist \/ dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform.",
+  "inLanguage" : "en",
+  "wordCount":  1837 ,
+  "datePublished" : "2019-11-01T00:00:00",
+  "dateModified" : "2019-11-01T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/2019-11-01-building-an-etl-pipeline-in-azure.en\/building-an-etl-pipeline-with-azure-batch\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Building an ETL pipeline with Azure Batch" />
+<meta property="og:description" content="So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/2019-11-01-building-an-etl-pipeline-in-azure.en/building-an-etl-pipeline-with-azure-batch/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="Building an ETL pipeline with Azure Batch" />
+  <meta name="twitter:description" content="So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/2019-11-01-building-an-etl-pipeline-in-azure.en/building-an-etl-pipeline-with-azure-batch/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Building an ETL pipeline with Azure Batch</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on November 1, 2019
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform. In short, the process involved collecting a number of data points from various sources, overlaying some analysis and pushing a number of enhanced data tables into a front end vis tool.</p>
+<p>So without any more rambling I’ll go through the steps and technology we used in order to solve this problem.</p>
+<div id="part-1-framing-the-problems" class="section level2">
+<h2>Part 1: Framing the problems</h2>
+<p>I’ll keep this piece short since I’ve already alluded to the process in the intro, but an important step in any automation / ML / analytics project is to frame the problem and understand how best to solve it. Luckily for us this problem was somewhat simple in that it could be broken down into an Extract Transform Load (ETL) job, where the objective was to pull data, modify it then feed it back to the end consumer. There were a number of issues around accessing data from various sources, which should be explored before any project kicks off, but that’s not really the topic of this post.</p>
+</div>
+<div id="part-2-drafting-the-architecture" class="section level2">
+<h2>Part 2: Drafting the architecture</h2>
+<p>In order to draft an outline architecture we first had to pick a provider, which based on discussions with the client ended up being azure, as they were looking to move into that direction later in the year anyway, so the move from a proof of concept into live would be less difficult.</p>
+<p><img src="/img/Az-ETL/Azure-logo.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>Once a provider was chosen the next step is to sift though the enormous number of moving parts within the ecosystem for pieces that fit the specific use case. For us that involved azure blobs for storage, azure batch (which relies on Docker containers and as such an AZ / Dockerhub container registry) for processing and a generic SQL store for long term storage. These components were then all encompassed within a Virtual Network to limit the IP addresses which could access the data / processes. Additionally, all of these pieces were allocated an identical resource group, meaning billing could be easily tracked and the entire architecture could easily be taken down if needed.</p>
+<p><img src="/img/Az-ETL/azure-pieces.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>So, how do all these pieces stack together to form a working architecture? Well, this can be seen on the diagram below, where data is ingested, manipulated and loaded via a batch process (which are all chron scheduled), stored in a number of blobs based on the state of the data and ultimately uploaded into a SQL store which connects to a PowerBi front end.</p>
+<p><img src="/img/Az-ETL/draft-arch.jpg" style="width:100.0%;height:100.0%" /></p>
+</div>
+<div id="part-3-building-the-pieces" class="section level2">
+<h2>Part 3: Building the pieces</h2>
+<p>So, moving onto actually building the individual pieces for the process. I wont go into the full details for each process here (such as functions to pull data from APIs etc), rather give a flavour of how to connect to the pieces of the architecture.</p>
+<div id="blobs-vnet-container-registry-keyvault-and-sql-store" class="section level3">
+<h3>Blobs, VNET, container registry, keyvault and SQL store</h3>
+<p>So the first thing to do is to build the “non-moving” pieces of the puzzle, namely what will either provide security or hold the data in this case, for this project I went in the order Resource Group, VNET, Blob stores, Container Registry, keyvault and then SQL store. This can either be done using Azure Resource Management (ARM) templates (<a href="https://github.com/Azure/azure-quickstart-templates" class="uri">https://github.com/Azure/azure-quickstart-templates</a>), which are similar to the cloud formation process in AWS. This allows you to construct the infrastructure using code, which can be helpful if you have multiple deployments.</p>
+<p>Equally this can be done using the azure portal, which can be a bit more user friendly to anyone who’s just starting out with Azure. An example of this is shown below for blob stores. In this case you just provide the required information (subscription, resource group, name, security (add it to your already made VNET), type - go for storage V2, etc) to build a storage account. After this is made you can then add containers, which will hold your various data blobs.</p>
+<p><img src="/img/Az-ETL/blobs.jpg" style="width:100.0%;height:100.0%" /></p>
+</div>
+<div id="processing-etl" class="section level3">
+<h3>Processing (ETL)</h3>
+<p>Now we have the data stores, security and resource group set up we can build the functions that will make up the various batch jobs. These jobs will be ran from Docker containers that are held in the azure container registry (though Dockerhub can also be used)</p>
+<div id="interacting-with-blob-stores-and-sql-stores" class="section level4">
+<h4>Interacting with blob stores and SQL stores</h4>
+<p>The first set of functions to build up are those that allow you to interact with your data stores, thus enabling you to pull and push data. In python this can be done via the Azure SDK, which has a variety of functions for interacting with azure components. In order to do this securely id recommend establishing a config file that pulls various environmental variables via the OS library, which can be stored in an Az key vault, which can then be imported into the main app file.</p>
+<p><br></p>
+<pre class="python"><code>from azure.storage.blob import BlockBlobService
+
+def pull_from_blob(container, file, output):
+
+    blobService = BlockBlobService(
+        account_name=config[&quot;ACCOUNT_NAME&quot;],
+        account_key=config[&quot;ACCOUNT_KEY&quot;]
+    )
+    container_name = config[container]
+
+    blobService = BlockBlobService(
+        account_name=config[&quot;ACCOUNT_NAME&quot;],
+        account_key=config[&quot;ACCOUNT_KEY&quot;]
+    )
+
+    blobService.get_blob_to_path(container_name, file, output)
+
+
+def general_blob_output(file_ending, df, container):
+    
+    file_name = &#39;{}.csv&#39;.format(file_ending)
+
+    df.to_csv(&quot;./{}&quot;.format(file_name), index = False)
+
+    container_name = config[container]
+
+    blobService = BlockBlobService(
+    account_name= config[&quot;ACCOUNT_NAME&quot;],
+    account_key= config[&quot;ACCOUNT_KEY&quot;]
+    )
+
+    blobService = BlockBlobService(
+        account_name=config[&quot;ACCOUNT_NAME&quot;],
+        account_key=config[&quot;ACCOUNT_KEY&quot;]
+    )
+
+    blobService.create_blob_from_path(container_name, file_name, 
+    &quot;./{}&quot;.format(file_name))</code></pre>
+<p><br>
+In addition to blobs, I needed to build functions that could pull or push data from the SQL store, which was done using PyODBC rather than the Azure SDK. In order to perform these actions you must ensure that the supplied user has select and insert permissions on the database. Also, by converting the dataframe into tuples this allows the executemany function from PyODBC to be used, which can significantly reduce the upload time.</p>
+<p><br></p>
+<pre class="python"><code>import pyodbc
+
+def pull_from_sql(SQL, filename):
+
+    sqlconn = pyodbc.connect(DRIVER =&#39;{ODBC Driver 17 for SQL Server}&#39;,
+                        SERVER = config[&quot;SERVER&quot;],
+                        DATABASE = config[&quot;DB&quot;], 
+                        UID = config[&quot;EXPORT_USER&quot;],
+                        PWD = config[&quot;EXPORT_PASS&quot;])
+
+    pd.read_sql(sql= SQL, con= sqlconn) \
+    .to_csv(&quot;./{}&quot;.format(filename), index=False)
+
+    sqlconn.close()
+
+
+def create_sql_conn():
+
+    sqlconn = pyodbc.connect(DRIVER =&#39;{ODBC Driver 17 for SQL Server}&#39;,
+                        SERVER = config[&quot;SERVER&quot;],
+                        DATABASE = config[&quot;DB&quot;], 
+                        UID = config[&quot;IMPORT_USER&quot;],
+                        PWD = config[&quot;IMPORT_PASS&quot;])
+
+    return sqlconn
+    
+    
+def table_to_sql(conn, df, table):
+
+    date_filter = (date.today() - timedelta(days = 1)).strftime(&#39;%d/%m/%Y&#39;)
+
+    df = df.loc[df[&quot;Date&quot;] == date_filter]
+
+    df.loc[:, &quot;Date&quot;] = pd.to_datetime(df[&quot;Date&quot;], dayfirst = True).dt.strftime(&#39;%Y-%m-%d&#39;)
+
+    df = df.replace({pd.np.nan: None})
+
+    tup = list(df.itertuples(index=False, name=None))
+
+    sql = &quot;INSERT INTO dbo.&quot; + table + &quot; values (&quot; + &quot;?,&quot; * (len(df.columns) -1)  + &quot; ?)&quot;
+
+    cursor = conn.cursor()
+
+    cursor.executemany(sql, tup) 
+    conn.commit()
+
+    cursor.close()
+    
+    sqlconn.close()</code></pre>
+<p><br></p>
+</div>
+<div id="pulling-and-manipulating-data" class="section level4">
+<h4>Pulling and manipulating data</h4>
+<p>Since this section is rather contextual I’ll make it short. As such I’ve only included a couple of example functions below for how you might choose to pull data from an API using the requests library and how you may choose to manipulate it via pandas. For the first part of this process we needed to calculate set days as parameters, feed this into a query string and then request the data from the API, which was then stored as a dataframe and outputted as a CSV via the blob function from the previous section.</p>
+<p><br></p>
+<pre class="python"><code>def get_dates():
+    today = date.today().weekday()
+
+    a = today - 0
+    b = today - 4
+
+    start_date = str((date.today() - timedelta(days = a)) - timedelta(days = 7))
+
+    end_date = str((date.today() - timedelta(days = b)))
+
+    return start_date, end_date
+    
+    
+def create_req_list(codes, start_date, end_date):
+    key = config[&#39;EOD_API_KEY&#39;]
+    url = config[&#39;EOD_URL&#39;]
+    reqs = []
+    for i in codes:
+        a = url + i + &quot;?from=&quot; + start_date + &quot;&amp;to=&quot; + end_date + &quot;&amp;api_token=&quot; + key + &quot;&amp;fmt=json&quot;
+        reqs.append(a)
+    return reqs
+    
+    
+def data_pull(requests, codes):
+    data_json = []
+    for i, j in zip(requests, codes):
+        response = req.get(i)
+        if response.status_code == 200:
+            req_text = response.json()
+            if len(req_text) &gt; 0:
+                req_text = req_text[0]
+                a = req_text.get(&quot;a&quot;, req_text[&quot;b&quot;])
+                dict = {&quot;A&quot; : j, &quot;B&quot; : a}
+                data_json.append(dict)
+
+            else:
+                dict = {&quot;A&quot; : j, , &quot;B&quot; : &quot;NA&quot;}
+                data_json.append(dict)
+
+        else:
+            dict = {&quot;A&quot; : j, , &quot;B&quot; : &quot;NA&quot;}
+            data_json.append(dict)
+
+    return data_json
+
+
+def JSON_to_df(json_file):
+
+    df = pd.DataFrame()
+
+    for i in json_file:
+        row = pd.DataFrame([i])
+        df = df.append(row)
+
+    return df</code></pre>
+<p><br>
+For the second part we needed to manipulate the data and calculate a number of measurements. This was conducted by first melting a wide dataframe into a long one via pandas, and then filtering this data and calculating the required metric.
+<br></p>
+<pre class="python"><code>def melt_raw_data(df):
+
+    df_raw = df_raw.iloc[:, np.r_[0, 6:len(df_raw.columns)]]
+
+    # Extract date labels
+    date_labels = [col for col in df_raw if &#39;/20&#39; in col]
+
+    #Reshape price data to long format
+    df_long = pd.melt(df_raw, id_vars=[&#39;A&#39;], var_name = &#39;Date&#39;, value_name = &#39;B&#39;)
+
+    df_long =df_long.drop_duplicates()
+
+    return df_long, date_labels
+    
+
+def ten_week_av(df, period, date_labels):
+
+    ten_week_current = df[df[&#39;Date&#39;].isin(date_labels[-1*period:])]
+    ten_week_current = ten_week_current.groupby(&#39;A&#39;).agg(np.nanmean)
+    
+    ten_week_current.reset_index(drop = False, inplace = True)
+    ten_week_current.rename(columns={&#39;B&#39;: &#39;Av&#39;}, inplace=True)
+
+    return ten_week_current</code></pre>
+<p><br></p>
+</div>
+<div id="scheduling-the-etl-process" class="section level4">
+<h4>Scheduling the ETL process</h4>
+<p>Now that we have the base components and some actual functions established, the next thing to do is schedule each part of the ETL process. Doing this with azure batch components is relatively easy using batch shipyard, an official Azure add on for batch which allows you to build up jobs through YAML files, similar again to cloudformation. These jobs can be scheduled and allow for options that remove batch pools and jobs upon completion, allowing you to only pay for resources when required.</p>
+<p><img src="/img/Az-ETL/shipyard.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>Shown below is an example of one of the four YAML files that need completing to schedule a batch job. These files encompass the credentials required to access your Azure subscription, the config for the pool, the pool setting and the job settings. With regards to scheduling, the important aspects can be found in the job settings file, where you can set the pool lifetime and job recurrence.</p>
+<p><img src="/img/Az-ETL/yaml.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>When starting out I’d recommend following the very in depth docs (<a href="https://batch-shipyard.readthedocs.io/en/latest/00-introduction/" class="uri">https://batch-shipyard.readthedocs.io/en/latest/00-introduction/</a>) in order to both access the infrastructure and get help in building up the files. Once they’re complete you then launch the batch processes via the command line.</p>
+</div>
+</div>
+</div>
+<div id="part-4-setting-it-free" class="section level2">
+<h2>Part 4: Setting it free</h2>
+<p>Once all the pieces are in place setting it loose is somewhat simple. As mentioned previously, using batch shipyard to build each batch job allows them to be scheduled using a chron trigger, meaning that the ETL process will run over the weekend each week. As such the only manual piece of the puzzle now is refreshing the dashboard on a Monday morning to access the new data!</p>
+<p>And there it is, a quick dive into building an ETL job in azure! The process overall was fun, with Azure actually having some fairly comprehensive docs on the SDK and the components, and the batch shipyard team being very responsive to my silly questions around scheduling!</p>
+<p>Also, some of you may notice that even in this simplistic rendition, parts around tracking data quality are missing. However, I can assure you they were included within the actual build through both aspects of the dashboard and additional batch processes!</p>
+</div>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2019-05-22-building-a-data-science-environment-with-aws-emr.en/building-a-data-science-environment-with-aws-emr/" data-toggle="tooltip" data-placement="top" title="Intro to Spark and building an AWS EMR cluster">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2019
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.6</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+
