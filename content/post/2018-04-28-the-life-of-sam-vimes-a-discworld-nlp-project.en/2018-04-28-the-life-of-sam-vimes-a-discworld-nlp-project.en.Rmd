@@ -14,7 +14,7 @@ editor_options:
 
 I've never been a huge reader, though when I do tend to get into a book it's usually part of a larger series (ASOIAF, Harry Potter, LoTR etc). By far my favorite series of books belongs to the collection know as discworld novels, written by Sir Terry Pratchett. Between 1983 and 2015 he wrote 41 novels all surrounding a single universe, where a giant tortoise holding up a disc shaped world roamed the sky's. Within these novels there are a range of story arcs, however my heart and soul favorite can only be given to those relating to Sam Vimes, a misanthropic, sarcastic copper that just wants to see the world in the right place. 
 
-As such, I decided to take some inspiration from two tutorials, the first relating to structural topic models ![silge](https://juliasilge.com/blog/sherlock-holmes-stm/) and the second a full text analysis of the GoT novels ![GOT](https://api.rpubs.com/julheimer/got)
+As such, I decided to take some inspiration from two tutorials, the first relating to structural topic models (https://juliasilge.com/blog/sherlock-holmes-stm/) and the second a full text analysis of the GoT novels (https://api.rpubs.com/julheimer/got)
 
 
 So, as always the first thing to do is load the packages I'll need, with plyr and the tidyverse for general cleaning, tidytext, stm, quanteda, tm, reticulate and cleanNLP to deal with the text elements and analysis and pdftools / readtext to read in the books.
@@ -35,7 +35,7 @@ library(tm)
 
 Now that we have our packages we need some data, which came from either a PDF or word document of the books. Since there was going to be a lot of repetition I designated two functions for either pdf or text extraction, which just read in the text, collapsed it and then unnested it into sentences.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 PDF_extraction <- function(a){
   pdf_text(a) %>%
@@ -54,7 +54,7 @@ WRD_extraction <- function(x){
 ```
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 GG <- WRD_extraction("D08 - Guards! Guards!.doc")
 
 
@@ -81,7 +81,7 @@ SNUFF <- PDF_extraction("Snuff - Terry Pratchett.pdf")
 
 Now that we have all then books split into sentences, it's time to clean up the text and bind all the books into a single data frame. The cleaning simply involved removing the unrequired lines from each data frame and adding in a row number column as a proxy for sentence number. Once clean they were then bound together, and an reordering applied to the titles based on the order of the books.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 Clean_func <- function(a,b,c){
   a %>%
@@ -118,7 +118,7 @@ Now the data is clean and in one place, a logical starting place is a sentiment 
 
 From the below figure you can see that sentiment varies over the timeline of each book (as you would expect) with some seeming overall a bit more cheerful than other, for example comparing Men At Arms to Snuff. This makes sense as Snuff is mostly tasked with dissecting the persecution of the goblin race.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 afinn <- tidytext::get_sentiments("afinn")
 
@@ -144,7 +144,7 @@ watch_books_AFINN %>%
 
 In addition to looking at each book sentence by sentence, the overall sentiment of each book was calculated and tracked across the progression of the books. This shows a somewhat different picture compared to tracking each sentence, with Men At Arms showing a lower score (thus more negative) in comparison to Snuff and Thud hitting rock bottom (likely due to all the war threats and death!)
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 afinn_sent_summary <- watch_books_AFINN %>%
   group_by(Book) %>%
@@ -165,7 +165,7 @@ Another interesting aspect of text analysis, stole from Julia Silges wonderful !
 
 This analysis showed that, generally, the most common bigrams were full names (such as Sam Vimes or Lord Vetinari). However, there were some interesting in book findings, such as mhm mhm within the Fifth Elephant (a phase often muttered by Inigo Skinner) and po lees within Snuff (a phrase spoken by the goblins to mean police). With regards t the gendered aspect, in general male bigrams were far more prevalent, though there was little to speak for differences in terms of actions as they mostly related to speaking / thinking.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 Watch_books_bigrams <- Watch_books %>%
   unnest_tokens(bigram, sentence, token = "ngrams", n = 2) %>%
@@ -292,7 +292,7 @@ full_dep <- bind_rows(dependencies_GG, dependencies_MAA, dependencies_J) %>%
   arrange(desc(n))
 ```
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 full_dep <- read_csv("dependencies_DF.csv")
 
 watch_tfidf <- bind_tf_idf(full_dep, word, word_target, n) %>%
@@ -314,7 +314,7 @@ watch_tfidf %>%
 
 The final piece of analysis for this project was to perform subject topic modelling on the full series of books, aiming to divide them up into a number of related topics. This involved two different data prep approaches, the first being the conversion of the tokenised text into a document frequency matrix for modelling, and the second using the internal processing functions of the stm package to prepare the texts for a K search (in order to find an ideal number of topics). The two approaches were used due to some difficulty with using a dfm with the K search function. Once a suitable number of topics was chosen through the K search (6) the stm model was ran. 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 Watch_dfm <- Watch_books %>%
   unnest_tokens(word, sentence, token = "words") %>%
   anti_join(stop_words) %>%
@@ -333,7 +333,7 @@ plot(K_search)
 ```
 
 The outputs of this model could then be extracted from the model object, namely the top terms per topic (beta) and the distribution of books to topics (gamma). The terms graph of this data reveal that Vimes is fairly key for all except topic 2, and a number of terms were highlighted which indicate which book fits with each topic (IE the term carcer is included for topic 4, indicating this is likely fitted to the Night Watch book). The distribution graph shows that four books sit solely within one topic, whilst the other four books are spread between the two topics, two a piece. If I were to guess which these were I’d say Fifth Elephant and Thud fall into topic 1 (due to the dwarf and troll terms), leaving Jingo and Feet of Clay to fall into topic 6.
-```{r}
+```{r, warning=FALSE, message=FALSE}
 Watch_books_stm <- stm(Watch_dfm, K = 6, init.type = "Spectral", verbose = F)
 
 tidy_stm <- tidy(Watch_books_stm)

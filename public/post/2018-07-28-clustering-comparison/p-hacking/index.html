@@ -64,7 +64,7 @@ library(tidyverse)library(clustree)library(cluster)library(scales)library(gr
   "headline": "Clustering comparison",
   "description" : "Intro\rThis short post is an attempt to compare two commonly used clustering methods, hierarchical and k means, utilising a wheat seeds data set from the online machine learning repository Analysis\rFirst thing as always is to load packages, with a mix of cleaning, clustering and graphing packages for this analysis.\nlibrary(tidyverse)\rlibrary(clustree)\rlibrary(cluster)\rlibrary(scales)\rlibrary(gridExtra)\rlibrary(devtools)\rlibrary(gganimate)\rNow its time to load in the data set and tidy it up.",
   "inLanguage" : "en",
-  "wordCount":  878 ,
+  "wordCount":  906 ,
   "datePublished" : "2018-07-28T00:00:00",
   "dateModified" : "2018-07-28T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -334,13 +334,16 @@ plot_heir(seed_cent, &quot;centroid&quot;)</code></pre>
   gather(key = &quot;Method&quot;, value = &quot;Cluster&quot;, c(3:6)) %&gt;%
   mutate(Method = factor(Method, levels = c(&quot;Actual&quot;, &quot;Average&quot;, &quot;Complete&quot;, &quot;Centroid&quot;)))</code></pre>
 <pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
-## please use list() instead
+## Please use a list of either functions or lambdas: 
 ## 
-## # Before:
-## funs(name = f(.)
+##   # Simple named list: 
+##   list(mean = mean, median = median)
 ## 
-## # After: 
-## list(name = ~f(.))
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
 ## This warning is displayed once per session.</code></pre>
 <pre class="r"><code>animated_clust &lt;- ggplot(seeds_h_clust, aes(area, perimeter, col = Cluster)) +
     geom_point(alpha = 0.6) +

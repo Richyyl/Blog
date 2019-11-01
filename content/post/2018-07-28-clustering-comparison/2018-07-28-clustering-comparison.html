@@ -76,13 +76,16 @@ plot_heir(seed_cent, &quot;centroid&quot;)</code></pre>
   gather(key = &quot;Method&quot;, value = &quot;Cluster&quot;, c(3:6)) %&gt;%
   mutate(Method = factor(Method, levels = c(&quot;Actual&quot;, &quot;Average&quot;, &quot;Complete&quot;, &quot;Centroid&quot;)))</code></pre>
 <pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
-## please use list() instead
+## Please use a list of either functions or lambdas: 
 ## 
-## # Before:
-## funs(name = f(.)
+##   # Simple named list: 
+##   list(mean = mean, median = median)
 ## 
-## # After: 
-## list(name = ~f(.))
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
 ## This warning is displayed once per session.</code></pre>
 <pre class="r"><code>animated_clust &lt;- ggplot(seeds_h_clust, aes(area, perimeter, col = Cluster)) +
     geom_point(alpha = 0.6) +
