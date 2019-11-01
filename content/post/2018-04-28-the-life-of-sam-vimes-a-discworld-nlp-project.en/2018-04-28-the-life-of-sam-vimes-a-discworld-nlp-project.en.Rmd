@@ -128,7 +128,7 @@ watch_books_AFINN <- Watch_books %>%
   
 
 watch_books_AFINN %>%
-  ggplot(aes(x = Sentence_number, y = Sentiment_score, fill = Book)) + 
+  ggplot(aes(x = Sentence_number, y = Sentiment_score, fill = Book)) +
   geom_bar(stat = "identity", show.legend = F) + 
   scale_color_viridis_c() +
   facet_wrap(~Book, ncol = 3, scales = "free_x") +

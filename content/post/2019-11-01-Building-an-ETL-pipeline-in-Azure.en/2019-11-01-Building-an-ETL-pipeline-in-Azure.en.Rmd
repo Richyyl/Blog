@@ -1,7 +1,7 @@
 ---
 title: Building an ETL pipeline using Azure Batch
 author: Rich Louden
-date: '2019-11-03'
+date: '2019-11-01'
 slug: Building-an-ETL-pipeline-in-Azure
 categories: []
 tags: []
