@@ -6,19 +6,10 @@
     <description>Recent content in Posts on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Logo copyright of zen pencils</copyright>
-    <lastBuildDate>Sun, 03 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 08 Jun 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Building an ETL pipeline using Azure Batch</title>
-      <link>/post/2019-11-01-building-an-etl-pipeline-in-azure.en/building-an-etl-pipeline-in-azure/</link>
-      <pubDate>Sun, 03 Nov 2019 00:00:00 +0000</pubDate>
-      
-      <guid>/post/2019-11-01-building-an-etl-pipeline-in-azure.en/building-an-etl-pipeline-in-azure/</guid>
-      <description>So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I’ve been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It’s because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform.</description>
-    </item>
     
     <item>
       <title>Intro to Spark and building an AWS EMR cluster</title>
