@@ -3,13 +3,8 @@ comments: false
 title: About me
 ---
 
-Hi there, I'm Rich.
+Hi there, I'm Rich and I currently work as a Data Scientist / Dev for The Oakland Group (https://www.theoaklandgroup.co.uk/), a tech consultancy based in Leeds (However all posts are my own content and are reflective of my personal views).
 
-Things about me:
+I've created this site both to both showcase some of the things I learn in my own time / as part of work and also to allow me to pen down my thoughts when I fell it's appropriate.
 
-- I love science and the wonders of life
-- I find plants amazingly interesting
-- I love coding and analysing data
-- I have a PhD in molecular biology
-
-If you've eneded up at this site I'm not sure why, but I hope you gain something from my mad stumblings into learning new techniques around data science!
+If you want to get in touch feel free to reahc out via twitter, the link is at the bottom of the page!
