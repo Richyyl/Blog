@@ -1,15 +1,13 @@
 ---
-title: Building an ETL pipeline using Azure Batch
+title: Building an ETL pipeline with Azure Batch
 author: Rich Louden
 date: '2019-11-01'
-slug: Building-an-ETL-pipeline-in-Azure
+slug: building-an-etl-pipeline-with-azure-batch
 categories: []
 tags: []
 type: ''
 subtitle: ''
 image: ''
-editor_options: 
-  chunk_output_type: console
 ---
 
 So, this is my first post in a long while, partly due to a busy summer and partly due to shifting jobs (which added to the busyness!). Since June I've been working as a data scientist / dev at a small, but rapidly growing, tech consultancy, which so far has lead to me learning tonnes of new skills and working on some interesting projects. It's because of this jump that I can actually write this post, as one project was the automation of a very manual, local process through the use of the Azure platform. In short, the process involved collecting a number of data points from various sources, overlaying some analysis and pushing a number of enhanced data tables into a front end vis tool.

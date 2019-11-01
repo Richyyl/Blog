@@ -120,11 +120,13 @@ From the below figure you can see that sentiment varies over the timeline of eac
 
 ```{r}
 
+afinn <- tidytext::get_sentiments("afinn")
+
 watch_books_AFINN <- Watch_books %>%
   unnest_tokens(word, sentence, token = "words") %>%
-  inner_join(get_sentiments("afinn")) %>%
+  inner_join(afinn) %>%
   group_by(Book, Sentence_number) %>%
-  summarise(Sentiment_score = sum(score))
+  summarise(Sentiment_score = sum(value))
   
 
 watch_books_AFINN %>%
@@ -228,7 +230,7 @@ Moving on to inspirations from other areas, at the start I mentioned a text anal
 
 This showed a few key differences between main characters, such as Angua being associated with bounding, Nobby edging (usually away from danger) and Vimes thinking / realising (as he becomes a better detective).
 
-```{reval=F, echo=T}
+```{r, eval=F, echo=T}
 
 use_python("/Library/Frameworks/Python.framework/Versions/3.7/bin/python3")
 
