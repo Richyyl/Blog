@@ -65,7 +65,7 @@ As …"><script type="application/ld+json">
   "headline": "Football Modelling part 2 - EDA and Modelling",
   "description" : "This document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.\nAs before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel \/ gghighlight to add tweaks to charts.",
   "inLanguage" : "en",
-  "wordCount":  2595 ,
+  "wordCount":  2427 ,
   "datePublished" : "2019-04-14T00:00:00",
   "dateModified" : "2019-04-14T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -292,23 +292,9 @@ theme_set(theme_minimal())</code></pre>
                                    Season == &quot;16&quot; ~ &quot;16/17&quot;,
                                    Season == &quot;17&quot; ~ &quot;17/18&quot;,
                                    T ~ &quot;18/19&quot;),
-                Season = factor(Season))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   Data = col_character(),
-##   Team = col_character(),
-##   `passes completed` = col_double(),
-##   `forward passes` = col_double(),
-##   `backward passes` = col_double(),
-##   `sideways passes` = col_double(),
-##   `chances created` = col_double(),
-##   `assists created` = col_double(),
-##   `avg pass length` = col_character(),
-##   `shots on target` = col_double(),
-##   `shots off target` = col_double(),
-##   `goals scored` = col_double()
-## )</code></pre>
-<pre class="r"><code>team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
+                Season = factor(Season))
+
+team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
          mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
@@ -316,21 +302,6 @@ theme_set(theme_minimal())</code></pre>
                                    Season == &quot;17&quot; ~ &quot;17/18&quot;,
                                    T ~ &quot;18/19&quot;),
                 Season = factor(Season))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   Data = col_character(),
-##   Team = col_character(),
-##   `tackles made` = col_double(),
-##   `tackles won` = col_double(),
-##   intercept = col_double(),
-##   `total blocks` = col_double(),
-##   `total clearances` = col_double(),
-##   `total red cards` = col_double(),
-##   `total yellow cards` = col_double(),
-##   `total saves` = col_double(),
-##   `saves per goal` = col_double(),
-##   `totals goals conceded` = col_double()
-## )</code></pre>
 <p>First lets see how passing relates to goals scored, which you’d expect to be a fairly linear trend with some outliers, as most teams that pass lots and move well hold the ball and ultimatly score, however some teams are able to soak up the attacks and move on the counter. From the graph we can see that two teams who are at opposite ends of the passing spectrum show quite a significant difference in goals per 90 minutes.</p>
 <pre class="r"><code>passing_labels &lt;- team_attack %&gt;%
   filter(team %in% c(&quot;Manchester City&quot;, &quot;Burnley&quot;))
@@ -346,10 +317,8 @@ team_attack %&gt;%
   scale_x_continuous(labels = scales::comma_format()) +
   expand_limits(x = 0, y = 0) +
   geom_text_repel(data = passing_labels, aes(x = passes_completed, y = goals_scored, label = team))</code></pre>
-<pre><code>## Warning: You set use_group_by = TRUE, but grouped calculation failed.
-## Falling back to ungrouped filter operation...</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20passing%20stats-1.png" width="672" />
-Again, when looking at changes against goals score we’d expect a linear trend here, as the more times you’re on to shoot the more you’re likely to score, which is shown by the clear linear trend. However, what is interesting is that more chances doesnt appear to improve your on target ratio, meaning its unlikely you’ll get better if you just keep shooting.</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20passing%20stats-1.png" width="672" /></p>
+<p>Again, when looking at changes against goals score we’d expect a linear trend here, as the more times you’re on to shoot the more you’re likely to score, which is shown by the clear linear trend. However, what is interesting is that more chances doesnt appear to improve your on target ratio, meaning its unlikely you’ll get better if you just keep shooting.</p>
 <pre class="r"><code>chances_labels &lt;- team_attack %&gt;%
   filter(team %in% c(&quot;Manchester United&quot;, &quot;Newcastle United&quot;))
   
@@ -364,8 +333,6 @@ team_attack %&gt;%
   scale_x_continuous(labels = scales::comma_format()) +
   expand_limits(x = 0, y = 0) +
   geom_text_repel(data = chances_labels, aes(x = chances_created, y = goals_scored, label = team))</code></pre>
-<pre><code>## Warning: You set use_group_by = TRUE, but grouped calculation failed.
-## Falling back to ungrouped filter operation...</code></pre>
 <p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20chances-1.png" width="672" /></p>
 <pre class="r"><code>team_attack %&gt;%
   mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
@@ -378,8 +345,8 @@ team_attack %&gt;%
        caption = &quot;Horizontal line highlights a 1-1 ratio&quot;) + 
   expand_limits(x = 0, y = 0) +
   geom_hline(yintercept = 1)</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20chances-2.png" width="672" />
-Moving on to some defensive stats now, with both the number of tackles and tackle success on display below. As can be seen from the two charts there is little to no correlation between these metrics and how many goals you might concede, which probably isnt what you’d expect. Interestignly however there seems to be less tackling in this season so far, on average, than the past 3 seasons.</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20chances-2.png" width="672" /></p>
+<p>Moving on to some defensive stats now, with both the number of tackles and tackle success on display below. As can be seen from the two charts there is little to no correlation between these metrics and how many goals you might concede, which probably isnt what you’d expect. Interestignly however there seems to be less tackling in this season so far, on average, than the past 3 seasons.</p>
 <pre class="r"><code>team_defence %&gt;%
   ggplot(aes(x = tackles_made, y = totals_goals_conceded)) +
   geom_point(aes(col = Season)) +
@@ -396,8 +363,8 @@ Moving on to some defensive stats now, with both the number of tackles and tackl
   labs(x = &quot;Average tackle success ratio, per 90 minutes&quot;,
        y = &quot;Average goals conceded, per 90 minutes&quot;,
        title = &quot;With tackle success also showing\n little correlation against goals conceded&quot;)</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20tackles-2.png" width="672" />
-For the final defence metric I’m going to explore saves per goal, which you’d expect to increase with the number of goals conceded as it shows how much pressure the team is under, likely leading to mistakes. As predicted, there’s a slight linear trend between the two, with the graph also highlighting the low number of saves and goals conceded by Manchester Utd in recent seasons, under their more defensive approach spearheaded by the now absent Jose Mourinho.</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20tackles-2.png" width="672" /></p>
+<p>For the final defence metric I’m going to explore saves per goal, which you’d expect to increase with the number of goals conceded as it shows how much pressure the team is under, likely leading to mistakes. As predicted, there’s a slight linear trend between the two, with the graph also highlighting the low number of saves and goals conceded by Manchester Utd in recent seasons, under their more defensive approach spearheaded by the now absent Jose Mourinho.</p>
 <pre class="r"><code>saves_labels &lt;- team_defence %&gt;%
   filter(team %in% c(&quot;Manchester United&quot;, &quot;Chelsea&quot;, &quot;Burnley&quot;))
 
@@ -409,8 +376,8 @@ team_defence %&gt;%
        y = &quot;Average goals conceded, per 90 minutes&quot;,
        title = &quot;Number of saves however does appear to\n upwardly trend with conceding goals&quot;) +
   geom_text(data = saves_labels, aes(x = total_saves, y = totals_goals_conceded, label = team), hjust = 0.5, check_overlap = T, vjust = 1, nudge_x = -1)</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20saves%20per%20goal-1.png" width="672" />
-Now that we’vce had a quick look at the data its time to build some models, starting with a simple linear regression and a random forest, with a parameter grid. Firstly however I need to split the data into test and training sets, and then further split the training sets into 5 fold cross validation sets, each with 5 repeats to provide averages for our assessment statistics.</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Check%20saves%20per%20goal-1.png" width="672" /></p>
+<p>Now that we’vce had a quick look at the data its time to build some models, starting with a simple linear regression and a random forest, with a parameter grid. Firstly however I need to split the data into test and training sets, and then further split the training sets into 5 fold cross validation sets, each with 5 repeats to provide averages for our assessment statistics.</p>
 <pre class="r"><code>attack_final &lt;- team_attack %&gt;%
   mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
   select(goals_scored, everything(),-team, -Stats, -Season)
@@ -562,12 +529,14 @@ attack_error %&gt;%
   ggplot(aes(x = method, y = .avg, col = method)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)</code></pre>
 <p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Extract%20error%20and%20plot-1.png" width="672" /></p>
 <pre class="r"><code>defence_error %&gt;%
   ggplot(aes(x = method, y = .avg, col = method)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)</code></pre>
 <p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Extract%20error%20and%20plot-2.png" width="672" /></p>
 <p>One of the better aspects of the random forest model is that we can look to see what variables had the biggest impact, which for regression models in ranger is given by which variables accounted for the largest decrease in variation at each node split. As can be seen from the below charts, chances, shots on target and assists were the most important for predicting goals scored and blocks, saves and clearances for predicting goals conceded.</p>
@@ -622,8 +591,8 @@ defensive_importance %&gt;%
        title = &quot;Clearances and saves have the most impact\n on predicting goals conceded&quot;,
        col = &quot;&quot;) +
   scale_y_continuous(labels = scales::percent_format())</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Produce%20variable%20importance%20plot%20for%20rf%20models-2.png" width="672" />
-Due to the large amount of variation accounted for by only a few variables in each model a good way to proceed would be to run a ridge regression, which due to the penalty against low impact variables may be able to outperform the more simplistic linear regression. As with the other sets of models, the parsnip interface is used to both construct the model object and a paramter grid to test different penalty values. However, again there appears to be no benefit to this method over the linear regression model, making lm the best choice to go forwards with for this analysis.</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Produce%20variable%20importance%20plot%20for%20rf%20models-2.png" width="672" /></p>
+<p>Due to the large amount of variation accounted for by only a few variables in each model a good way to proceed would be to run a ridge regression, which due to the penalty against low impact variables may be able to outperform the more simplistic linear regression. As with the other sets of models, the parsnip interface is used to both construct the model object and a paramter grid to test different penalty values. However, again there appears to be no benefit to this method over the linear regression model, making lm the best choice to go forwards with for this analysis.</p>
 <pre class="r"><code>ridge_mod &lt;- linear_reg(penalty = varying(), mixture = 0) %&gt;%
   set_engine(&quot;glmnet&quot;)
   
@@ -667,15 +636,17 @@ attack_ridge_error %&gt;%
   ggplot(aes(x = penalty, y = .avg, col = penalty)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)</code></pre>
 <p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Attempt%20ridge%20regression%20and%20compare%20to%20lm-1.png" width="672" /></p>
 <pre class="r"><code>defence_ridge_error %&gt;%
   ggplot(aes(x = penalty, y = .avg, col = penalty)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)</code></pre>
-<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Attempt%20ridge%20regression%20and%20compare%20to%20lm-2.png" width="672" />
-The final stage of this section is to fit the a linear regression model to the full training data set and test its predictive capabiltities on the unseen test dataset. For the attacking dataset the lm showed an error of ~ 0.5 goals, covering around 91% of the variation in the dataset. For the defensive dataset the linear model showed an error of ~ 0.44 goals per game, covering around 93% variation. All in all these models seem appropriate to run with for this analysis, which I’ll be utilising them in combination with some aggregated player data to try and predict some outcomes of upcoming matches!</p>
+<p><img src="/post/2019-04-14-Football-modelling-part-2-EDA-and-modelling/2019-04-14-Football-modelling-part-2-EDA-and-modelling_files/figure-html/Attempt%20ridge%20regression%20and%20compare%20to%20lm-2.png" width="672" /></p>
+<p>The final stage of this section is to fit the a linear regression model to the full training data set and test its predictive capabiltities on the unseen test dataset. For the attacking dataset the lm showed an error of ~ 0.5 goals, covering around 91% of the variation in the dataset. For the defensive dataset the linear model showed an error of ~ 0.44 goals per game, covering around 93% variation. All in all these models seem appropriate to run with for this analysis, which I’ll be utilising them in combination with some aggregated player data to try and predict some outcomes of upcoming matches!</p>
 <pre class="r"><code>attack_final_lm &lt;- fit(object = linear_mod,
 formula = attack_form,
 data = attack_train)

@@ -11,12 +11,13 @@ image: ''
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
 This document will serve as part two, focussing on exploring the data collected in part one and building the final model to test on player data, as such it will be focussed at the team level.
 
 As before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse and tidymodels packages, as well as the required model packages and ggrepel / gghighlight to add tweaks to charts.
+
 ```{r Load packages, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(tidymodels)
@@ -31,7 +32,8 @@ theme_set(theme_minimal())
 At the end of the last segement I'd managed to scrape five key datasets, the first two relating to attacking and defensive stats for clubs, the second two the same but at a player level and the final one a list of players and their current clubs. 
 
 So in order to build a model to use at club level, I'll have to start with club level data and see what really impacts how many goals you score or concede.
-```{r Load team data}
+
+```{r Load team data, warning=FALSE, message=FALSE}
 
 team_attack <- read_csv("team_attack_stats.csv") %>%
   janitor::clean_names() %>%
@@ -54,8 +56,10 @@ team_defence <- read_csv("team_defence_stats.csv") %>%
   
 
 ```
+
 First lets see how passing relates to goals scored, which you'd expect to be a fairly linear trend with some outliers, as most teams that pass lots and move well hold the ball and ultimatly score, however some teams are able to soak up the attacks and move on the counter. From the graph we can see that two teams who are at opposite ends of the passing spectrum show quite a significant difference in goals per 90 minutes.
-```{r Check passing stats}
+
+```{r Check passing stats, warning=FALSE, message=FALSE}
 
 passing_labels <- team_attack %>%
   filter(team %in% c("Manchester City", "Burnley"))
@@ -74,8 +78,10 @@ team_attack %>%
   
 
 ```
+
 Again, when looking at changes against goals score we'd expect a linear trend here, as the more times you're on to shoot the more you're likely to score, which is shown by the clear linear trend. However, what is interesting is that more chances doesnt appear to improve your on target ratio, meaning its unlikely you'll get better if you just keep shooting. 
-```{r Check chances}
+
+```{r Check chances, warning=FALSE, message=FALSE}
 
 chances_labels <- team_attack %>%
   filter(team %in% c("Manchester United", "Newcastle United"))
@@ -106,8 +112,10 @@ team_attack %>%
   geom_hline(yintercept = 1)
 
 ```
+
 Moving on to some defensive stats now, with both the number of tackles and tackle success on display below. As can be seen from the two charts there is little to no correlation between these metrics and how many goals you might concede, which probably isnt what you'd expect. Interestignly however there seems to be less tackling in this season so far, on average, than the past 3 seasons.
-```{r Check tackles}
+
+```{r Check tackles, warning=FALSE, message=FALSE}
 
 team_defence %>%
   ggplot(aes(x = tackles_made, y = totals_goals_conceded)) +
@@ -129,8 +137,10 @@ team_defence %>%
 
 
 ```
+
 For the final defence metric I'm going to explore saves per goal, which you'd expect to increase with the number of goals conceded as it shows how much pressure the team is under, likely leading to mistakes. As predicted, there's a slight linear trend between the two, with the graph also highlighting the low number of saves and goals conceded by Manchester Utd in recent seasons, under their more defensive approach spearheaded by the now absent Jose Mourinho.
-```{r Check saves per goal}
+
+```{r Check saves per goal, warning=FALSE, message=FALSE}
 
 saves_labels <- team_defence %>%
   filter(team %in% c("Manchester United", "Chelsea", "Burnley"))
@@ -145,8 +155,10 @@ team_defence %>%
   geom_text(data = saves_labels, aes(x = total_saves, y = totals_goals_conceded, label = team), hjust = 0.5, check_overlap = T, vjust = 1, nudge_x = -1)
 
 ```
+
 Now that we'vce had a quick look at the data its time to build some models, starting with a simple linear regression and a random forest, with a parameter grid. Firstly however I need to split the data into test and training sets, and then further split the training sets into 5 fold cross validation sets, each with 5 repeats to provide averages for our assessment statistics.
-```{r Prep the data}
+
+```{r Prep the data, warning=FALSE, message=FALSE}
 
 attack_final <- team_attack %>%
   mutate(shot_ratio = shots_on_target / shots_off_target) %>%
@@ -176,8 +188,10 @@ attack_cross <- vfold_cv(attack_train, v = 5, repeats = 5)
 defence_cross <- vfold_cv(defence_train, v = 5, repeats = 5)
 
 ```
+
 With the data prepped its time to make the model objects, using the new interface provided by the parsnip package. In addition, this package allows easy creation of parameter grids, which can then be combined with the base model as a nested column of a dataframe.
-```{r Make the model objects}
+
+```{r Make the model objects, warning=FALSE, message=FALSE}
 
 linear_mod <- linear_reg() %>%
   set_engine("lm")
@@ -198,8 +212,10 @@ full_defence_rf <- crossing(defence_cross, forest_models)
 
 
 ```
+
 Now its time to fit the models and calculate the assessment statistics, where I'll be using the standard combo of R2 and RMSE to judge the models.
-```{r Fit the models}
+
+```{r Fit the models, warning=FALSE, message=FALSE}
 
 attack_form <-formula(goals_scored ~ .)
 
@@ -228,7 +244,8 @@ defence_rf <- full_defence_rf %>%
 ```
 
 Now that we have the models built its time to make some predictions and asses the accuracy, using a couple of functions to pull out the appropriate data and either perform the prediction or assess it.
-```{r make predictions and calculate error}
+
+```{r make predictions and calculate error, warning=FALSE, message=FALSE}
 
 compute_pred <- function(split, model) {
 # Extract the assessment set
@@ -268,7 +285,8 @@ defence_rf <- defence_rf %>%
 ```
 
 As can be seen from the below charts, for both datasets the linear model appears to outshine any of the random forest models for both R2 and RMSE.
-```{r Extract error and plot}
+
+```{r Extract error and plot, warning=FALSE, message=FALSE}
 
 error_sum <- function(x, a = NULL, b = NULL, c = NULL) {
 
@@ -318,19 +336,22 @@ attack_error %>%
   ggplot(aes(x = method, y = .avg, col = method)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)
 
 defence_error %>%
   ggplot(aes(x = method, y = .avg, col = method)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)
 
 
 ```
 
 One of the better aspects of the random forest model is that we can look to see what variables had the biggest impact, which for regression models in ranger is given by which variables accounted for the largest decrease in variation at each node split. As can be seen from the below charts, chances, shots on target and assists were the most important for predicting goals scored and blocks, saves and clearances for predicting goals conceded.
-```{r Produce variable importance plot for rf models}
+
+```{r Produce variable importance plot for rf models, warning=FALSE, message=FALSE}
 
 attacking_variables <- tibble(variable = names(attack_final[2:11]))
 
@@ -386,8 +407,10 @@ defensive_importance %>%
 
 
 ```
+
 Due to the large amount of variation accounted for by only a few variables in each model a good way to proceed would be to run a ridge regression, which due to the penalty against low impact variables may be able to outperform the more simplistic linear regression. As with the other sets of models, the parsnip interface is used to both construct the model object and a paramter grid to test different penalty values. However, again there appears to be no benefit to this method over the linear regression model, making lm the best choice to go forwards with for this analysis.
-```{r Attempt ridge regression and compare to lm}
+
+```{r Attempt ridge regression and compare to lm, warning=FALSE, message=FALSE}
 
 ridge_mod <- linear_reg(penalty = varying(), mixture = 0) %>%
   set_engine("glmnet")
@@ -432,17 +455,21 @@ attack_ridge_error %>%
   ggplot(aes(x = penalty, y = .avg, col = penalty)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)
 
 defence_ridge_error %>%
   ggplot(aes(x = penalty, y = .avg, col = penalty)) +
   geom_point() +
   geom_errorbar(aes(ymin = ymin, ymax = ymax)) +
+  coord_flip() +
   facet_wrap(~.metric)
 
 
 ```
+
 The final stage of this section is to fit the a linear regression model to the full training data set and test its predictive capabiltities on the unseen test dataset. For the attacking dataset the lm showed an error of ~ 0.5 goals, covering around 91% of the variation in the dataset. For the defensive dataset the linear model showed an error of ~ 0.44 goals per game, covering around 93% variation. All in all these models seem appropriate to run with for this analysis, which I'll be utilising them in combination with some aggregated player data to try and predict some outcomes of upcoming matches!
+
 ```{r Fit the final LM model and run on the test data, eval = FALSE}
 
 attack_final_lm <- fit(object = linear_mod,

@@ -161,7 +161,7 @@ afinn_sent_summary %>%
 ```
 
 
-Another interesting aspect of text analysis, stole from Julia Silges wonderful ![blog](https://juliasilge.com/blog/gender-pronouns/) is that of gendered bigrams, IE what words are associated with he / she most commonly. So in order to do this the text had to be split into bigrams, stop words removed from each side and then put back together for counting / plotting. This was conducted for both bigrams in general and those associated with he / she.
+Another interesting aspect of text analysis, stole from Julia Silges wonderful blog(https://juliasilge.com/blog/gender-pronouns/) is that of gendered bigrams, IE what words are associated with he / she most commonly. So in order to do this the text had to be split into bigrams, stop words removed from each side and then put back together for counting / plotting. This was conducted for both bigrams in general and those associated with he / she.
 
 This analysis showed that, generally, the most common bigrams were full names (such as Sam Vimes or Lord Vetinari). However, there were some interesting in book findings, such as mhm mhm within the Fifth Elephant (a phase often muttered by Inigo Skinner) and po lees within Snuff (a phrase spoken by the goblins to mean police). With regards t the gendered aspect, in general male bigrams were far more prevalent, though there was little to speak for differences in terms of actions as they mostly related to speaking / thinking.
 
@@ -314,7 +314,7 @@ watch_tfidf %>%
 
 The final piece of analysis for this project was to perform subject topic modelling on the full series of books, aiming to divide them up into a number of related topics. This involved two different data prep approaches, the first being the conversion of the tokenised text into a document frequency matrix for modelling, and the second using the internal processing functions of the stm package to prepare the texts for a K search (in order to find an ideal number of topics). The two approaches were used due to some difficulty with using a dfm with the K search function. Once a suitable number of topics was chosen through the K search (6) the stm model was ran. 
 
-```{r, warning=FALSE, message=FALSE}
+```{r, eval=F, echo=T}
 Watch_dfm <- Watch_books %>%
   unnest_tokens(word, sentence, token = "words") %>%
   anti_join(stop_words) %>%
@@ -332,8 +332,11 @@ plot(K_search)
 
 ```
 
+![](/img/vimes/unnamed-chunk-10-1.jpg){height=100% width=100%}
+
 The outputs of this model could then be extracted from the model object, namely the top terms per topic (beta) and the distribution of books to topics (gamma). The terms graph of this data reveal that Vimes is fairly key for all except topic 2, and a number of terms were highlighted which indicate which book fits with each topic (IE the term carcer is included for topic 4, indicating this is likely fitted to the Night Watch book). The distribution graph shows that four books sit solely within one topic, whilst the other four books are spread between the two topics, two a piece. If I were to guess which these were I’d say Fifth Elephant and Thud fall into topic 1 (due to the dwarf and troll terms), leaving Jingo and Feet of Clay to fall into topic 6.
-```{r, warning=FALSE, message=FALSE}
+
+```{r, eval=F, echo=T}
 Watch_books_stm <- stm(Watch_dfm, K = 6, init.type = "Spectral", verbose = F)
 
 tidy_stm <- tidy(Watch_books_stm)
@@ -351,7 +354,12 @@ top_beta %>%
   facet_wrap(~topic, scales = "free_y", nrow = 2) +
   labs(title = "Top ten terms per theme of the Night Watch books", x = "Term", y = "Beta") +
   theme_minimal()
+```
 
+
+![](/img/vimes/unnamed-chunk-11-1.jpg){height=100% width=100%}
+
+```{r, eval=F, echo=T}
 Watch_gamma <- tidy(Watch_books_stm, matrix = "gamma",                    
                     document_names = rownames(Watch_books_stm)) %>%
   mutate(topic = paste0("Topic ", topic))
@@ -365,5 +373,7 @@ Watch_gamma %>%
        y = "Number of books", x = "Gamma")
 
 ```
+
+![](/img/vimes/unnamed-chunk-11-2.jpg){height=100% width=100%}
 
 So, this brings me to the end of my analysis of the Night Watch books, using a few interesting techniques I’ve picked up from tutorials (mostly delivered by Julia Silge), hopefully you’ve enjoyed it!

@@ -11,7 +11,7 @@ image: ''
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
 ```
 
 This document will serve as the final part (part 3) of the premier league analysis / modelling, and will be focussed on the player data collected in part one, which will then be aggregated inot teams and used for predicting some old matches.
@@ -27,7 +27,7 @@ theme_set(theme_minimal())
 ```
 
 First I'll load in the player data, clean it up a little and just give a cursory check to see that it looks ok! From the tables below it seems that the data is in order and we have plenty of teams with more than 11 players from the scraping.
-```{r Load player data}
+```{r Load player data, warning=FALSE, message=FALSE}
 
 all_players <- read_csv("2018-19 players.csv")
 
@@ -65,7 +65,7 @@ current_players_attacking %>%
 ```
 
 Now its time to reload the team data and produce a simple linear model like in the last post, as this will be used to predict how many goals are scored and conceded for each time.
-```{r Load team data and reproduce models}
+```{r Load team data and reproduce models, warning=FALSE, message=FALSE}
 
 team_attack <- read_csv("team_attack_stats.csv") %>%
   janitor::clean_names() %>%
@@ -102,7 +102,7 @@ defence_model <- lm(totals_goals_conceded ~ ., data = defence_final)
 ```
 
 Now we have to arrange the player sinto their respective teams, making sure to only include teams where I've managed to get data for at least 11 players, in order to make a full squad.
-```{r Build up teams for predictions}
+```{r Build up teams for predictions, warning=FALSE, message=FALSE}
 
 attack_model_data <- current_players_attacking %>%
   filter(data == "Season_18") %>%
@@ -125,7 +125,7 @@ defence_data_list <- rep(list(defence_model_data), 500)
 ```
 
 Now since I dont have the squad list for the fixtures im using I figured the best approach was to randomly sample 11 players from each team over multiple iterations to give a distribution of goals for and against, with the mean of this distribution acting as a good proxy for potential goals.
-```{r Boostrap model process for a goal distribution}
+```{r Boostrap model process for a goal distribution, warning=FALSE, message=FALSE}
 
 team_attack_modeller <- function(x){
   
@@ -156,7 +156,7 @@ defence_models <- map_df(defence_data_list, ~team_defence_modeller(.x))
 ```
 
 So, whilst the model for predicting goals scored appears to working relatively well, except for predicting negative goals, the defensive model has fallen pretty flat, predicitng all teams will conceded around 4 goals. As such the best way forwards is to rely on the attacking model and use the difference to decide the winner! 
-```{r Check distributions of two teams}
+```{r Check distributions of two teams, warning=FALSE, message=FALSE}
 
 attack_models %>%
   filter(team == "Manchester City") %>%
@@ -179,7 +179,7 @@ defence_models %>%
 ```
 
 So, the final predictions are in and they look okay in places and off in some, for instance it's highly unlikely that Southampton will beat Liverpool this weekend, and its confusing why they show such a low goal prediction based on their current form. However this was more a dive into webscraping and the parsnip interface rather than about getting accurate predictions, I'll leave that one to the gambling companies. As such, this is the end of the post, I hope you've enjoyed reading along!
-```{r Weekends predictions!}
+```{r Weekends predictions!, warning=FALSE, message=FALSE}
 
 latest_fixtures <- read_html("https://www.theguardian.com/football/premierleague/fixtures") %>%
   html_node(xpath = '//*[@id="article"]/div/div/div[1]/div[3]') %>%

@@ -64,7 +64,7 @@ As before, first thing to do is load the required packages, for this piece the r
   "headline": "Football Modelling part 3 - Team predictions",
   "description" : "This document will serve as the final part (part 3) of the premier league analysis \/ modelling, and will be focussed on the player data collected in part one, which will then be aggregated inot teams and used for predicting some old matches.\nAs before, first thing to do is load the required packages, for this piece the requirements should be filled by both the tidyverse, for cleaning \/ iterating, and rvest to scrape some fixtures.",
   "inLanguage" : "en",
-  "wordCount":  1289 ,
+  "wordCount":  995 ,
   "datePublished" : "2019-04-21T00:00:00",
   "dateModified" : "2019-04-21T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -278,45 +278,13 @@ library(rvest)
 library(knitr)
 theme_set(theme_minimal())</code></pre>
 <p>First I’ll load in the player data, clean it up a little and just give a cursory check to see that it looks ok! From the tables below it seems that the data is in order and we have plenty of teams with more than 11 players from the scraping.</p>
-<pre class="r"><code>all_players &lt;- read_csv(&quot;2018-19 players.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   Full_name = col_character(),
-##   Team = col_character()
-## )</code></pre>
-<pre class="r"><code>player_attack &lt;- read_csv( &quot;player_attack_stats.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   data = col_character(),
-##   Name = col_character(),
-##   Games = col_character(),
-##   `passes completed` = col_double(),
-##   `forward passes` = col_double(),
-##   `backward passes` = col_double(),
-##   `sideways passes` = col_double(),
-##   `chances created` = col_double(),
-##   `assists created` = col_double(),
-##   `avg pass length` = col_character(),
-##   `shots on target` = col_double(),
-##   `shots off target` = col_double()
-## )</code></pre>
-<pre class="r"><code>player_defence &lt;- read_csv( &quot;player_defence_stats.csv&quot;)</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   data = col_character(),
-##   Name = col_character(),
-##   Games = col_character(),
-##   `tackles made` = col_double(),
-##   `tackles won` = col_double(),
-##   intercept = col_double(),
-##   `total blocks` = col_double(),
-##   `total clearances` = col_double(),
-##   `total red cards` = col_double(),
-##   `total yellow cards` = col_double(),
-##   `total saves` = col_double(),
-##   `saves per goal` = col_double()
-## )</code></pre>
-<pre class="r"><code>current_players_attacking &lt;- inner_join(all_players, player_attack, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
+<pre class="r"><code>all_players &lt;- read_csv(&quot;2018-19 players.csv&quot;)
+
+player_attack &lt;- read_csv( &quot;player_attack_stats.csv&quot;)
+
+player_defence &lt;- read_csv( &quot;player_defence_stats.csv&quot;)
+
+current_players_attacking &lt;- inner_join(all_players, player_attack, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
   janitor::clean_names()
 
 current_players_defending &lt;- inner_join(all_players, player_defence, by = c(&quot;Full_name&quot; = &quot;Name&quot;)) %&gt;%
@@ -511,46 +479,18 @@ current_players_attacking %&gt;%
                                    Season == &quot;16&quot; ~ &quot;16/17&quot;,
                                    Season == &quot;17&quot; ~ &quot;17/18&quot;,
                                    T ~ &quot;18/19&quot;),
-                Season = factor(Season))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   Data = col_character(),
-##   Team = col_character(),
-##   `passes completed` = col_double(),
-##   `forward passes` = col_double(),
-##   `backward passes` = col_double(),
-##   `sideways passes` = col_double(),
-##   `chances created` = col_double(),
-##   `assists created` = col_double(),
-##   `avg pass length` = col_character(),
-##   `shots on target` = col_double(),
-##   `shots off target` = col_double(),
-##   `goals scored` = col_double()
-## )</code></pre>
-<pre class="r"><code>team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
+                Season = factor(Season))
+
+team_defence &lt;- read_csv(&quot;team_defence_stats.csv&quot;) %&gt;%
   janitor::clean_names() %&gt;%
   separate(data, into = c(&quot;Stats&quot;, &quot;Season&quot;), sep = &quot;_&quot;) %&gt;%
          mutate(Season = case_when(Season == &quot;15&quot; ~ &quot;15/16&quot;,
                                    Season == &quot;16&quot; ~ &quot;16/17&quot;,
                                    Season == &quot;17&quot; ~ &quot;17/18&quot;,
                                    T ~ &quot;18/19&quot;),
-                Season = factor(Season))</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   Data = col_character(),
-##   Team = col_character(),
-##   `tackles made` = col_double(),
-##   `tackles won` = col_double(),
-##   intercept = col_double(),
-##   `total blocks` = col_double(),
-##   `total clearances` = col_double(),
-##   `total red cards` = col_double(),
-##   `total yellow cards` = col_double(),
-##   `total saves` = col_double(),
-##   `saves per goal` = col_double(),
-##   `totals goals conceded` = col_double()
-## )</code></pre>
-<pre class="r"><code>attack_final &lt;- team_attack %&gt;%
+                Season = factor(Season))
+
+attack_final &lt;- team_attack %&gt;%
   mutate(shot_ratio = shots_on_target / shots_off_target) %&gt;%
   select(-team, -Stats, -Season)
 
