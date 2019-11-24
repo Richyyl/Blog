@@ -12,7 +12,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-Anyone who's read The Hitchhikers Guide to The Galaxy, or seen the film, will know  the seminal quote "Space is big. Really big. You just won’t believe how vastly hugely mindbogglingly big it is.". "Well apparently space has a new competitor for sheer size, and that's data!
+Anyone who's read The Hitchhikers Guide to The Galaxy, or seen the film, will know  the seminal quote "Space is big. Really big. You just won’t believe how vastly hugely mindbogglingly big it is.". Well apparently space has a new competitor for sheer size, and that's data!
 
 ![](/img/bdl/space.jpg){height=100% width=100%}
 
@@ -24,7 +24,7 @@ Every year a mass of people descend on the Olympia conference center in Hammersm
 
 The main reason for being at BDL was to chat with potential clients in order to understand what data centric issues they were having, from overall strategy down to data quality. This allows us as company to better understand the current market and determine what we can deliver to help solve these issues.
 
-From these conversations the most common issues that arose were around actually being able to access data easily and ensuring the quality of said data. From further discussions the most likely candidates for these problems looked to be the isolation of data systems away from those trained to utilise the data (I.D data held by IT, whilst analysts sit in other functions) or poor ETL processes. As such, there may be some hope for these companies with the greater push from on prem to cloud infrastructure, which allows permissions and processes to be reset for a more data centric organisation! 
+From these conversations the most common issues that arose were around actually being able to access data easily and ensuring the quality of said data. From further discussions the most likely candidates for these problems looked to be the isolation of data systems away from those trained to utilise the data (I.E data held by IT, whilst analysts sit in other functions) or poor ETL processes. As such, there may be some hope for these companies with the greater push from on prem to cloud infrastructure, which allows permissions and processes to be reset for a more data centric organisation! 
 
 ![](/img/bdl/data.jpg){height=50% width=50%}
 
