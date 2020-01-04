@@ -64,7 +64,7 @@ The first person who comes to mind on this topic, at least for me, is David Robi
   "headline": "The Birthday Paradox, Tidyverse to Pandas",
   "description" : "Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.\nThe first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https:\/\/twitter.",
   "inLanguage" : "en",
-  "wordCount":  1066 ,
+  "wordCount":  1079 ,
   "datePublished" : "2020-01-04T00:00:00",
   "dateModified" : "2020-01-04T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -271,7 +271,7 @@ The first person who comes to mind on this topic, at least for me, is David Robi
 
 
 <p>Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.</p>
-<p>The first person who comes to mind on this topic, at least for me, is David Robinson (<span class="citation">@drob</span> - <a href="https://twitter.com/drob" class="uri">https://twitter.com/drob</a>). In addition to being a highly regarded data scientist he’s authored / maintained a number of R packages and finds time to blog / screen cast examples of analytics and problem solving using the R programming language.</p>
+<p>The first person who comes to mind on this topic, at least for me, is David Robinson (<span class="citation">@drob</span> - <a href="https://twitter.com/drob" class="uri">https://twitter.com/drob</a>). In addition to being a highly regarded data scientist, he’s authored / maintained a number of R packages and finds time to blog / screen cast examples of analytics and problem solving using the R programming language (<a href="https://www.youtube.com/channel/UCeiiqmVK07qhY-wvg3IZiZQ" class="uri">https://www.youtube.com/channel/UCeiiqmVK07qhY-wvg3IZiZQ</a>).</p>
 <p>My first stab at programming came with R, and as such I learnt a lot from reading David’s posts and watching his videos, along with those from other members of the amazing R community. These days my programming tends to be focused on Python, but I still try and keep up with what’s going on in the R community, leading me to David’s recent post solving the Birthday Paradox using some of the neater tidyverse tooling!</p>
 <p>The jist of the problem is calculating the probability two people in a room will share the same birthday, as the number of people in the room increases. In order to blow off a few Christmas coding cobwebs I decided to have a stab at this using python, both in a functional manner using python’s base data structures and also the commonly used Pandas library!</p>
 <div id="the-r-way" class="section level2">
@@ -295,25 +295,25 @@ head(summarised)</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##   people chance
 ##    &lt;dbl&gt;  &lt;dbl&gt;
-## 1      2 0.0034
-## 2      4 0.0173
-## 3      6 0.0426
-## 4      8 0.0734
-## 5     10 0.12  
-## 6     12 0.170</code></pre>
+## 1      2 0.0033
+## 2      4 0.0175
+## 3      6 0.0374
+## 4      8 0.0689
+## 5     10 0.118 
+## 6     12 0.169</code></pre>
 <p>As you can see the above code leads to a dataframe with the simulated probability of a matching birthday based on the number of people in the room, which is what I’ve replicated below in two different ways.</p>
 </div>
 <div id="python-part-one---native" class="section level2">
 <h2>Python part one - Native</h2>
 <p>For the first method I decided to stick mostly to python’s inbuilt data structures (list, tuples, etc), only using pandas to help aggregate and plot the data.</p>
-<p>In order to stay away from dataframes I replied heavily on lists, with the first function taking an integer in order to provide a random sample on birthdays. This sample was then converted into a set in order to remove duplicates and a length check used to see if any items had been removed, giving me a binary output.</p>
-<p>The second function then acted to replicate this function for both a number of iterations and a range of people, giving me a final list of tuples with the people, trial and result which I could feed into a pandas dataframe and aggregate, as shown below.</p>
+<p>In order to stay away from dataframes I replied heavily on lists, with the first function taking an integer in order to provide a random sample on birthdays. This sample was then converted into a set (essentially a hashed list that can’t contain duplicates) in order to remove duplicates and a length check used to see if any items had been removed, giving me a binary output.</p>
+<p>The second function then acted to replicate this function for both a number of iterations and a range of people, giving me a final list of tuples (essentially an immutable list) with the people, trial and result which I could feed into a pandas dataframe and aggregate, as shown below.</p>
 <pre class="python"><code>from random import choices
 import seaborn as sns
 import pandas as pd
 
 def birthday_trial(people):
-  &quot;&quot;&quot;Function that takes an integer of people and determines if at leas two have matching birthdays&quot;&quot;&quot;
+  &quot;&quot;&quot;Function that takes an integer of people and determines if at least two have matching birthdays&quot;&quot;&quot;
     
     #Build list of random birthdays
     birthdays = choices(range(1, 366, 1), k = people)
