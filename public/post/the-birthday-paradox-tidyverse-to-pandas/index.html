@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>The Birthday Paradox, Tidyverse to Pandas - Upsupervised Learnings</title>
+  <meta property="og:title" content="The Birthday Paradox, Tidyverse to Pandas" />
+  <meta name="twitter:title" content="The Birthday Paradox, Tidyverse to Pandas" />
+  <meta name="description" content="Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.
+The first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https://twitter.">
+  <meta property="og:description" content="Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.
+The first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https://twitter.">
+  <meta name="twitter:description" content="Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/the-birthday-paradox-tidyverse-to-pandas\/",
+          "name": "The birthday paradox, tidyverse to pandas"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "The Birthday Paradox, Tidyverse to Pandas",
+  "description" : "Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.\nThe first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https:\/\/twitter.",
+  "inLanguage" : "en",
+  "wordCount":  1066 ,
+  "datePublished" : "2020-01-04T00:00:00",
+  "dateModified" : "2020-01-04T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/the-birthday-paradox-tidyverse-to-pandas\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="The Birthday Paradox, Tidyverse to Pandas" />
+<meta property="og:description" content="Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.
+The first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https://twitter.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/the-birthday-paradox-tidyverse-to-pandas/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="The Birthday Paradox, Tidyverse to Pandas" />
+  <meta name="twitter:description" content="Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/the-birthday-paradox-tidyverse-to-pandas/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>The Birthday Paradox, Tidyverse to Pandas</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on January 4, 2020
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<p>Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.</p>
+<p>The first person who comes to mind on this topic, at least for me, is David Robinson (<span class="citation">@drob</span> - <a href="https://twitter.com/drob" class="uri">https://twitter.com/drob</a>). In addition to being a highly regarded data scientist he’s authored / maintained a number of R packages and finds time to blog / screen cast examples of analytics and problem solving using the R programming language.</p>
+<p>My first stab at programming came with R, and as such I learnt a lot from reading David’s posts and watching his videos, along with those from other members of the amazing R community. These days my programming tends to be focused on Python, but I still try and keep up with what’s going on in the R community, leading me to David’s recent post solving the Birthday Paradox using some of the neater tidyverse tooling!</p>
+<p>The jist of the problem is calculating the probability two people in a room will share the same birthday, as the number of people in the room increases. In order to blow off a few Christmas coding cobwebs I decided to have a stab at this using python, both in a functional manner using python’s base data structures and also the commonly used Pandas library!</p>
+<div id="the-r-way" class="section level2">
+<h2>The R way!</h2>
+<p>So, first up is David’s code using the crossing, mutate and map functions from tidyr, dplyr and purrr respectively. However, I did feel inclined to change summarize back to the English spelling….</p>
+<p>If you’re interested in the breakdown of the code his post has a brilliant explanation of each element (<a href="http://varianceexplained.org/r/birthday-problem/" class="uri">http://varianceexplained.org/r/birthday-problem/</a>), but I’ve added a couple of comments below too.</p>
+<pre class="r"><code>library(tidyverse)
+
+summarised &lt;- crossing(people = seq(2, 50, 2), #Produce a cartesian df with people and trials
+                       trial = 1:10000) %&gt;%
+  #Give each trial a number of randomly assigned birthdays
+  mutate(birthday = map(people, ~ sample(365, ., replace = TRUE)),
+  #Check if any birthdays match       
+         multiple = map_lgl(birthday, ~ any(duplicated(.)))) %&gt;%
+  #Group by number of people and calculate average across all trials
+  group_by(people) %&gt;%
+  summarise(chance = mean(multiple))
+
+
+head(summarised)</code></pre>
+<pre><code>## # A tibble: 6 x 2
+##   people chance
+##    &lt;dbl&gt;  &lt;dbl&gt;
+## 1      2 0.0034
+## 2      4 0.0173
+## 3      6 0.0426
+## 4      8 0.0734
+## 5     10 0.12  
+## 6     12 0.170</code></pre>
+<p>As you can see the above code leads to a dataframe with the simulated probability of a matching birthday based on the number of people in the room, which is what I’ve replicated below in two different ways.</p>
+</div>
+<div id="python-part-one---native" class="section level2">
+<h2>Python part one - Native</h2>
+<p>For the first method I decided to stick mostly to python’s inbuilt data structures (list, tuples, etc), only using pandas to help aggregate and plot the data.</p>
+<p>In order to stay away from dataframes I replied heavily on lists, with the first function taking an integer in order to provide a random sample on birthdays. This sample was then converted into a set in order to remove duplicates and a length check used to see if any items had been removed, giving me a binary output.</p>
+<p>The second function then acted to replicate this function for both a number of iterations and a range of people, giving me a final list of tuples with the people, trial and result which I could feed into a pandas dataframe and aggregate, as shown below.</p>
+<pre class="python"><code>from random import choices
+import seaborn as sns
+import pandas as pd
+
+def birthday_trial(people):
+  &quot;&quot;&quot;Function that takes an integer of people and determines if at leas two have matching birthdays&quot;&quot;&quot;
+    
+    #Build list of random birthdays
+    birthdays = choices(range(1, 366, 1), k = people)
+    
+    
+    #Check for matches
+    if len(set(birthdays)) == people:
+        
+        return 0
+    
+    else:
+        
+        return 1
+    
+def birthday_trailer(iterations, people):
+  &quot;&quot;&quot;Function to replicate previous function for required number of trails and groups of people &quot;&quot;&quot;
+    
+    results = []
+    
+    #Iterate over list of people for set number of iterations
+    for i in people:
+        
+        for j in range(0, iterations):
+            
+            #for each iteration record number of people, trial and result and append to results list
+            result = tuple([i, j, birthday_trial(i)])
+            
+            results.append(result)
+            
+    return results
+    
+chances = birthday_trailer(1000, range(2, 51, 2))
+
+chances_df = pd.DataFrame(chances, columns = [&quot;People&quot;, &quot;Trial&quot;, &quot;Probability&quot;])
+
+chances_summary = chances_df.loc[:, [&quot;People&quot;, &quot;Probability&quot;]].groupby(&quot;People&quot;).mean()
+
+chances_summary.reset_index(inplace = True, drop = False)
+
+chances_summary.head(6)</code></pre>
+<p><img src="/img/birthday/birthday_head.jpg" style="width:50.0%;height:50.0%" /></p>
+</div>
+<div id="python-part-two---pandas" class="section level2">
+<h2>Python part two - Pandas</h2>
+<p>Once I’d completed the puzzle in (mostly) base data structures I decided to have a go using Pandas, a library developed for data analysis and manipulation.</p>
+<p>For this method I first created a Cartesian product dataframe, similar to David using crossing, and then applied a couple of custom functions. The first gave each row a list a random birthdays based on the number of people allocated to that row. The second checked for any matching birthdays and returns a binary result. This dataframe could then be grouped by the number of people and an average taken, as in the previous two examples.</p>
+<p>Finally I decided to make a simple line plot using the seaborn package to highlight the change in probability as the number of people increases.</p>
+<pre class="python"><code>import pandas as pd
+import numpy as np
+from random import choices
+import seaborn as sns
+from itertools import product
+
+#Build the cartesian DF
+pop_df = pd.DataFrame(list(product(range(2, 51, 2), 
+                                   range(0, 1000))), columns=[&#39;People&#39;, &#39;Trial&#39;])
+
+#Function to provide random birthdays
+def birthday_lister(people):
+    
+    return choices(range(1, 366, 1), k = people)
+
+#Function to check for matches
+def match_checker(x):
+    
+    if len(set(x)) == len(x):
+        
+        return 0
+    else:
+        return 1
+    
+#Applying each function to the DF, each giving a new column
+pop_df[&quot;Birthdays&quot;] = pop_df[&quot;People&quot;].apply(birthday_lister)
+
+pop_df[&quot;Probability&quot;] = pop_df[&quot;Birthdays&quot;].apply(match_checker)
+
+
+#Grouping, summarising and plotting of data
+pop_df_summary = pop_df.loc[:, [&quot;People&quot;, &quot;Probability&quot;]].groupby(&quot;People&quot;).mean()
+
+pop_df_summary.reset_index(inplace = True, drop = False)
+
+sns.lineplot(data=pop_df_summary, x=&#39;People&#39;,y=&#39;Probability&#39;).axhline(0.5, ls = &quot;--&quot;)</code></pre>
+<p><img src="/img/birthday/birthday.jpg" style="width:75.0%;height:75.0%" /></p>
+<p>So there we have it, a couple of ways to repeat David’s interesting solution using python! What I haven’t covered here is the expansion into assessing the probability of n birthdays matching, though this could be achieved through small tweaks to the defined functions, IE checking the difference between set and sample length and using that integer as a score.</p>
+<p>Once again I’d highly advise checking out David’s blog (<a href="http://varianceexplained.org/" class="uri">http://varianceexplained.org/</a>) for a few other interesting puzzles, it’s certainly given me a few good quick reads!</p>
+</div>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2019-11-15-big-data-london/big-data-london/" data-toggle="tooltip" data-placement="top" title="Big Data London!">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2020
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.6</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+
