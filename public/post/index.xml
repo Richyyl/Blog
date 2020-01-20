@@ -6,17 +6,26 @@
     <description>Recent content in Posts on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Logo copyright of zen pencils</copyright>
-    <lastBuildDate>Sat, 04 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 20 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks</title>
+      <link>/post/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library/</link>
+      <pubDate>Mon, 20 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library/</guid>
+      <description>Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.</description>
+    </item>
+    
+    <item>
       <title>The Birthday Paradox, Tidyverse to Pandas</title>
-      <link>/post/the-birthday-paradox-tidyverse-to-pandas/</link>
+      <link>/post/2020-01-04-the-birthday-paradox-tidyverse-to-pandas/the-birthday-paradox-tidyverse-to-pandas/</link>
       <pubDate>Sat, 04 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/post/the-birthday-paradox-tidyverse-to-pandas/</guid>
+      <guid>/post/2020-01-04-the-birthday-paradox-tidyverse-to-pandas/the-birthday-paradox-tidyverse-to-pandas/</guid>
       <description>Whilst programming is often portrayed as quite a serious endeavor (someone hacking into a bank, a security analyst saving the world, a financial quant spending 80 hours a week modelling interest rates etc…) there is alot of fun and inventiveness that can be had with it. One such example is solving puzzles through simulating potential outcomes to determine the probability of an event occurring.
 The first person who comes to mind on this topic, at least for me, is David Robinson (@drob - https://twitter.</description>
     </item>

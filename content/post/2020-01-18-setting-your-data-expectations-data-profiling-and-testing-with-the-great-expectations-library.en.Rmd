@@ -1,0 +1,221 @@
+---
+title: Setting your data expectations - Data profiling and testing with the Great
+  Expectations library & Databricks
+author: "Rich Louden"
+date: '2020-01-20'
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+image: ''
+slug: setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library
+subtitle: ''
+tags: []
+categories: []
+type: ''
+---
+
+## Introduction - Why Data Quality matters and the Great Expectations library
+
+Over the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy. In addition to this simpler goal, it must also be manipulated into a format that is acceptable to the people analysing said data!
+
+The pipelines that complete these operations are often complex, incorporating numerous source systems with different schemas, update times etc. This leads to the development of numerous functions that work within an ETL flow, scheduled by a tool such as [Prefect](https://docs.prefect.io/core/) or [Airflow](https://airflow.Apache.org/).
+
+![](/img/GE-setup/etl_tools.jpg){height=50% width=50%} 
+
+So with the crucial nature of this data in mind, how do we ensure that what gets pulled though our flow is going to be of use to those at the end of the pipeline? That something hasn't been misentered or corrupted in the source systems? Well in most software the role of unit / integration testing would help, however if your unit test expects a data frame and to return a dataframe, as a simple example, this may pass whilst the data within said dataframe is riddled with NULL values and bad quality data. As such, a good addition to more standard testing is to actually test what data those source systems are providing, such as in the example below, which is where a fairly recent library, [Great Expectations](https://github.com/great-expectations) (GE), can be a real help! (Though as is usually the case, other DQ testing libraries exist that can be explored, such as [deequ](https://github.com/awslabs/deequ) and [bulwark](https://github.com/ZaxR/bulwark))
+
+![](/img/GE-setup/pipeline_testing.jpg){height=75% width=75%}
+
+To summarise the library, GE works in addition to unit / integration testing by profiling data sources in order to build a set of "expectations" around each column based on the type, which can then be pruned / added to by the user. For example, on the dataframe shown below we have and ID column that you may expect to never be NULL, an Animal column that should always be a string and a cost that should always be a float.   
+
+
+```{python}
+
+import pandas as pd
+
+df = pd.DataFrame(zip([1, 2, 3, 4, 5], ["Cat", "Dog", "Cat", "Rabbit", "Dog"], [70, 65.00, 120.50, 20.75, 1000.00]), columns = ["ID", "Animal", "Treatment_Cost"])
+
+print(df)
+
+```
+
+
+An example flow of a GE pipeline would involve initial profiling of data, adaption of the produced expectations and continual validation of new data against said expectations. In addition to a better understanding of the source and processed data, this process can help visualise it though auto generated html, which can be deployed as a static website. This nice addition allows the user to deploy a very quick data quality dashboard, an example of which from the package's docs is shown below.   
+
+![](/img/GE-setup/data_docs.jpg){height=75% width=75%}
+
+
+## Getting started with GE on databricks
+
+As eluded to in the title of this post, I've been utilising GE on the well known Spark platform Databricks, as we've been using this platform with a number of clients in order to do distributed computation of large datasets. However, whilst this post is based around Spark, GE can work with other datatypes such as CSVs (via Pandas Dataframes) and Relational Databases (via SQL Alchemy), as shown in their docs [here](https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html).
+
+So, in order to start using GE in DataBricks you must first follow the initialisation [instructions](https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html) on your local machine, after downloading from PyPy both locally and on your Databricks cluster. However, at the add datasource stage choose option 4, which will lead to set up completing with no allocated datasource. The next step is to go into the great_expectations.yaml file in order to set up the required datasource, by adding in the lines shown below.
+
+
+![](/img/GE-setup/yaml.jpg){height=100% width=100%}
+
+
+Once this is saved you can copy the local files over into the DataBricks File System (DBFS), using the DataBricks CLI, as shown below and documented [here](https://docs.databricks.com/dev-tools/cli/dbfs-cli.html). This involves first making a directory in the DBFS and then copying over the files.
+
+
+```{r, eval=FALSE}
+
+dbfs mkdirs your_ge_dir
+
+#Note this \ is for Windows, change to / for linux
+dbfs cp -r .\your_local_folder dbfs:/your_ge_dir
+
+```
+
+
+Once this is done you can check the files have copied by opening a notebook, and using the %fs cell magic to check the contents of your dbfs, using the below code.
+
+```{r, eval = FALSE}
+
+%fs
+
+ls your_new_dir/
+
+```
+
+   
+
+![](/img/GE-setup/ge_dbfs.jpg){height=50% width=50%}
+
+
+Now that you have the initilisation set up and the library on your cluster you can set your GE context (which tells the profiler what kind of data to expect) and set your initial expectations, which I'll document in two different ways, manual profiling and full profiling.   
+
+
+### Setting your expectations - Setup
+
+To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database, and then adds a list with paths of where to store the expectations.   
+
+
+```{r, eval = FALSE}
+
+import great_expectations as ge
+
+DATABASE = "database"
+
+context = ge.data_context.DataContext("/dbfs/your_ge_dir/great_expectations/")
+
+generator = ge.datasource.generator.databricks_generator.DatabricksTableGenerator(name = 'default', datasource = None, database = DATABASE)
+
+data_assets = generator.get_available_data_asset_names()
+
+data_assets_paths = ["spark/passthrough/" + i for i in data_assets]
+
+```
+   
+   
+### Method 1: Manual Profiling
+   
+   The first step to manual profiling is to set up the batch kwargs for the dataset in question, which allows GE to know what batch of data is being profiled, and the asset path in order to produce an empty expectations file.   
+
+```{r, eval = FALSE}
+
+batch_kwargs = {"dataset" : spark.table(f"{database}.{data_assets[0]}")}
+
+data_asset_name = data_assets_paths[0]
+
+context.create_expectation_suite(data_asset_name, "Test")
+
+batch = context.get_batch(data_asset_name, "Test", batch_kwargs)
+
+```
+
+![](/img/GE-setup/empty_expectation.jpg){height=100% width=100%}
+
+Once you have your empty file you can manually add in the relevant expectations for the desired columns, and profile the batch of data via the validation operator, save out the new expectation suite (in this scenario also saving any failed expectations) and build the static html for the data quality docs.   
+
+```{r, eval=FALSE}
+
+batch.expect_column_values_to_not_be_null("PROJECT_ID")
+batch.expect_column_values_to_be_in_set("DELIVERY_GROUP_LATEST", set(['IP Legacy', 'IP AM SP&C']))
+batch.expect_column_distinct_values_to_be_in_set("DELIVERY_GROUP_LATEST", set(['IP Legacy', 'IP AM SP&C']))
+
+context.run_validation_operator("action_list_operator", [batch])
+
+batch.save_expectation_suite(discard_failed_expectations = False)
+
+context.build_data_docs()
+
+```
+
+   
+### Method 2: Full Profiling
+
+As opposed to manual profiling, full profiling utilises the inbuilt data profiler that is packaged with GE in order to build a full expectation suite based on the column types, and then validate the data against all of these expectations. A workflow for such a method might be to profile all the tables within a database, maintain these expectations and then validate any updates from the raw data that is appended to these tables. This example is what is shown below, which utilises a couple of custom functions which can be applied to each table within the data asset list created during set up.   
+
+```{r, eval = FALSE}
+
+# First build the functions to produce the expectations for the database and also
+# to run the validations 
+
+def create_initial_expectations_suite(database, asset_name, context, asset_path):
+  
+  data = spark.table(database + "." + asset_name)
+  
+  batch_kwargs = {"dataset" : data}
+  
+  context.create_expectation_suite(asset_path, f"{asset_name}_{database}_expectations", overwrite_existing = True)
+  
+  batch = context.get_batch(asset_path, f"{asset_name}_{database}_expectations", batch_kwargs)
+  
+  expectation_suite, validation_result = BasicDatasetProfiler.profile(batch)
+  
+  context.save_expectation_suite(expectation_suite)
+  
+  
+def run_validations(database, asset_name, context, asset_path):
+  
+  data = spark.table(database + "." + asset_name)
+  
+  batch_kwargs = {"dataset" : data}
+  
+  batch = context.get_batch(asset_path, f"{asset_name}_{database}_expectations", batch_kwargs)
+  
+  val_run = batch.validate()
+  
+  with open("/dbfs/getest/great_expectations/expectations/spark/passthrough/dss_parameter/validation.txt", 'w') as f:
+    json.dump(val_run, f)
+  
+  context.run_validation_operator("action_list_operator", [batch])  
+  
+  context.build_data_docs()
+
+```
+   
+   
+```{r, eval = FALSE}
+
+# Import the profiler, create the expectations and then validate, storing the 
+# results of the validation and updating the data docs
+
+from great_expectations.profile.basic_dataset_profiler import BasicDatasetProfiler
+
+
+for i, j in zip(data_assets, data_assets_paths):
+  create_initial_expectations_suite(DATABASE, i, context, j)
+
+
+for i, j in zip():
+  run_validations(DATABASE, i, context, j)
+
+
+```
+
+The first function should produce an expectations file for each table, which can then be validated against to build a new data docs page. Examples of the json outputs from both functions are shown below.
+
+![](/img/GE-setup/empty_profile.jpg){height=100% width=100%}
+   
+   
+
+![](/img/GE-setup/full_profile.jpg){height=100% width=100%}   
+
+## Wrap up
+
+So, hopefully this post has shown you a potential new way to more simply test the quality of what's moving within your data pipeline, rather than just the functions that make it up! In addition to the enhanced testing that GE provides, I believe that the incorporation of the static Data Docs data quality pages could be a real help to organisations looking to quickly understand the quality of their data!
+

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks - Upsupervised Learnings</title>
+  <meta property="og:title" content="Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks" />
+  <meta name="twitter:title" content="Setting your data expectations - Data profiling and testing with the …" />
+  <meta name="description" content="Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.">
+  <meta property="og:description" content="Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.">
+  <meta name="twitter:description" content="Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects …"><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Upsupervised Learnings",
+    
+    "url": "\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "\/post\/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library\/",
+          "name": "Setting your data expectations data profiling and testing with the great expectations library \x26 databricks"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Rich Louden"
+  },
+  "headline": "Setting your data expectations - Data profiling and testing with the Great Expectations library \x26 Databricks",
+  "description" : "Introduction - Why Data Quality matters and the Great Expectations library\rOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales \/ behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.",
+  "inLanguage" : "en",
+  "wordCount":  1376 ,
+  "datePublished" : "2020-01-20T00:00:00",
+  "dateModified" : "2020-01-20T00:00:00",
+  "image" : "\/img\/avatar.png",
+  "keywords" : [ "" ],
+  "mainEntityOfPage" : "\/post\/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "\/img\/avatar.png",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks" />
+<meta property="og:description" content="Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.">
+<meta property="og:image" content="/img/avatar.png" />
+<meta property="og:url" content="/post/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Upsupervised Learnings" />
+  <meta name="twitter:title" content="Setting your data expectations - Data profiling and testing with the …" />
+  <meta name="twitter:description" content="Introduction - Why Data Quality matters and the Great Expectations libraryOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects …">
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:image" content="/img/avatar.png" />
+  <meta name="twitter:image" content="/img/avatar.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@Richyyl" />
+  <meta name="twitter:creator" content="@Richyyl" />
+  <meta property="og:url" content="/post/setting-your-data-expectations-data-profiling-and-testing-with-the-great-expectations-library/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Upsupervised Learnings" />
+
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Upsupervised Learnings"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" /><link rel="stylesheet" href="/css/syntax.css" /><link rel="stylesheet" href="/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Upsupervised Learnings</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Home" href="/">Home</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="/page/about">About</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Upsupervised Learnings" href="/">
+            <img class="avatar-img" src="/img/avatar.png" alt="Upsupervised Learnings" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks</h1>
+              
+              
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;Posted on January 20, 2020
+  
+  
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Rich Louden
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        
+
+
+<div id="introduction---why-data-quality-matters-and-the-great-expectations-library" class="section level2">
+<h2>Introduction - Why Data Quality matters and the Great Expectations library</h2>
+<p>Over the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales / behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy. In addition to this simpler goal, it must also be manipulated into a format that is acceptable to the people analysing said data!</p>
+<p>The pipelines that complete these operations are often complex, incorporating numerous source systems with different schemas, update times etc. This leads to the development of numerous functions that work within an ETL flow, scheduled by a tool such as <a href="https://docs.prefect.io/core/">Prefect</a> or <a href="https://airflow.Apache.org/">Airflow</a>.</p>
+<p><img src="/img/GE-setup/etl_tools.jpg" style="width:50.0%;height:50.0%" /></p>
+<p>So with the crucial nature of this data in mind, how do we ensure that what gets pulled though our flow is going to be of use to those at the end of the pipeline? That something hasn’t been misentered or corrupted in the source systems? Well in most software the role of unit / integration testing would help, however if your unit test expects a data frame and to return a dataframe, as a simple example, this may pass whilst the data within said dataframe is riddled with NULL values and bad quality data. As such, a good addition to more standard testing is to actually test what data those source systems are providing, such as in the example below, which is where a fairly recent library, <a href="https://github.com/great-expectations">Great Expectations</a> (GE), can be a real help! (Though as is usually the case, other DQ testing libraries exist that can be explored, such as <a href="https://github.com/awslabs/deequ">deequ</a> and <a href="https://github.com/ZaxR/bulwark">bulwark</a>)</p>
+<p><img src="/img/GE-setup/pipeline_testing.jpg" style="width:75.0%;height:75.0%" /></p>
+<p>To summarise the library, GE works in addition to unit / integration testing by profiling data sources in order to build a set of “expectations” around each column based on the type, which can then be pruned / added to by the user. For example, on the dataframe shown below we have and ID column that you may expect to never be NULL, an Animal column that should always be a string and a cost that should always be a float.</p>
+<pre class="python"><code>
+import pandas as pd
+
+df = pd.DataFrame(zip([1, 2, 3, 4, 5], [&quot;Cat&quot;, &quot;Dog&quot;, &quot;Cat&quot;, &quot;Rabbit&quot;, &quot;Dog&quot;], [70, 65.00, 120.50, 20.75, 1000.00]), columns = [&quot;ID&quot;, &quot;Animal&quot;, &quot;Treatment_Cost&quot;])
+
+print(df)</code></pre>
+<pre><code>##    ID  Animal  Treatment_Cost
+## 0   1     Cat           70.00
+## 1   2     Dog           65.00
+## 2   3     Cat          120.50
+## 3   4  Rabbit           20.75
+## 4   5     Dog         1000.00</code></pre>
+<p>An example flow of a GE pipeline would involve initial profiling of data, adaption of the produced expectations and continual validation of new data against said expectations. In addition to a better understanding of the source and processed data, this process can help visualise it though auto generated html, which can be deployed as a static website. This nice addition allows the user to deploy a very quick data quality dashboard, an example of which from the package’s docs is shown below.</p>
+<p><img src="/img/GE-setup/data_docs.jpg" style="width:75.0%;height:75.0%" /></p>
+</div>
+<div id="getting-started-with-ge-on-databricks" class="section level2">
+<h2>Getting started with GE on databricks</h2>
+<p>As eluded to in the title of this post, I’ve been utilising GE on the well known Spark platform Databricks, as we’ve been using this platform with a number of clients in order to do distributed computation of large datasets. However, whilst this post is based around Spark, GE can work with other datatypes such as CSVs (via Pandas Dataframes) and Relational Databases (via SQL Alchemy), as shown in their docs <a href="https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html">here</a>.</p>
+<p>So, in order to start using GE in DataBricks you must first follow the initialisation <a href="https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html">instructions</a> on your local machine, after downloading from PyPy both locally and on your Databricks cluster. However, at the add datasource stage choose option 4, which will lead to set up completing with no allocated datasource. The next step is to go into the great_expectations.yaml file in order to set up the required datasource, by adding in the lines shown below.</p>
+<p><img src="/img/GE-setup/yaml.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>Once this is saved you can copy the local files over into the DataBricks File System (DBFS), using the DataBricks CLI, as shown below and documented <a href="https://docs.databricks.com/dev-tools/cli/dbfs-cli.html">here</a>. This involves first making a directory in the DBFS and then copying over the files.</p>
+<pre class="r"><code>dbfs mkdirs your_ge_dir
+
+#Note this \ is for Windows, change to / for linux
+dbfs cp -r .\your_local_folder dbfs:/your_ge_dir</code></pre>
+<p>Once this is done you can check the files have copied by opening a notebook, and using the %fs cell magic to check the contents of your dbfs, using the below code.</p>
+<pre class="r"><code>%fs
+
+ls your_new_dir/</code></pre>
+<p><img src="/img/GE-setup/ge_dbfs.jpg" style="width:50.0%;height:50.0%" /></p>
+<p>Now that you have the initilisation set up and the library on your cluster you can set your GE context (which tells the profiler what kind of data to expect) and set your initial expectations, which I’ll document in two different ways, manual profiling and full profiling.</p>
+<div id="setting-your-expectations---setup" class="section level3">
+<h3>Setting your expectations - Setup</h3>
+<p>To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database, and then adds a list with paths of where to store the expectations.</p>
+<pre class="r"><code>import great_expectations as ge
+
+DATABASE = &quot;database&quot;
+
+context = ge.data_context.DataContext(&quot;/dbfs/your_ge_dir/great_expectations/&quot;)
+
+generator = ge.datasource.generator.databricks_generator.DatabricksTableGenerator(name = &#39;default&#39;, datasource = None, database = DATABASE)
+
+data_assets = generator.get_available_data_asset_names()
+
+data_assets_paths = [&quot;spark/passthrough/&quot; + i for i in data_assets]</code></pre>
+</div>
+<div id="method-1-manual-profiling" class="section level3">
+<h3>Method 1: Manual Profiling</h3>
+<p>The first step to manual profiling is to set up the batch kwargs for the dataset in question, which allows GE to know what batch of data is being profiled, and the asset path in order to produce an empty expectations file.</p>
+<pre class="r"><code>batch_kwargs = {&quot;dataset&quot; : spark.table(f&quot;{database}.{data_assets[0]}&quot;)}
+
+data_asset_name = data_assets_paths[0]
+
+context.create_expectation_suite(data_asset_name, &quot;Test&quot;)
+
+batch = context.get_batch(data_asset_name, &quot;Test&quot;, batch_kwargs)</code></pre>
+<p><img src="/img/GE-setup/empty_expectation.jpg" style="width:100.0%;height:100.0%" /></p>
+<p>Once you have your empty file you can manually add in the relevant expectations for the desired columns, and profile the batch of data via the validation operator, save out the new expectation suite (in this scenario also saving any failed expectations) and build the static html for the data quality docs.</p>
+<pre class="r"><code>batch.expect_column_values_to_not_be_null(&quot;PROJECT_ID&quot;)
+batch.expect_column_values_to_be_in_set(&quot;DELIVERY_GROUP_LATEST&quot;, set([&#39;IP Legacy&#39;, &#39;IP AM SP&amp;C&#39;]))
+batch.expect_column_distinct_values_to_be_in_set(&quot;DELIVERY_GROUP_LATEST&quot;, set([&#39;IP Legacy&#39;, &#39;IP AM SP&amp;C&#39;]))
+
+context.run_validation_operator(&quot;action_list_operator&quot;, [batch])
+
+batch.save_expectation_suite(discard_failed_expectations = False)
+
+context.build_data_docs()</code></pre>
+</div>
+<div id="method-2-full-profiling" class="section level3">
+<h3>Method 2: Full Profiling</h3>
+<p>As opposed to manual profiling, full profiling utilises the inbuilt data profiler that is packaged with GE in order to build a full expectation suite based on the column types, and then validate the data against all of these expectations. A workflow for such a method might be to profile all the tables within a database, maintain these expectations and then validate any updates from the raw data that is appended to these tables. This example is what is shown below, which utilises a couple of custom functions which can be applied to each table within the data asset list created during set up.</p>
+<pre class="r"><code># First build the functions to produce the expectations for the database and also
+# to run the validations 
+
+def create_initial_expectations_suite(database, asset_name, context, asset_path):
+  
+  data = spark.table(database + &quot;.&quot; + asset_name)
+  
+  batch_kwargs = {&quot;dataset&quot; : data}
+  
+  context.create_expectation_suite(asset_path, f&quot;{asset_name}_{database}_expectations&quot;, overwrite_existing = True)
+  
+  batch = context.get_batch(asset_path, f&quot;{asset_name}_{database}_expectations&quot;, batch_kwargs)
+  
+  expectation_suite, validation_result = BasicDatasetProfiler.profile(batch)
+  
+  context.save_expectation_suite(expectation_suite)
+  
+  
+def run_validations(database, asset_name, context, asset_path):
+  
+  data = spark.table(database + &quot;.&quot; + asset_name)
+  
+  batch_kwargs = {&quot;dataset&quot; : data}
+  
+  batch = context.get_batch(asset_path, f&quot;{asset_name}_{database}_expectations&quot;, batch_kwargs)
+  
+  val_run = batch.validate()
+  
+  with open(&quot;/dbfs/getest/great_expectations/expectations/spark/passthrough/dss_parameter/validation.txt&quot;, &#39;w&#39;) as f:
+    json.dump(val_run, f)
+  
+  context.run_validation_operator(&quot;action_list_operator&quot;, [batch])  
+  
+  context.build_data_docs()</code></pre>
+<pre class="r"><code># Import the profiler, create the expectations and then validate, storing the 
+# results of the validation and updating the data docs
+
+from great_expectations.profile.basic_dataset_profiler import BasicDatasetProfiler
+
+
+for i, j in zip(data_assets, data_assets_paths):
+  create_initial_expectations_suite(DATABASE, i, context, j)
+
+
+for i, j in zip():
+  run_validations(DATABASE, i, context, j)</code></pre>
+<p>The first function should produce an expectations file for each table, which can then be validated against to build a new data docs page. Examples of the json outputs from both functions are shown below.</p>
+<p><img src="/img/GE-setup/empty_profile.jpg" style="width:100.0%;height:100.0%" /></p>
+<p><img src="/img/GE-setup/full_profile.jpg" style="width:100.0%;height:100.0%" /></p>
+</div>
+</div>
+<div id="wrap-up" class="section level2">
+<h2>Wrap up</h2>
+<p>So, hopefully this post has shown you a potential new way to more simply test the quality of what’s moving within your data pipeline, rather than just the functions that make it up! In addition to the enhanced testing that GE provides, I believe that the incorporation of the static Data Docs data quality pages could be a real help to organisations looking to quickly understand the quality of their data!</p>
+</div>
+
+
+        
+
+        
+
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="/post/2020-01-04-the-birthday-paradox-tidyverse-to-pandas/the-birthday-paradox-tidyverse-to-pandas/" data-toggle="tooltip" data-placement="top" title="The Birthday Paradox, Tidyverse to Pandas">&larr; Previous Post</a>
+            </li>
+          
+          
+        </ul>
+      
+
+
+      
+
+    </div>
+  </div>
+</div>
+
+    <footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="https://github.com/Richyyl" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/Richyyl" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2020
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="/">Upsupervised Learnings</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="http://gohugo.io">Hugo v0.55.6</a> powered &nbsp;&bull;&nbsp; Theme by <a href="http://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a> adapted to <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="/js/main.js"></script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
+
