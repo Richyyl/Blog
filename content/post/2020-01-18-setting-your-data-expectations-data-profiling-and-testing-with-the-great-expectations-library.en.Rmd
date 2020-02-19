@@ -107,9 +107,9 @@ Datasource = SparkDFDatasource()
 
 generator = DatabricksTableGenerator(name = 'default', datasource = Datasource, database = DATABASE)
 
-data_assets = generator.get_available_data_asset_names()
+data_assets = test.get_available_data_asset_names()["names"]
 
-data_assets_paths = ["spark/passthrough/" + i for i in data_assets]
+data_assets_paths = ["spark/passthrough/" + i[0] for i in data_assets]
 
 ```
    

@@ -321,9 +321,9 @@ Datasource = SparkDFDatasource()
 
 generator = DatabricksTableGenerator(name = &#39;default&#39;, datasource = Datasource, database = DATABASE)
 
-data_assets = generator.get_available_data_asset_names()
+data_assets = test.get_available_data_asset_names()[&quot;names&quot;]
 
-data_assets_paths = [&quot;spark/passthrough/&quot; + i for i in data_assets]</code></pre>
+data_assets_paths = [&quot;spark/passthrough/&quot; + i[0] for i in data_assets]</code></pre>
 </div>
 <div id="method-1-manual-profiling" class="section level3">
 <h3>Method 1: Manual Profiling</h3>
