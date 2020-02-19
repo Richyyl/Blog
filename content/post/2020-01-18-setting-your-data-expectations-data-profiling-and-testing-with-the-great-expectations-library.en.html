@@ -61,12 +61,16 @@ ls your_new_dir/</code></pre>
 <h3>Setting your expectations - Setup</h3>
 <p>To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database, and then adds a list with paths of where to store the expectations.</p>
 <pre class="r"><code>import great_expectations as ge
+from great_expectations.datasource.generator.databricks_generator import DatabricksTableBatchKwargsGenerator
+from great_expectations.datasource.sparkdf_datasource import SparkDFDatasource
 
 DATABASE = &quot;database&quot;
 
 context = ge.data_context.DataContext(&quot;/dbfs/your_ge_dir/great_expectations/&quot;)
 
-generator = ge.datasource.generator.databricks_generator.DatabricksTableGenerator(name = &#39;default&#39;, datasource = None, database = DATABASE)
+Datasource = SparkDFDatasource()
+
+generator = DatabricksTableGenerator(name = &#39;default&#39;, datasource = Datasource, database = DATABASE)
 
 data_assets = generator.get_available_data_asset_names()
 

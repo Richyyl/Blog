@@ -96,12 +96,16 @@ To do either of the above mentioned methods there is a standard set up, which is
 ```{r, eval = FALSE}
 
 import great_expectations as ge
+from great_expectations.datasource.generator.databricks_generator import DatabricksTableBatchKwargsGenerator
+from great_expectations.datasource.sparkdf_datasource import SparkDFDatasource
 
 DATABASE = "database"
 
 context = ge.data_context.DataContext("/dbfs/your_ge_dir/great_expectations/")
 
-generator = ge.datasource.generator.databricks_generator.DatabricksTableGenerator(name = 'default', datasource = None, database = DATABASE)
+Datasource = SparkDFDatasource()
+
+generator = DatabricksTableGenerator(name = 'default', datasource = Datasource, database = DATABASE)
 
 data_assets = generator.get_available_data_asset_names()
 

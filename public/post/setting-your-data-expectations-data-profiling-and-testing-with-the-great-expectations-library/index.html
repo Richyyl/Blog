@@ -62,7 +62,7 @@
   "headline": "Setting your data expectations - Data profiling and testing with the Great Expectations library \x26 Databricks",
   "description" : "Introduction - Why Data Quality matters and the Great Expectations library\rOver the last decade or so companies have been striving to make better use of their data. The use cases for such projects have generally fallen under two categories, improve operational efficiency or drive customer sales \/ behaviour. However, in order to utilise this data it must first be piped from source systems (CRM, ordering, POS etc) into somewhere with greater redundancy.",
   "inLanguage" : "en",
-  "wordCount":  1376 ,
+  "wordCount":  1387 ,
   "datePublished" : "2020-01-20T00:00:00",
   "dateModified" : "2020-01-20T00:00:00",
   "image" : "\/img\/avatar.png",
@@ -310,12 +310,16 @@ ls your_new_dir/</code></pre>
 <h3>Setting your expectations - Setup</h3>
 <p>To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database, and then adds a list with paths of where to store the expectations.</p>
 <pre class="r"><code>import great_expectations as ge
+from great_expectations.datasource.generator.databricks_generator import DatabricksTableBatchKwargsGenerator
+from great_expectations.datasource.sparkdf_datasource import SparkDFDatasource
 
 DATABASE = &quot;database&quot;
 
 context = ge.data_context.DataContext(&quot;/dbfs/your_ge_dir/great_expectations/&quot;)
 
-generator = ge.datasource.generator.databricks_generator.DatabricksTableGenerator(name = &#39;default&#39;, datasource = None, database = DATABASE)
+Datasource = SparkDFDatasource()
+
+generator = DatabricksTableGenerator(name = &#39;default&#39;, datasource = Datasource, database = DATABASE)
 
 data_assets = generator.get_available_data_asset_names()
 
@@ -414,7 +418,7 @@ for i, j in zip():
         <ul class="pager blog-pager">
           
             <li class="previous">
-              <a href="/post/2020-01-04-the-birthday-paradox-tidyverse-to-pandas/the-birthday-paradox-tidyverse-to-pandas/" data-toggle="tooltip" data-placement="top" title="The Birthday Paradox, Tidyverse to Pandas">&larr; Previous Post</a>
+              <a href="/post/the-birthday-paradox-tidyverse-to-pandas/" data-toggle="tooltip" data-placement="top" title="The Birthday Paradox, Tidyverse to Pandas">&larr; Previous Post</a>
             </li>
           
           
