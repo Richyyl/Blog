@@ -49,9 +49,21 @@ An example flow of a GE pipeline would involve initial profiling of data, adapti
 
 ## Getting started with GE on databricks
 
-As eluded to in the title of this post, I've been utilising GE on the well known Spark platform Databricks, as we've been using this platform with a number of clients in order to do distributed computation of large datasets. However, whilst this post is based around Spark, GE can work with other datatypes such as CSVs (via Pandas Dataframes) and Relational Databases (via SQL Alchemy), as shown in their docs [here](https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html).
+As eluded to in the title of this post, I've been utilising GE on the well known Spark platform Databricks, as we've been using this platform with a number of clients in order to do distributed computation of large datasets. However, whilst this post is based around Spark, GE can work with other datatypes such as CSVs (via Pandas Dataframes) and Relational Databases (via SQL Alchemy), as shown in their docs [here](https://docs.greatexpectations.io/en/latest/getting_started/typical_workflow.html).
 
-So, in order to start using GE in DataBricks you must first follow the initialisation [instructions](https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html) on your local machine, after downloading from PyPy both locally and on your Databricks cluster. However, at the add datasource stage choose option 4, which will lead to set up completing with no allocated datasource. The next step is to go into the great_expectations.yaml file in order to set up the required datasource, by adding in the lines shown below.
+So, in order to start using GE in DataBricks you must first follow the initialisation [instructions](https://docs.greatexpectations.io/en/latest/getting_started/cli_init.html) on your local machine, after downloading from PyPy both locally and on your Databricks cluster. During set up choose option 1 regarding data sources and then 2 for pyspark, which will give you an error unless you have pyspark installed locally, however this doesnt matter. If you now check the directory you initiated within youll find a great_expectations folder and a great_expectations.yml file which you can open and edit. In this file add the following code, so that it matches the image shown below.
+
+
+```{r, eval=FALSE}
+
+datasources:
+  spark:
+    class_name: SparkDFDatasource
+    generators:
+      passthrough:
+        class_name: DatabricksTableBatchKwargsGenerator
+
+```
 
 
 ![](/img/GE-setup/yaml.jpg){height=100% width=100%}
@@ -85,19 +97,23 @@ ls your_new_dir/
 ![](/img/GE-setup/ge_dbfs.jpg){height=50% width=50%}
 
 
-Now that you have the initilisation set up and the library on your cluster you can set your GE context (which tells the profiler what kind of data to expect) and set your initial expectations, which I'll document in two different ways, manual profiling and full profiling.   
+Now that you have the initilisation set up and the library on your cluster you can set your GE context (which tells the profiler what kind of data to expect) and set your initial expectations, which I'll document in two different ways, manual profiling and full profiling, the latter involving the building of the above mentioned data docs.   
 
 
 ### Setting your expectations - Setup
 
-To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database, and then adds a list with paths of where to store the expectations.   
+To do either of the above mentioned methods there is a standard set up, which is shown below. This sets up your data context and builds a list of your data assets in a specific database.   
 
 
 ```{r, eval = FALSE}
+#Loading the package and any additional elements, such as the basic profiler
 
 import great_expectations as ge
 from great_expectations.datasource.generator.databricks_generator import DatabricksTableBatchKwargsGenerator
 from great_expectations.datasource.sparkdf_datasource import SparkDFDatasource
+from great_expectations.dataset.sparkdf_dataset import SparkDFDataset
+from great_expectations.profile.basic_dataset_profiler import BasicDatasetProfiler
+import json
 
 DATABASE = "database"
 
@@ -111,42 +127,37 @@ data_asset_tuples = test.get_available_data_asset_names()["names"]
 
 data_assets = [i[0] for i in data_asset_tuples]
 
-data_assets_paths = ["spark/passthrough/" + i for i in data_assets]
-
 ```
    
    
 ### Method 1: Manual Profiling
    
-   The first step to manual profiling is to set up the batch kwargs for the dataset in question, which allows GE to know what batch of data is being profiled, and the asset path in order to produce an empty expectations file.   
+The first step to manual profiling is to load the required data, convert this to a GE recognisable spark dataframe object and then create an empty expectations file.   
 
 ```{r, eval = FALSE}
 
-batch_kwargs = {"dataset" : spark.table(f"{database}.{data_assets[0]}")}
+data = spark.table(database + "." + data_assets_paths[0])
+
+spark_data = SparkDFDataset(data)
 
 data_asset_name = data_assets_paths[0]
 
 context.create_expectation_suite(data_asset_name, "Test")
 
-batch = context.get_batch(data_asset_name, "Test", batch_kwargs)
-
 ```
 
 ![](/img/GE-setup/empty_expectation.jpg){height=100% width=100%}
 
-Once you have your empty file you can manually add in the relevant expectations for the desired columns, and profile the batch of data via the validation operator, save out the new expectation suite (in this scenario also saving any failed expectations) and build the static html for the data quality docs.   
+Once you have your empty file you can manually add in the relevant expectations for the desired columns, and profile the batch of data via the validation operator and save out the new expectation suite (in this scenario also saving any failed expectations).   
 
 ```{r, eval=FALSE}
 
-batch.expect_column_values_to_not_be_null("PROJECT_ID")
-batch.expect_column_values_to_be_in_set("DELIVERY_GROUP_LATEST", set(['IP Legacy', 'IP AM SP&C']))
-batch.expect_column_distinct_values_to_be_in_set("DELIVERY_GROUP_LATEST", set(['IP Legacy', 'IP AM SP&C']))
+spark_data.expect_column_values_to_not_be_null("PROJECT_ID")
+spark_data.expect_column_values_to_be_in_set("DELIVERY_GROUP_LATEST", set(['IP Legacy', 'IP AM SP&C']))
 
-context.run_validation_operator("action_list_operator", [batch])
+spark_data.validate()
 
-batch.save_expectation_suite(discard_failed_expectations = False)
-
-context.build_data_docs()
+context.save_expectation_suite(discard_failed_expectations = False)
 
 ```
 
@@ -160,55 +171,55 @@ As opposed to manual profiling, full profiling utilises the inbuilt data profile
 # First build the functions to produce the expectations for the database and also
 # to run the validations 
 
-def create_initial_expectations_suite(database, asset_name, context, asset_path):
+def build_expectations(database, asset_name, context):
+  
+  exp_suite = database + "." + asset_name + "." + str(datetime.today().strftime("%d-%m-%Y")) + "_expectations"
   
   data = spark.table(database + "." + asset_name)
   
-  batch_kwargs = {"dataset" : data}
+  spark_data = SparkDFDataset(data)
   
-  context.create_expectation_suite(asset_path, f"{asset_name}_{database}_expectations", overwrite_existing = True)
+  context.create_expectation_suite(exp_suite, overwrite_existing = True)
   
-  batch = context.get_batch(asset_path, f"{asset_name}_{database}_expectations", batch_kwargs)
+  profile = spark_data.profile(BasicDatasetProfiler)
   
-  expectation_suite, validation_result = BasicDatasetProfiler.profile(batch)
+  context.save_expectation_suite(profile)
   
-  context.save_expectation_suite(expectation_suite)
+  sqlContext.uncacheTable(database + "." + asset_name)
   
   
-def run_validations(database, asset_name, context, asset_path):
+def validate_expectations(database, asset_name, context):
+  
+  val_suite = database + "." + asset_name + "." + str(datetime.today().strftime("%d-%m-%Y")) + "_validation.json"
   
   data = spark.table(database + "." + asset_name)
   
-  batch_kwargs = {"dataset" : data}
+  spark_data = SparkDFDataset(data)
   
-  batch = context.get_batch(asset_path, f"{asset_name}_{database}_expectations", batch_kwargs)
+  validation = spark_data.validate()
   
-  val_run = batch.validate()
+  val_json = json.loads(str(test))  
   
-  with open("/dbfs/getest/great_expectations/expectations/spark/passthrough/dss_parameter/validation.txt", 'w') as f:
-    json.dump(val_run, f)
+  with open(f"/dbfs/getest/expectations{val_suite}", 'w') as f:
+    json.dump(val_json, f)
   
-  context.run_validation_operator("action_list_operator", [batch])  
-  
-  context.build_data_docs()
+  sqlContext.uncacheTable(database + "." + asset_name)
 
 ```
    
    
 ```{r, eval = FALSE}
 
-# Import the profiler, create the expectations and then validate, storing the 
-# results of the validation and updating the data docs
+# Create the expectations and then validate, storing the results of the validation and updating the data docs
 
-from great_expectations.profile.basic_dataset_profiler import BasicDatasetProfiler
 
 
 for i, j in zip(data_assets, data_assets_paths):
-  create_initial_expectations_suite(DATABASE, i, context, j)
+  build_expectations(DATABASE, i, context)
 
 
 for i, j in zip():
-  run_validations(DATABASE, i, context, j)
+  validate_expectations(DATABASE, i, context)
 
 
 ```
