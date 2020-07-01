@@ -1,13 +1,9 @@
 ---
-title: The wrong type of dirty data - Modelling waste-water resource management via graph theory
+title: The wrong type of dirty data - Modelling waste-water resource management via
+  graph theory
 author: Rich Louden
 date: '2020-06-29'
-slug: tbc
-categories: []
-tags: []
-type: ''
-subtitle: ''
-image: ''
+slug: The-wrong-type-of-dirty data-Modelling-waste-water-resource-management-via-graph-theory
 ---
 
 ```{r, echo=FALSE, message=FALSE}
