@@ -4,8 +4,10 @@ title: Setting your data expectations - Data profiling and testing with the Grea
 author: "Rich Louden"
 date: '2020-01-20'
 output:
-  html_document:
-    df_print: paged
+  redoc::redoc:
+    highlight_outputs: FALSE
+    margins: 1 
+    line_numbers: FALSE 
 editor_options:
   chunk_output_type: console
 image: ''

@@ -6,10 +6,19 @@
     <description>Recent content on Upsupervised Learnings</description>
     <generator>Hugo -- gohugo.io</generator>
     <copyright>Logo copyright of zen pencils</copyright>
-    <lastBuildDate>Mon, 20 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 29 Jun 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>The wrong type of dirty data - Modelling waste-water resource management via graph theory</title>
+      <link>/post/tbc/</link>
+      <pubDate>Mon, 29 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/tbc/</guid>
+      <description>A data engineer, some waste-water and graph theory walk into a bar…..Sludge 101Right, before we delve any deeper into this there’s clearly a few questions that need answering. Whilst I imagine the majority of people could have a good stab at telling you what a data engineer does and that graph theory is something mathsy, I’m going to assume their less au fait with the lesser known world of waste water treatment, and sludge (both shown in figure 1 below).</description>
+    </item>
     
     <item>
       <title>Setting your data expectations - Data profiling and testing with the Great Expectations library &amp; Databricks</title>

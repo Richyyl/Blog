@@ -1,0 +1,147 @@
+---
+title: The wrong type of dirty data - Modelling waste-water resource management via graph theory
+author: Rich Louden
+date: '2020-06-29'
+slug: tbc
+categories: []
+tags: []
+type: ''
+subtitle: ''
+image: ''
+---
+
+
+
+<div id="a-data-engineer-some-waste-water-and-graph-theory-walk-into-a-bar.." class="section level2">
+<h2>A data engineer, some waste-water and graph theory walk into a bar…..</h2>
+<div id="sludge-101" class="section level3">
+<h3>Sludge 101</h3>
+<p>Right, before we delve any deeper into this there’s clearly a few questions that need answering. Whilst I imagine the majority of people could have a good stab at telling you what a data engineer does and that graph theory is something mathsy, I’m going to assume their less au fait with the lesser known world of waste water treatment, and sludge (both shown in figure 1 below).</p>
+<p>So to quickly get people up to speed I’ve thrown up a quick Q&amp;A, a sort of elevator pitch for sludge…</p>
+<ul>
+<li><p><strong>What is sludge and how does it relate to waster water?</strong> Sludge is a colloquial term for the biological matter that is removed during the treatment of waster water.</p></li>
+<li><p><strong>Is it important?</strong> Whilst obviously sludge will never top a water companies priority list, it is still a very important aspect of water treatment and recycling, which is essential for continuing water supplies.</p></li>
+<li><p><strong>What happens to it?</strong> Once treated to remove harmful bacteria, sludge is used in agriculture to help fertilise soil and crops.</p></li>
+<li><p><strong>Why should I care?</strong> Well as with most utilities the only way you’ll ever need to care is if the price goes up (however for water this is highly regulated) or if something goes wrong. In the latter case this could impact a water companies general operations, which you never want and is why they take it rather seriously!</p></li>
+</ul>
+<div class="figure">
+<img src="/img/sludge_network/ww_treatment.JPG" style="width:100.0%;height:100.0%" alt="" />
+<p class="caption">Figure 1 - The conventional waste water treament process, generating sludge</p>
+</div>
+</div>
+<div id="so-how-do-you-solve-a-problem-like-sludge" class="section level3">
+<h3>So how do you solve a problem like… Sludge?</h3>
+<p>Now you know a bit more about what sludge is, we can go into the treatment process and how this has brought about an interesting planning problem!</p>
+<p>Once produced at a water treatment facility sludge can be handled in two key ways, it can either be thickened to one of two levels of water density or sent directly to where it it can be digested (as shown in figure 2), a process which also produces bio-gas that can be used to generate electricity. A water company will hold a number of each of these different site types, those that just produce raw, unthickened sludge, those that produce raw sludge and can thicken it to one of the two levels, or finally those that produce raw sludge and can digest it.</p>
+<p>This collection of sites is what presents our problem, we have a number of sites each with a specialised job and an amount of sludge produced daily that requires treatment. So how do we balance the capacity of these sites and also the resources required to move the material, whilst being cost effective (since the cost to the customer is fixed over time periods, the best way for water companies to operate is internal efficiency)?</p>
+<div class="figure">
+<img src="/img/sludge_network/sludge_treatment.JPG" style="width:100.0%;height:100.0%" alt="" />
+<p class="caption">Figure 2 - The sites and movements involved in sludge production and treatment</p>
+</div>
+<p>Well on the surface it may appear there’s a simple-ish answer to this, we have a site type than can handle any type of sludge and gives us the end product whilst producing useful biogas, so problem solved! Sadly however it’s not that simple (though I doubt anyone would need help with this problem if it were…), for a few reasons, a couple of which I’ve listed below.</p>
+<ul>
+<li>Sites have limited import capacity, and calculating the movement from a large number of sites to few final processing sites can become a tough balancing act.</li>
+<li>Sites have a limit on vehicle access, and since unthickened sludge takes a lot of vehicles to move due to the higher water content this presents a whole world of transport pain.</li>
+<li>Some sites are very far from the end product site, meaning it can require a lot of drivers and vehicles to move it there, as opposed to using an intermediate thickening site.</li>
+<li>End sites can have varying costs based on the type of sludge their taking in, so shipping everything straight there can leave you worse off financially.</li>
+</ul>
+<p>Well now that we know why it’s not that simple, how can we go about actually solving this? Well since we’ve explained the waste-water involvement and the data engineer hasn’t got enough fingers to work it out for ~600 treatment sites we’re only left with graph theory from the rather leading section title! So I guess I should probably introduce that, and then we can get cracking on the actual problem!</p>
+</div>
+<div id="not-wanting-to-be-too-graphic." class="section level3">
+<h3>Not wanting to be too graphic….</h3>
+<p>First off, I’m going to throw in the disclaimer that I’m a novice mathematician at best, with my knowledge mostly centered around statistics. As such this is going to be a fairly basic, but helpful, overview of the topic, therefore if you feel like you know enough already I’d jump into the next section looking at how the networks were actually designed.</p>
+<p>Now that’s over with, it’s worth mentioning that whilst graphs and graph theory share a fundamental element that they are structures utilised to understand the connectivity between data, they are not the same thing. Graph theory is a branch of maths that utilises objects made up of nodes (the related items, such as people in an online community) and edges (the connections between nodes), with an example shown below in figure 3. These graphs can be built up into different forms, with edges taking on various aspects such as a measure of connectivity, capacity, cost or similarity, that are then used to solve various problems such as how connected are two individuals in a social network, or how can we cluster two groups of genes based on how they interact with each other. A final key aspects of graphs, at least from the point of this work, is that they can be undirected, flow can move both ways across an edge, or directed, flow is unidirectional across an edge.</p>
+<p>In our case, we can build up the sites as nodes in a directed graph, with edges containing information on capacity and costs, allowing us to utilise a network based algorithm to solve for the production in the network at the minimum cost based on the information provided in the edges.</p>
+<div class="figure">
+<img src="/img/sludge_network/example_network.JPG" style="width:100.0%;height:100.0%" alt="" />
+<p class="caption">Figure 3 - An example graph made up of a collection of nodes (circles) and edges (lines)</p>
+</div>
+</div>
+</div>
+<div id="expanding-our-network." class="section level2">
+<h2>Expanding our network….</h2>
+<p>So now we have the component concepts down how do we go about creating a network (or graph) of our sites and solving our problem? Well for ease of visualisation I’ll showcase it using a toy example of around 6 sites, which still incorporates all our required site types, but I’ll also explain a couple of the important elements that are needed when scaling up to a full set of sites.</p>
+<p>Starting simple, below is the code to build a 6 site network (which is alos shown in figure 4), with connections moving down through the site types, i.e raw sludge producing sites (type A) can connect to any site except their own type, first thickener sites (type B) can connect to further thickeners (type C) and final sites (type D), etc, etc. In the real network this is controlled by giving sites numeric ranks based on their type, which can then be used to filter connections, allowing a site type change in the input data to subsequently be deployed in the network. This gives some flexibility if say the equipment malfunctions at a site and can no longer perform its defined function.</p>
+<pre class="python"><code>
+# a very useful network analysis library
+import networkx as nx 
+
+# create an empty, directed graph
+G = nx.DiGraph()
+
+# add nodes from list, with associated production (-) / capacity (+)
+G.add_nodes_from([(&quot;A-1&quot;, {&quot;demand&quot; : -3}), (&quot;A-2&quot;, {&quot;demand&quot; : -3}), (&quot;B-1&quot;, {&quot;demand&quot; : -3}),
+                  (&quot;B-2&quot;, {&quot;demand&quot; : -3}), (&quot;C-1&quot;, {&quot;demand&quot; : -3}), (&quot;D-1&quot;, {&quot;demand&quot; : 15})])
+
+# add edges with capacities and weight (cost)
+G.add_edges_from([(&quot;A-1&quot;, &quot;B-1&quot;, {&#39;capacity&#39;: 3, &#39;weight&#39;: 4}), 
+                   (&quot;A-1&quot;, &quot;B-2&quot;, {&#39;capacity&#39;: 5, &#39;weight&#39;: 6}),
+                   (&quot;A-2&quot;, &quot;B-1&quot;, {&#39;capacity&#39;: 3, &#39;weight&#39;: -3}),
+                   (&quot;A-2&quot;, &quot;B-2&quot;, {&#39;capacity&#39;: 5, &#39;weight&#39;: 1}),
+                   (&quot;A-1&quot;, &quot;C-1&quot;, {&#39;capacity&#39;: 2,&#39;weight&#39;: 9}),
+                   (&quot;A-1&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 5}),
+                   (&quot;A-2&quot;, &quot;C-1&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 13}),
+                   (&quot;A-2&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 0}),
+                   (&quot;B-1&quot;, &quot;C-1&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 2}),
+                   (&quot;B-2&quot;, &quot;C-1&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 1}),
+                   (&quot;B-1&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15,&#39;weight&#39;: 8}),
+                   (&quot;B-2&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 6}),
+                   (&quot;C-1&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 6})])</code></pre>
+<div class="figure">
+<img src="/img/sludge_network/6_site_network.JPG" style="width:75.0%;height:50.0%" alt="" />
+<p class="caption">Figure 4 - A representation of the network produced in the code above</p>
+</div>
+<p>Okay, so now we have a representative network we can go ahead and solve it right? Well not just yet actually, there’s a couple of things we need to do to make it truly representative, one on the actual structure of the network and a few in the data that feeds it (though I’ll just discuss these rather than writing out the associated data tables!)</p>
+<p>Starting with the more data centric adjustments, which fall into two main categories, there is a need to adjust capacities based on indigenous production and also alter costs to highlight the distance between sites, why these are required is explained below.</p>
+<ul>
+<li><p>The first is required due to a couple of processes that occur at the final site, electricity generation and the method by which the sludge is treated. Both of these processes have capacity thresholds and as such must be adjusted based on the indigenous production fo the site (as this will be treated before any imports). This can be performed fairly easily when building cost tables, though corrections will need to be made if indigenous production is higher than the max threshold of either process!</p></li>
+<li><p>The second is important due to the resource cost of moving material long distances, especially material with high liquid content, as mentioned previously. Now this may well be reflected by a distance based costing approach, but if third party contractors are used this may be banded, losing some of the detail. This can be amended by developing a cost function based on distance, and then applying it to the banded transport costs.</p></li>
+</ul>
+<p>Moving on to the structural element, the main issue we have with the current set up is that it can’t control for a nodes capacity, as this is designated on the edges. As an example, node C above may have a capacity of 3, which is reflected in each of the edges, however as there is no capacity measure on the node this may allow the network to send more than 3 units to said node. We can remove this problem by using “gate-nodes”, as shown in figure 5, that sit in front of those that can receive multiple inputs, controlling the total flow towards it. In order to do this we’ll need to rebuild our above network, with a few additional elements.</p>
+<pre class="python"><code>G2 = nx.DiGraph()
+
+# add nodes, including those acting as gates
+G2.add_nodes_from([(&quot;A-1&quot;, {&quot;demand&quot; : -3}), (&quot;A-2&quot;, {&quot;demand&quot; : -3}), (&quot;B-1&quot;, {&quot;demand&quot; : -3}), (&quot;B-1-G&quot;, {&quot;demand&quot; : 0}),
+                  (&quot;B-2&quot;, {&quot;demand&quot; : -3}), (&quot;B-2-G&quot;, {&quot;demand&quot; : 0}), (&quot;C-1&quot;, {&quot;demand&quot; : -3}), (&quot;C-1-G&quot;, {&quot;demand&quot; : 0}),
+                  (&quot;D-1&quot;, {&quot;demand&quot; : 15}), (&quot;D-1-G&quot;, {&quot;demand&quot; : 0})])
+
+# add edges with capacities and weight (cost)
+G2.add_edges_from([(&quot;A-1&quot;, &quot;B-1-G&quot;, {&#39;capacity&#39;: 3, &#39;weight&#39;: 4}), 
+                   (&quot;A-1&quot;, &quot;B-2-G&quot;, {&#39;capacity&#39;: 5, &#39;weight&#39;: 6}),
+                   (&quot;A-2&quot;, &quot;B-1-G&quot;, {&#39;capacity&#39;: 3, &#39;weight&#39;: -3}),
+                   (&quot;A-2&quot;, &quot;B-2-G&quot;, {&#39;capacity&#39;: 5, &#39;weight&#39;: 1}),
+                   (&quot;A-1&quot;, &quot;C-1-G&quot;, {&#39;capacity&#39;: 2,&#39;weight&#39;: 9}),
+                   (&quot;A-1&quot;, &quot;D-1-G&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 5}),
+                   (&quot;A-2&quot;, &quot;C-1-G&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 13}),
+                   (&quot;A-2&quot;, &quot;D-1-G&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 0}),
+                   (&quot;B-1&quot;, &quot;C-1-G&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 2}),
+                   (&quot;B-2&quot;, &quot;C-1-G&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 1}),
+                   (&quot;B-1&quot;, &quot;D-1-G&quot;, {&#39;capacity&#39;: 15,&#39;weight&#39;: 8}),
+                   (&quot;B-2&quot;, &quot;D-1-G&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 6}),
+                   (&quot;C-1&quot;, &quot;D-1-G&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 6}),
+                   (&quot;B-1-G&quot;, &quot;B-1&quot;, {&#39;capacity&#39;: 3, &#39;weight&#39;: 6}),
+                   (&quot;B-2-G&quot;, &quot;B-2&quot;, {&#39;capacity&#39;: 5, &#39;weight&#39;: 6}),
+                   (&quot;C-1-G&quot;, &quot;C-1&quot;, {&#39;capacity&#39;: 2, &#39;weight&#39;: 6}),
+                   (&quot;D-1-G&quot;, &quot;D-1&quot;, {&#39;capacity&#39;: 15, &#39;weight&#39;: 6})])</code></pre>
+<div class="figure">
+<img src="/img/sludge_network/6_site_gated_network.JPG" style="width:75.0%;height:50.0%" alt="" />
+<p class="caption">Figure 5 - A representation of the above network, including gate nodes</p>
+</div>
+<p>Now that we have a complete network we can utilise an algorithm in order to solve the problem, at hand, ie dealing with the production in the system (designated by the -ve demand in the nodes above) through the available capacity and at the lowest associated cost. There are a number of algorithms utilised to deal with flow in graph theory, such as Edmonds-Karp and max-flow, however the most appropriate for this scenario is a linear solving method known as the network simplex model. In essence, this solver works by moving units through the network from production sites to sink sites for the lowest possible cost, altering movements where a cheaper solution can be found.</p>
+<pre class="python"><code>flowCost, flowDict = nx.network_simplex(G2)</code></pre>
+<pre><code>## 165</code></pre>
+<pre><code>## {&#39;A-1&#39;: {&#39;B-1-G&#39;: 0, &#39;B-2-G&#39;: 0, &#39;C-1-G&#39;: 0, &#39;D-1-G&#39;: 3}, &#39;A-2&#39;: {&#39;B-1-G&#39;: 0, &#39;B-2-G&#39;: 0, &#39;C-1-G&#39;: 0, &#39;D-1-G&#39;: 3}, &#39;B-1&#39;: {&#39;C-1-G&#39;: 0, &#39;D-1-G&#39;: 3}, &#39;B-1-G&#39;: {&#39;B-1&#39;: 0}, &#39;B-2&#39;: {&#39;C-1-G&#39;: 0, &#39;D-1-G&#39;: 3}, &#39;B-2-G&#39;: {&#39;B-2&#39;: 0}, &#39;C-1&#39;: {&#39;D-1-G&#39;: 3}, &#39;C-1-G&#39;: {&#39;C-1&#39;: 0}, &#39;D-1&#39;: {}, &#39;D-1-G&#39;: {&#39;D-1&#39;: 15}}</code></pre>
+<p>Shown above are the outputs of this method, namely a total cost of the optimal solution and also the node to node flow, which can then be used to build any associated outputs that may be required. These would likely encompass details such as the amount of biogas generated, associated transport costs and distances, chemical requirements and other costs that may arise in the process. Such outputs could then be summarised to provide different detail levels required by different people, ie high detail for those involved in detailed planning and lower detail for those solely interested in cost and resource implications at the top level. Outputs at levels similar to what is discussed above is shown in figure 6.</p>
+<div class="figure">
+<img src="/img/sludge_network/outputs_example.JPG" style="width:100.0%;height:100.0%" alt="" />
+<p class="caption">Figure 6 - Example outsputs at the sludge movement and aggregated run level</p>
+</div>
+</div>
+<div id="so-no-more-sludge-problems" class="section level2">
+<h2>So no more sludge problems?</h2>
+<p>Whilst I can hope this short intro is enlightening and somewhat entertaining, I can’t say that its definitively solved the problem. For one there’s a few elements that I’ve not incorporated just to keep the article from expanding into a waste-water based mess…</p>
+<p>This includes aspects like additional gate nodes for dealing with the amount of high and low liquid density loads a site can deal with and the variable capacity aspects derived from biogas generation and other elements (ie the production of biogas lowers the cost of treatment up to a certain threshold, so at least 2 costs are required based on a nodes capacity).</p>
+<p>Then there’s how the input and output data is manipulated to either adjust the input data, for things calculating the variable cost implications from biogas generation, or build up the output data, to give the required detail for elements that feed into the process such as chemical usage.</p>
+<p>Finally there’s how to actually build and deploy the above as a solution, it’s no help to anyone if it’s just sitting on a laptop waiting for someone to run it. It needs to be built up into a maintainable, scalable application, which most likely relies on utilising some open source software (we’ve already made a start by using Python to create and run the graph) and getting in running either on premise or in the cloud where it can be used effectively!</p>
+<p><em>(I will however point out that it would be somewhat remiss of me to bring up these questions if I hadn’t gone through them myself whilst attempting to solve this problem)</em></p>
+</div>
